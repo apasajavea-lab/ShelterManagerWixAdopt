@@ -26,6 +26,15 @@
 .apasa-waiting { margin-top: 14px; color: #777; font-size: 14px; font-weight: 600; }
 .apasa-button { width: 85%; margin: 20px auto 0; padding: 13px 20px; box-sizing: border-box; color: #fff; background: var(--apasa-orange); border-radius: 40px; font-size: 16px; font-weight: 600; text-align: center; transition: var(--apasa-transition); }
 .asm3-adoptable-item:hover .apasa-button { background: var(--apasa-orange-dark); }
+.apasa-toolbar { margin: 0 0 28px; padding: 18px; background: #fff; border-radius: 14px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); }
+.apasa-toolbar-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; }
+.apasa-toolbar input, .apasa-toolbar select, .apasa-clear { width: 100%; min-height: 44px; padding: 10px 12px; box-sizing: border-box; border: 1px solid #d7d7d7; border-radius: 9px; color: #444; background: #fff; font: inherit; font-size: 14px; }
+.apasa-toolbar input:focus, .apasa-toolbar select:focus, .apasa-clear:focus-visible { border-color: var(--apasa-orange); outline: 3px solid rgba(245, 163, 0, 0.2); }
+.apasa-clear { border-color: var(--apasa-green); color: #fff; background: var(--apasa-green); cursor: pointer; font-weight: 700; }
+.apasa-clear:hover { background: var(--apasa-green-dark); }
+.apasa-results { margin-top: 12px; color: #666; font-size: 14px; font-weight: 700; }
+.apasa-empty { margin-top: 18px; padding: 24px; color: #666; text-align: center; }
+.apasa-hidden { display: none !important; }
 .apasa-badge { display: inline-block; align-self: center; margin: 3px 3px 8px; padding: 6px 12px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .apasa-badge-new { color: #2f7d32; background: #dff6dd; }
 .apasa-badge-longstay { color: #865900; background: #fff1cc; }
@@ -34,5 +43,5 @@
 
 @media (max-width: 1200px) { #asm3-adoptable-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 900px) { #asm3-adoptable-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; } .asm3-adoptable-name { font-size: 28px; } }
-@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list { grid-template-columns: 1fr; gap: 18px; } .asm3-adoptable-name { font-size: 26px; } .apasa-summary { min-height: auto; -webkit-line-clamp: 4; } }
+@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list { grid-template-columns: 1fr; gap: 18px; } .asm3-adoptable-name { font-size: 26px; } .apasa-summary { min-height: auto; -webkit-line-clamp: 4; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
 @media print { .asm3-adoptable-item { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; } }
