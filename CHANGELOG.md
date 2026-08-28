@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Format time at APASA from `DAYSONSHELTER` in English, Spanish, and German.
+- Remove inherited waiting-time punctuation and tighten mobile card spacing.
 - Add a complete ID-based dictionary covering all 224 dog breeds in the APASA table.
 - Use Petfinder's standard breed names for English cards.
 - Keep ShelterManager's local breed names for Spanish cards.
