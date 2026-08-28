@@ -6,7 +6,7 @@
   const text = {
     en: { meet: "Meet", female: "Female", male: "Male", small: "Small", medium: "Medium", large: "Large", atApasa: "At APASA", cross: "cross", senior: "Senior", longstay: "Long-term", newArrival: "New arrival" },
     es: { meet: "Conoce a", female: "Hembra", male: "Macho", small: "Pequeño", medium: "Mediano", large: "Grande", atApasa: "En APASA", cross: "cruce", senior: "Senior", longstay: "Larga estancia", newArrival: "Recién llegado" },
-    de: { meet: "Lerne kennen:", female: "Hündin", male: "Rüde", small: "Klein", medium: "Mittel", large: "Groß", atApasa: "Bei APASA", cross: "Mischling", senior: "Senior", longstay: "Langzeitgast", newArrival: "Neu angekommen" }
+    de: { meet: "Triff", female: "Hündin", male: "Rüde", small: "Klein", medium: "Mittel", large: "Groß", atApasa: "Bei APASA", cross: "Mischling", senior: "Senior", longstay: "Langzeitgast", newArrival: "Neu angekommen" }
   }[lang];
 
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
@@ -38,12 +38,38 @@
     if (lang === "de") return `${primary}-${text.cross}`;
     return `${primary} Cross`;
   }
+  function localizedDuration(years, months, days) {
+    const parts = [];
+    if (lang === "es") {
+      if (years) parts.push(`${years} ${years === 1 ? "año" : "años"}`);
+      if (months) parts.push(`${months} ${months === 1 ? "mes" : "meses"}`);
+      if (!parts.length && days !== undefined) parts.push(`${days} ${days === 1 ? "día" : "días"}`);
+    } else if (lang === "de") {
+      if (years) parts.push(`${years} ${years === 1 ? "Jahr" : "Jahre"}`);
+      if (months) parts.push(`${months} ${months === 1 ? "Monat" : "Monate"}`);
+      if (!parts.length && days !== undefined) parts.push(`${days} ${days === 1 ? "Tag" : "Tage"}`);
+    } else {
+      if (years) parts.push(`${years} ${years === 1 ? "year" : "years"}`);
+      if (months) parts.push(`${months} ${months === 1 ? "month" : "months"}`);
+      if (!parts.length && days !== undefined) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
+    }
+    return parts.join(" ");
+  }
+
+  function translatedStoredDuration(value) {
+    const raw = String(value || "").replace(/\.$/, "");
+    const years = Number((raw.match(/(\d+)\s+years?/i) || [])[1] || 0);
+    const months = Number((raw.match(/(\d+)\s+months?/i) || [])[1] || 0);
+    const daysMatch = raw.match(/(\d+)\s+days?/i);
+    if (!years && !months && !daysMatch) return raw;
+    return localizedDuration(years, months, daysMatch ? Number(daysMatch[1]) : undefined);
+  }
+
   function age(a) {
-    if (!a.DATEOFBIRTH) return String(a.ANIMALAGE || "").replace(/\.$/, "");
-    const dob = new Date(`${a.DATEOFBIRTH}T00:00:00`); if (Number.isNaN(dob.getTime())) return String(a.ANIMALAGE || "").replace(/\.$/, "");
+    if (!a.DATEOFBIRTH) return translatedStoredDuration(a.ANIMALAGE);
+    const dob = new Date(`${a.DATEOFBIRTH}T00:00:00`); if (Number.isNaN(dob.getTime())) return translatedStoredDuration(a.ANIMALAGE);
     const now = new Date(); let months = (now.getFullYear() - dob.getFullYear()) * 12 + now.getMonth() - dob.getMonth(); if (now.getDate() < dob.getDate()) months -= 1; months = Math.max(0, months); const years = Math.floor(months / 12);
-    if (years === 0) { if (lang === "es") return `${months} ${months === 1 ? "mes" : "meses"}`; if (lang === "de") return `${months} ${months === 1 ? "Monat" : "Monate"}`; return `${months} ${months === 1 ? "month" : "months"}`; }
-    if (lang === "es") return `${years} ${years === 1 ? "año" : "años"}`; if (lang === "de") return `${years} ${years === 1 ? "Jahr" : "Jahre"}`; return `${years} ${years === 1 ? "year" : "years"}`;
+    return localizedDuration(years, years === 0 ? months : 0, undefined);
   }
   function sex(a) { const numeric = Number(a.SEX); if (!Number.isNaN(numeric)) return numeric === 0 ? text.female : text.male; const value = String(a.SEXNAME || "").toLowerCase(); return /female|hembra|hündin/.test(value) ? text.female : text.male; }
   function size(a) { const numeric = Number(a.SIZE); if (!Number.isNaN(numeric)) { if (numeric === 0) return text.small; if (numeric === 1) return text.medium; if (numeric === 2) return text.large; } const value = String(a.SIZENAME || "").toLowerCase(); if (/small|peque|klein/.test(value)) return text.small; if (/medium|medio|mittel/.test(value)) return text.medium; if (/large|grande|groß|gross/.test(value)) return text.large; return a.SIZENAME || ""; }
@@ -54,26 +80,10 @@
       if (Number.isFinite(days)) {
         const years = Math.floor(days / 365.2425);
         const months = Math.floor((days - Math.floor(years * 365.2425)) / 30.4369);
-        const parts = [];
-
-        if (lang === "es") {
-          if (years) parts.push(`${years} ${years === 1 ? "año" : "años"}`);
-          if (months) parts.push(`${months} ${months === 1 ? "mes" : "meses"}`);
-          if (!parts.length) parts.push(`${days} ${days === 1 ? "día" : "días"}`);
-        } else if (lang === "de") {
-          if (years) parts.push(`${years} ${years === 1 ? "Jahr" : "Jahre"}`);
-          if (months) parts.push(`${months} ${months === 1 ? "Monat" : "Monate"}`);
-          if (!parts.length) parts.push(`${days} ${days === 1 ? "Tag" : "Tage"}`);
-        } else {
-          if (years) parts.push(`${years} ${years === 1 ? "year" : "years"}`);
-          if (months) parts.push(`${months} ${months === 1 ? "month" : "months"}`);
-          if (!parts.length) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
-        }
-
-        return parts.join(" ");
+        return localizedDuration(years, months, days);
       }
     }
-    return String(a.TIMEONSHELTER || "").replace(/\.$/, "");
+    return translatedStoredDuration(a.TIMEONSHELTER);
   }
   function badge(a) { const days = Number(a.DAYSONSHELTER || 0); const dob = a.DATEOFBIRTH ? new Date(`${a.DATEOFBIRTH}T00:00:00`) : null; const years = dob && !Number.isNaN(dob.getTime()) ? (Date.now() - dob.getTime()) / 31557600000 : 0; if (years >= 10) return ["apasa-badge-senior", `⭐ ${text.senior}`]; if (days > 730) return ["apasa-badge-longstay", `❤️ ${text.longstay}`]; if (days > 0 && days < 30) return ["apasa-badge-new", `● ${text.newArrival}`]; return null; }
   function card(a) {
