@@ -9,9 +9,48 @@
     de: { meet: "Lerne kennen:", female: "Hündin", male: "Rüde", small: "Klein", medium: "Mittel", large: "Groß", atApasa: "Bei APASA", cross: "Mischling", senior: "Senior", longstay: "Langzeitgast", newArrival: "Neu angekommen" }
   }[lang];
 
+  const germanBreeds = {
+    "Afghan Hound": "Afghanischer Windhund",
+    "Alaskan Malamute": "Alaskan Malamute",
+    "American Bulldog": "Amerikanische Bulldogge",
+    "American Eskimo Dog": "Amerikanischer Eskimohund",
+    "American Staffordshire Terrier": "American Staffordshire Terrier",
+    "Anatolian Shepherd": "Anatolischer Hirtenhund",
+    "German Shepherd": "Deutscher Schäferhund",
+    "Greyhound": "Windhund",
+    "Mastiff": "Mastiff",
+    "Sheep Dog": "Schäferhund",
+    "Spanish Mastiff": "Spanischer Mastiff"
+  };
+
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
   function shortDescription(a) { if (lang === "es") return a.WEBSHORTDESCS || a.WEBSHORTDESC || ""; if (lang === "de") return a.WEBSHORTDESCG || a.WEBSHORTDESC || ""; return a.WEBSHORTDESC || ""; }
-  function breed(a) { const name = String(a.BREEDNAME || "").trim(); if (Number(a.CROSSBREED) !== 1) return name; if (lang === "es") return `${text.cross} de ${name}`.trim(); if (lang === "de") return `${name}-${text.cross}`.replace(/^-/, ""); return `${name} ${text.cross}`.trim(); }
+  function translatedBreed(englishName, spanishName) {
+    const english = String(englishName || spanishName || "").trim();
+    if (lang === "es") return String(spanishName || englishName || "").trim();
+    if (lang === "de") return germanBreeds[english] || english;
+    return english;
+  }
+
+  function breed(a) {
+    const primary = translatedBreed(a.PETFINDERBREED, a.BREEDNAME1 || a.BREEDNAME);
+    const secondary = translatedBreed(a.PETFINDERBREED2, a.BREEDNAME2);
+    if (Number(a.CROSSBREED) !== 1) return primary;
+
+    const differentBreeds = secondary && (
+      String(a.BREED2ID || "") !== String(a.BREEDID || "") ||
+      secondary.toLowerCase() !== primary.toLowerCase()
+    );
+
+    if (differentBreeds) {
+      if (lang === "es") return `Cruce de ${primary} y ${secondary}`;
+      return `${primary} × ${secondary}`;
+    }
+
+    if (lang === "es") return `Cruce de ${primary}`;
+    if (lang === "de") return `${primary}-${text.cross}`;
+    return `${primary} Cross`;
+  }
   function age(a) {
     if (!a.DATEOFBIRTH) return String(a.ANIMALAGE || "").replace(/\.$/, "");
     const dob = new Date(`${a.DATEOFBIRTH}T00:00:00`); if (Number.isNaN(dob.getTime())) return String(a.ANIMALAGE || "").replace(/\.$/, "");
