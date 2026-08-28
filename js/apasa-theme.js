@@ -9,32 +9,19 @@
     de: { meet: "Lerne kennen:", female: "Hündin", male: "Rüde", small: "Klein", medium: "Mittel", large: "Groß", atApasa: "Bei APASA", cross: "Mischling", senior: "Senior", longstay: "Langzeitgast", newArrival: "Neu angekommen" }
   }[lang];
 
-  const germanBreeds = {
-    "Afghan Hound": "Afghanischer Windhund",
-    "Alaskan Malamute": "Alaskan Malamute",
-    "American Bulldog": "Amerikanische Bulldogge",
-    "American Eskimo Dog": "Amerikanischer Eskimohund",
-    "American Staffordshire Terrier": "American Staffordshire Terrier",
-    "Anatolian Shepherd": "Anatolischer Hirtenhund",
-    "German Shepherd": "Deutscher Schäferhund",
-    "Greyhound": "Windhund",
-    "Mastiff": "Mastiff",
-    "Sheep Dog": "Schäferhund",
-    "Spanish Mastiff": "Spanischer Mastiff"
-  };
-
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
   function shortDescription(a) { if (lang === "es") return a.WEBSHORTDESCS || a.WEBSHORTDESC || ""; if (lang === "de") return a.WEBSHORTDESCG || a.WEBSHORTDESC || ""; return a.WEBSHORTDESC || ""; }
-  function translatedBreed(englishName, spanishName) {
+  function translatedBreed(id, englishName, spanishName) {
+    const record = window.APASA_BREEDS && window.APASA_BREEDS[String(id || "")];
+    if (record && record[lang]) return record[lang];
     const english = String(englishName || spanishName || "").trim();
     if (lang === "es") return String(spanishName || englishName || "").trim();
-    if (lang === "de") return germanBreeds[english] || english;
     return english;
   }
 
   function breed(a) {
-    const primary = translatedBreed(a.PETFINDERBREED, a.BREEDNAME1 || a.BREEDNAME);
-    const secondary = translatedBreed(a.PETFINDERBREED2, a.BREEDNAME2);
+    const primary = translatedBreed(a.BREEDID, a.PETFINDERBREED, a.BREEDNAME1 || a.BREEDNAME);
+    const secondary = translatedBreed(a.BREED2ID, a.PETFINDERBREED2, a.BREEDNAME2);
     if (Number(a.CROSSBREED) !== 1) return primary;
 
     const differentBreeds = secondary && (
