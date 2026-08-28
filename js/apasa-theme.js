@@ -1,4 +1,4 @@
-/* APASA ShelterManager adoption cards, version 2.0.0 */
+/* APASA ShelterManager adoption cards, version 2.1.0 */
 (function () {
   "use strict";
   const path = window.location.pathname.toLowerCase();
@@ -47,9 +47,37 @@
   }
   function sex(a) { const numeric = Number(a.SEX); if (!Number.isNaN(numeric)) return numeric === 0 ? text.female : text.male; const value = String(a.SEXNAME || "").toLowerCase(); return /female|hembra|hündin/.test(value) ? text.female : text.male; }
   function size(a) { const numeric = Number(a.SIZE); if (!Number.isNaN(numeric)) { if (numeric === 0) return text.small; if (numeric === 1) return text.medium; if (numeric === 2) return text.large; } const value = String(a.SIZENAME || "").toLowerCase(); if (/small|peque|klein/.test(value)) return text.small; if (/medium|medio|mittel/.test(value)) return text.medium; if (/large|grande|groß|gross/.test(value)) return text.large; return a.SIZENAME || ""; }
+  function waitingTime(a) {
+    const rawDays = a.DAYSONSHELTER;
+    if (rawDays !== undefined && rawDays !== null && rawDays !== "") {
+      const days = Math.max(0, Math.floor(Number(rawDays)));
+      if (Number.isFinite(days)) {
+        const years = Math.floor(days / 365.2425);
+        const months = Math.floor((days - Math.floor(years * 365.2425)) / 30.4369);
+        const parts = [];
+
+        if (lang === "es") {
+          if (years) parts.push(`${years} ${years === 1 ? "año" : "años"}`);
+          if (months) parts.push(`${months} ${months === 1 ? "mes" : "meses"}`);
+          if (!parts.length) parts.push(`${days} ${days === 1 ? "día" : "días"}`);
+        } else if (lang === "de") {
+          if (years) parts.push(`${years} ${years === 1 ? "Jahr" : "Jahre"}`);
+          if (months) parts.push(`${months} ${months === 1 ? "Monat" : "Monate"}`);
+          if (!parts.length) parts.push(`${days} ${days === 1 ? "Tag" : "Tage"}`);
+        } else {
+          if (years) parts.push(`${years} ${years === 1 ? "year" : "years"}`);
+          if (months) parts.push(`${months} ${months === 1 ? "month" : "months"}`);
+          if (!parts.length) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
+        }
+
+        return parts.join(" ");
+      }
+    }
+    return String(a.TIMEONSHELTER || "").replace(/\.$/, "");
+  }
   function badge(a) { const days = Number(a.DAYSONSHELTER || 0); const dob = a.DATEOFBIRTH ? new Date(`${a.DATEOFBIRTH}T00:00:00`) : null; const years = dob && !Number.isNaN(dob.getTime()) ? (Date.now() - dob.getTime()) / 31557600000 : 0; if (years >= 10) return ["apasa-badge-senior", `⭐ ${text.senior}`]; if (days > 730) return ["apasa-badge-longstay", `❤️ ${text.longstay}`]; if (days > 0 && days < 30) return ["apasa-badge-new", `● ${text.newArrival}`]; return null; }
   function card(a) {
-    const dogName = escapeHtml(a.ANIMALNAME || ""); const dogBadge = badge(a); const details = [age(a), sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(a.TIMEONSHELTER || "");
+    const dogName = escapeHtml(a.ANIMALNAME || ""); const dogBadge = badge(a); const details = [age(a), sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(waitingTime(a));
     return `<div class="apasa-extra">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : ""}<div class="apasa-breed">${escapeHtml(breed(a))}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details">${details}</div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<div class="apasa-button">${escapeHtml(text.meet)} ${dogName} →</div></div>`;
   }
   window.asm3_adoptable_extra = card;
