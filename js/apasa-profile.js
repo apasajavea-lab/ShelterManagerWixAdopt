@@ -6,14 +6,14 @@
   const set = (selector, value) => { const element = document.querySelector(selector); if (element && value) element.textContent = value; };
   const sex = value => /female|hembra|hündin/i.test(value) ? ["Female", "Hembra", "Hündin"][index] : /male|macho|rüde/i.test(value) ? ["Male", "Macho", "Rüde"][index] : value;
   function duration(value) {
-    const y = Number((value.match(/(\d+)\s*(?:years?|años?|jahre?)/i) || [])[1] || 0), m = Number((value.match(/(\d+)\s*(?:months?|mes(?:es)?|monate?)/i) || [])[1] || 0), d = Number((value.match(/(\d+)\s*(?:days?|días?|tage?)/i) || [])[1] || 0);
-    if (!y && !m && !d) return value;
-    const words = { en: [["year", "years"], ["month", "months"], ["day", "days"]], es: [["año", "años"], ["mes", "meses"], ["día", "días"]], de: [["Jahr", "Jahre"], ["Monat", "Monate"], ["Tag", "Tage"]] }[lang];
-    return [[y, words[0]], [m, words[1]], [d, words[2]]].filter(item => item[0]).map(item => `${item[0]} ${item[1][item[0] === 1 ? 0 : 1]}`).join(" ");
+    const y = Number((value.match(/(\d+)\s*(?:years?|años?|jahre?)/i) || [])[1] || 0), m = Number((value.match(/(\d+)\s*(?:months?|mes(?:es)?|monate?)/i) || [])[1] || 0), w = Number((value.match(/(\d+)\s*(?:weeks?|semanas?|wochen?)/i) || [])[1] || 0), d = Number((value.match(/(\d+)\s*(?:days?|días?|tage?)/i) || [])[1] || 0);
+    if (!y && !m && !w && !d) return value;
+    const words = { en: [["year", "years"], ["month", "months"], ["week", "weeks"], ["day", "days"]], es: [["año", "años"], ["mes", "meses"], ["semana", "semanas"], ["día", "días"]], de: [["Jahr", "Jahre"], ["Monat", "Monate"], ["Woche", "Wochen"], ["Tag", "Tage"]] }[lang];
+    return [[y, words[0]], [m, words[1]], [w, words[2]], [d, words[3]]].filter(item => item[0]).map(item => `${item[0]} ${item[1][item[0] === 1 ? 0 : 1]}`).join(" ");
   }
   function colour(value) {
     const map = { marron: ["Brown", "Marrón", "Braun"], brown: ["Brown", "Marrón", "Braun"], negro: ["Black", "Negro", "Schwarz"], black: ["Black", "Negro", "Schwarz"], blanco: ["White", "Blanco", "Weiß"], white: ["White", "Blanco", "Weiß"], gris: ["Grey", "Gris", "Grau"], grey: ["Grey", "Gris", "Grau"], gray: ["Grey", "Gris", "Grau"], canela: ["Tan", "Canela", "Zimtfarben"], dorado: ["Golden", "Dorado", "Goldfarben"], atigrado: ["Brindle", "Atigrado", "Gestromt"], tricolor: ["Tricolour", "Tricolor", "Dreifarbig"] };
-    return value.split(/\s+(?:y|and|und)\s+|\s*[/,]\s*/i).filter(Boolean).map(part => { const key = part.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); return map[key] ? map[key][index] : part.trim(); }).join({ en: " and ", es: " y ", de: " und " }[lang]);
+    return value.split(/\s*(?:-\s*(?:with|con|mit)?|\/|,|\b(?:and|with|y|con|und|mit)\b)\s*/i).filter(Boolean).map(part => { const key = part.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); return map[key] ? map[key][index] : part.trim(); }).join({ en: " and ", es: " y ", de: " und " }[lang]);
   }
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-language]").forEach(element => { element.style.display = element.dataset.language === lang ? "block" : "none"; });
