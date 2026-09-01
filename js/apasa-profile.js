@@ -5,6 +5,11 @@
   const index = lang === "en" ? 0 : lang === "es" ? 1 : 2;
   const set = (selector, value) => { const element = document.querySelector(selector); if (element && value) element.textContent = value; };
   const sex = value => /female|hembra|hündin/i.test(value) ? ["Female", "Hembra", "Hündin"][index] : /male|macho|rüde/i.test(value) ? ["Male", "Macho", "Rüde"][index] : value;
+  function lookup(value) {
+    const key = value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const map = { yes: ["Yes", "Sí", "Ja"], si: ["Yes", "Sí", "Ja"], ja: ["Yes", "Sí", "Ja"], no: ["No", "No", "Nein"], nein: ["No", "No", "Nein"], unknown: ["Unknown", "Desconocido", "Unbekannt"], desconocido: ["Unknown", "Desconocido", "Unbekannt"], unbekannt: ["Unknown", "Desconocido", "Unbekannt"], selective: ["Selective", "Selectivo", "Selektiv"], selectivo: ["Selective", "Selectivo", "Selektiv"], selektiv: ["Selective", "Selectivo", "Selektiv"] };
+    return map[key] ? map[key][index] : value;
+  }
   function duration(value) {
     const y = Number((value.match(/(\d+)\s*(?:years?|años?|jahre?)/i) || [])[1] || 0), m = Number((value.match(/(\d+)\s*(?:months?|mes(?:es)?|monate?)/i) || [])[1] || 0), w = Number((value.match(/(\d+)\s*(?:weeks?|semanas?|wochen?)/i) || [])[1] || 0), d = Number((value.match(/(\d+)\s*(?:days?|días?|tage?)/i) || [])[1] || 0);
     if (!y && !m && !w && !d) return value;
@@ -18,6 +23,7 @@
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-language]").forEach(element => { element.style.display = element.dataset.language === lang ? "block" : "none"; });
   document.querySelectorAll("[data-i18n]").forEach(element => { const value = element.dataset[lang]; if (value) element.textContent = value; });
+  document.querySelectorAll(".apasa-trait strong").forEach(element => { element.textContent = lookup(element.textContent); });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/smview", es: "https://www.apasa.eu/es/smview", de: "https://www.apasa.eu/de/smview" };
   if (back) { back.href = backUrls[lang]; back.textContent = back.dataset[lang] || back.textContent; }
