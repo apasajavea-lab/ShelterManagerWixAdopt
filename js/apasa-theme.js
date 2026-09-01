@@ -195,7 +195,7 @@
     let attempts = 0;
     const timer = window.setInterval(() => {
       const list = document.getElementById("asm3-adoptable-list");
-      if (list && list.querySelector(".apasa-extra")) { window.clearInterval(timer); initialiseToolbar(list); }
+      if (list && list.querySelector(".apasa-extra")) { window.clearInterval(timer); if (window.apasa_homepage_mode && typeof window.apasaHomepageReady === "function") window.apasaHomepageReady(list); else initialiseToolbar(list); }
       if (++attempts > 80) window.clearInterval(timer);
     }, 250);
   }

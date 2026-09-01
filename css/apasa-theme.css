@@ -37,6 +37,8 @@
 .apasa-clear:hover { background: var(--apasa-green-dark); }
 .apasa-results { margin-top: 12px; color: #666; font-size: 14px; font-weight: 700; }
 .apasa-empty { margin-top: 18px; padding: 24px; color: #666; text-align: center; }
+.apasa-home-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: stretch; padding: 20px; }
+.apasa-home-grid .asm3-adoptable-item { width: auto !important; }
 .apasa-hidden { display: none !important; }
 .apasa-badge { display: inline-block; align-self: center; margin: 3px 3px 8px; padding: 6px 12px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .apasa-badge-new { color: #2f7d32; background: #dff6dd; }
@@ -45,6 +47,6 @@
 .asm3-adoptable-link:focus-visible { outline: 3px solid var(--apasa-orange); outline-offset: 4px; border-radius: 18px; }
 
 @media (max-width: 1200px) { #asm3-adoptable-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 900px) { #asm3-adoptable-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; } .asm3-adoptable-name { font-size: 28px; } }
-@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list { grid-template-columns: 1fr; gap: 18px; } .asm3-adoptable-name { font-size: 26px; } .apasa-summary { min-height: auto; -webkit-line-clamp: 4; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; } .asm3-adoptable-name { font-size: 28px; } }
+@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: 1fr; gap: 18px; } .apasa-home-grid { padding: 12px; } .asm3-adoptable-name { font-size: 26px; } .apasa-summary { min-height: auto; -webkit-line-clamp: 4; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
 @media print { .asm3-adoptable-item { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; } }
