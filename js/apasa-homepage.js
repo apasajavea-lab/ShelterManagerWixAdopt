@@ -32,20 +32,6 @@
     return element;
   }
 
-  function fitWixSection(container) {
-    const section = container.closest("section");
-    const sectionInner = container.parentElement;
-    if (!section || !sectionInner) return;
-    const fit = () => window.requestAnimationFrame(() => {
-      const height = Math.ceil(container.getBoundingClientRect().height);
-      if (!height) return;
-      section.style.setProperty("height", `${height}px`, "important");
-      sectionInner.style.setProperty("height", `${height}px`, "important");
-    });
-    fit();
-    if (window.ResizeObserver) new ResizeObserver(fit).observe(container);
-  }
-
   function openProfile(item) {
     const source = item?.querySelector(".asm3-adoptable-link");
     if (!source) return;
@@ -59,21 +45,31 @@
   }
 
   window.apasaHomepageReady = function (list) {
-    const featuredContainer = document.getElementById(featuredId);
-    const seniorContainer = document.getElementById(seniorId);
-    if (!featuredContainer || !seniorContainer) return;
-    const all = Array.from(list.querySelectorAll(".asm3-adoptable-item"));
+    const all = Array.from(list.querySelectorAll(".asm3-adoptable-item")).filter(item => {
+      const src = item.querySelector(".asm3-adoptable-thumbnail")?.getAttribute("src") || "";
+      return src && !/[?&]d=null(?:&|$)/i.test(src);
+    });
     const seniors = all.filter(item => Number(item.querySelector(".apasa-extra")?.dataset.ageMonths || 0) >= 120);
     const featured = all.filter(item => Number(item.querySelector(".apasa-extra")?.dataset.ageMonths || 0) < 120);
-    featuredContainer.replaceChildren(grid(weeklySelection(featured, 3, 0)));
-    seniorContainer.replaceChildren(grid(weeklySelection(seniors, 3, 1)));
-    fitWixSection(featuredContainer);
-    fitWixSection(seniorContainer);
-    [featuredContainer, seniorContainer].forEach(container => container.addEventListener("click", event => {
-      const trigger = event.target.closest(".apasa-button, .asm3-adoptable-link");
-      if (!trigger) return;
-      event.preventDefault();
-      openProfile(trigger.closest(".asm3-adoptable-item"));
-    }));
+    const markup = (items, groupOffset) => {
+      const selected = weeklySelection(items, 3, groupOffset);
+      const holder = grid(selected.map(item => item.cloneNode(true)));
+      return { html: holder.outerHTML, count: selected.length };
+    };
+    const sections = { [featuredId]: markup(featured, 0), [seniorId]: markup(seniors, 1) };
+    const ensure = () => Object.entries(sections).forEach(([id, section]) => {
+      const container = document.getElementById(id);
+      if (container && container.querySelectorAll(":scope > .apasa-home-grid > .asm3-adoptable-item").length !== section.count) container.innerHTML = section.html;
+    });
+    ensure();
+    window.setInterval(ensure, 1000);
   };
+
+  document.addEventListener("click", event => {
+    const trigger = event.target.closest(".apasa-button, .asm3-adoptable-link");
+    const item = trigger?.closest(".asm3-adoptable-item");
+    if (!item || (!item.closest(`#${featuredId}`) && !item.closest(`#${seniorId}`))) return;
+    event.preventDefault();
+    openProfile(item);
+  });
 }());
