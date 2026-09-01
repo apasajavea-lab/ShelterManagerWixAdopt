@@ -13,6 +13,7 @@
 
 #asm3-adoptables { width: 100%; max-width: 1400px; margin: 0 auto; padding: 20px; box-sizing: border-box; color: var(--apasa-text); font-family: Lato, "Helvetica Neue", Arial, sans-serif; }
 #asm3-adoptable-list { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; align-items: stretch; }
+#asm3-adoptable-filters { display: none !important; }
 .asm3-adoptable-item { display: flex !important; flex-direction: column; height: 100%; overflow: hidden; text-align: center; background: var(--apasa-card); border-radius: var(--apasa-radius); box-shadow: var(--apasa-shadow); transition: var(--apasa-transition); }
 .asm3-adoptable-item:hover { transform: translateY(-6px); }
 .asm3-adoptable-link { display: flex; flex: 1; flex-direction: column; color: inherit; text-decoration: none; }
@@ -24,7 +25,7 @@
 .apasa-summary { min-height: 0; margin-bottom: 18px; overflow: hidden; display: -webkit-box; color: #555; font-size: 15px; line-height: 1.6; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 .apasa-details { margin-top: 0; color: #666; font-size: 14px; font-weight: 500; line-height: 1.5; }
 .apasa-waiting { margin-top: 14px; color: #777; font-size: 14px; font-weight: 600; }
-.apasa-button { width: 85%; margin: 20px auto 0; padding: 13px 20px; box-sizing: border-box; color: #fff; background: var(--apasa-orange); border-radius: 40px; font-size: 16px; font-weight: 600; text-align: center; transition: var(--apasa-transition); }
+.apasa-button { width: 85%; margin: 20px auto 0; padding: 13px 20px; box-sizing: border-box; border: 0; color: #fff; background: var(--apasa-orange); border-radius: 40px; cursor: pointer; font: inherit; font-size: 16px; font-weight: 600; text-align: center; transition: var(--apasa-transition); }
 .asm3-adoptable-item:hover .apasa-button { background: var(--apasa-orange-dark); }
 .apasa-toolbar { margin: 0 0 28px; padding: 18px; background: #fff; border-radius: 14px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); }
 .apasa-toolbar-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; }
