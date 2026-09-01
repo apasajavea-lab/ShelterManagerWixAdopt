@@ -39,6 +39,7 @@
 .apasa-empty { margin-top: 18px; padding: 24px; color: #666; text-align: center; }
 .apasa-home-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: stretch; padding: 20px; }
 .apasa-home-grid .asm3-adoptable-item { width: auto !important; }
+.apasa-home-loading { padding: 40px 20px; color: #666; font-weight: 700; text-align: center; }
 .apasa-hidden { display: none !important; }
 .apasa-badge { display: inline-block; align-self: center; margin: 3px 3px 8px; padding: 6px 12px; border-radius: 30px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .apasa-badge-new { color: #2f7d32; background: #dff6dd; }
