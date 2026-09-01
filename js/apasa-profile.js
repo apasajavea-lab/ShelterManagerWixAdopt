@@ -26,8 +26,11 @@
   document.querySelectorAll(".apasa-trait strong").forEach(element => { element.textContent = lookup(element.textContent); });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/smview", es: "https://www.apasa.eu/es/smview", de: "https://www.apasa.eu/de/smview" };
-  if (back) { back.href = backUrls[lang]; back.textContent = back.dataset[lang] || back.textContent; }
+  if (back) { back.href = backUrls[lang]; back.target = "_top"; back.textContent = back.dataset[lang] || back.textContent; }
   const main = document.querySelector(".apasa-main-photo");
   document.querySelectorAll(".apasa-thumb").forEach(button => { const image = button.querySelector("img"); image.addEventListener("error", () => button.remove()); button.addEventListener("click", () => { main.src = image.src; document.querySelectorAll(".apasa-thumb").forEach(item => item.removeAttribute("aria-current")); button.setAttribute("aria-current", "true"); }); });
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });
+  function reportHeight() { if (window.parent !== window) window.parent.postMessage({ type: "apasa-profile-height", height: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) }, "https://www.apasa.eu"); }
+  window.addEventListener("load", reportHeight); window.setTimeout(reportHeight, 300); window.setTimeout(reportHeight, 1200);
+  if (window.ResizeObserver) new ResizeObserver(reportHeight).observe(document.body);
 }());

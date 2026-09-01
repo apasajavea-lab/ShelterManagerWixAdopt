@@ -151,11 +151,12 @@
       if (profileLink) {
         event.preventDefault();
         const profileUrl = new URL(profileLink.href, window.location.href);
-        profileUrl.searchParams.set("lang", lang);
+        const wixProfile = new URL(`${lang === "en" ? "" : `/${lang}`}/dogprofile`, window.location.origin);
+        wixProfile.searchParams.set("animalid", profileUrl.searchParams.get("animalid") || "");
+        wixProfile.searchParams.set("lang", lang);
         const publisherColour = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.colour;
-        if (publisherColour) profileUrl.searchParams.set("colour", publisherColour);
-        profileLink.href = profileUrl.toString();
-        profileLink.click();
+        if (publisherColour) wixProfile.searchParams.set("colour", publisherColour);
+        window.location.assign(wixProfile.toString());
       }
     });
 
