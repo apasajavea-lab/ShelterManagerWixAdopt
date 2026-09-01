@@ -32,6 +32,20 @@
     return element;
   }
 
+  function fitWixSection(container) {
+    const section = container.closest("section");
+    const sectionInner = container.parentElement;
+    if (!section || !sectionInner) return;
+    const fit = () => window.requestAnimationFrame(() => {
+      const height = Math.ceil(container.getBoundingClientRect().height);
+      if (!height) return;
+      section.style.setProperty("height", `${height}px`, "important");
+      sectionInner.style.setProperty("height", `${height}px`, "important");
+    });
+    fit();
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(container);
+  }
+
   function openProfile(item) {
     const source = item?.querySelector(".asm3-adoptable-link");
     if (!source) return;
@@ -53,6 +67,8 @@
     const featured = all.filter(item => Number(item.querySelector(".apasa-extra")?.dataset.ageMonths || 0) < 120);
     featuredContainer.replaceChildren(grid(weeklySelection(featured, 3, 0)));
     seniorContainer.replaceChildren(grid(weeklySelection(seniors, 3, 1)));
+    fitWixSection(featuredContainer);
+    fitWixSection(seniorContainer);
     [featuredContainer, seniorContainer].forEach(container => container.addEventListener("click", event => {
       const trigger = event.target.closest(".apasa-button, .asm3-adoptable-link");
       if (!trigger) return;
