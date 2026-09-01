@@ -198,7 +198,7 @@
   }
   window.asm3_adoptable_extra = card;
   window.asm3_adoptable_sort = "ANIMALNAME";
-  window.asm3_adoptable_style = "apasa-animalview";
+  window.asm3_adoptable_style = "apasaanimalview";
   window.asm3_adoptable_fullsize_images = true;
   waitForList();
 }());
