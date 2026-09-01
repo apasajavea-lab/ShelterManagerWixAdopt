@@ -129,7 +129,7 @@
   function card(a) {
     const dogName = escapeHtml(a.ANIMALNAME || ""); const dogBadge = badge(a); const details = [age(a), sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(waitingTime(a));
     const months = ageInMonths(a); const days = Math.max(0, Number(a.DAYSONSHELTER || 0)); const specials = [months >= 120 ? "senior" : "", days > 730 ? "longstay" : "", days > 0 && days < 30 ? "new" : ""].filter(Boolean).join(" ");
-    return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : ""}<div class="apasa-breed">${escapeHtml(breed(a))}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details">${details}</div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
+    return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-colour="${escapeHtml(a.ADOPTAPETCOLOUR || "")}">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : ""}<div class="apasa-breed">${escapeHtml(breed(a))}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details">${details}</div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
   }
 
   function toolbarHtml() {
@@ -152,6 +152,8 @@
         event.preventDefault();
         const profileUrl = new URL(profileLink.href, window.location.href);
         profileUrl.searchParams.set("lang", lang);
+        const publisherColour = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.colour;
+        if (publisherColour) profileUrl.searchParams.set("colour", publisherColour);
         profileLink.href = profileUrl.toString();
         profileLink.click();
       }

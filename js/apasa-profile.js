@@ -18,7 +18,7 @@
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-language]").forEach(element => { element.style.display = element.dataset.language === lang ? "block" : "none"; });
   document.querySelectorAll("[data-i18n]").forEach(element => { const value = element.dataset[lang]; if (value) element.textContent = value; });
-  set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(document.querySelector(".apasa-colour")?.textContent || ""));
+  set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/smview", es: "https://www.apasa.eu/es/smview", de: "https://www.apasa.eu/de/smview" };
   if (back) { back.href = backUrls[lang]; back.textContent = back.dataset[lang] || back.textContent; }
   const main = document.querySelector(".apasa-main-photo");
