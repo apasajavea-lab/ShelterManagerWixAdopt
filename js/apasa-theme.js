@@ -150,6 +150,9 @@
       const profileLink = button.closest(".asm3-adoptable-item")?.querySelector(".asm3-adoptable-link");
       if (profileLink) {
         event.preventDefault();
+        const profileUrl = new URL(profileLink.href, window.location.href);
+        profileUrl.searchParams.set("lang", lang);
+        profileLink.href = profileUrl.toString();
         profileLink.click();
       }
     });

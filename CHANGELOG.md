@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an APASA-branded, multilingual ShelterManager animal profile template.
+- Pass the listing language to each ShelterManager profile link.
 - Format time at APASA from `DAYSONSHELTER` in English, Spanish, and German.
 - Remove inherited waiting-time punctuation and tighten mobile card spacing.
 - Add a complete ID-based dictionary covering all 224 dog breeds in the APASA table.

@@ -22,3 +22,14 @@ The breed dictionary must load before the theme, and the theme must load before 
 The script selects English by default, Spanish for `/es/` paths, and German for `/de/` paths. Translated short descriptions fall back to `WEBSHORTDESC` when necessary.
 
 The `@main` CDN URLs can be cached. For controlled releases, use a Git tag such as `@v2.0.0` in both URLs.
+
+## Dog profile template
+
+The files in `templates/animalview-*.html` are the three blocks for ShelterManager's
+`animalview` publishing template. Paste them into **Publishing → Edit HTML Publishing
+Templates → animalview** as the header, body and footer respectively. The template
+loads `css/apasa-profile.css` and `js/apasa-profile.js` from this repository.
+
+Profile language is passed from the Wix listing as `?lang=en`, `?lang=es` or
+`?lang=de`. The translated custom fields are `DescSpanish`, `DescGerman`,
+`WebSpecNote`, `WebSpecNoteS` and `WebSpecNoteG`.
