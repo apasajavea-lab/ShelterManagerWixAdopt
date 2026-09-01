@@ -60,8 +60,15 @@
     const raw = String(value || "").replace(/\.$/, "");
     const years = Number((raw.match(/(\d+)\s+years?/i) || [])[1] || 0);
     const months = Number((raw.match(/(\d+)\s+months?/i) || [])[1] || 0);
+    const weeksMatch = raw.match(/(\d+)\s+weeks?/i);
     const daysMatch = raw.match(/(\d+)\s+days?/i);
-    if (!years && !months && !daysMatch) return raw;
+    if (!years && !months && weeksMatch) {
+      const weeks = Number(weeksMatch[1]);
+      if (lang === "es") return `${weeks} ${weeks === 1 ? "semana" : "semanas"}`;
+      if (lang === "de") return `${weeks} ${weeks === 1 ? "Woche" : "Wochen"}`;
+      return `${weeks} ${weeks === 1 ? "week" : "weeks"}`;
+    }
+    if (!years && !months && !weeksMatch && !daysMatch) return raw;
     return localizedDuration(years, months, daysMatch ? Number(daysMatch[1]) : undefined);
   }
 
@@ -78,7 +85,8 @@
     const raw = String(a.ANIMALAGE || "");
     const years = Number((raw.match(/(\d+)\s+years?/i) || [])[1] || 0);
     const months = Number((raw.match(/(\d+)\s+months?/i) || [])[1] || 0);
-    return years || months ? years * 12 + months : -1;
+    const weeks = Number((raw.match(/(\d+)\s+weeks?/i) || [])[1] || 0);
+    return years || months || weeks ? years * 12 + months + Math.floor(weeks / 4.345) : -1;
   }
 
   function sexKey(a) {
