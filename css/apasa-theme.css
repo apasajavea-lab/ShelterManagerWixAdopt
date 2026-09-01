@@ -28,8 +28,10 @@
 .apasa-button { width: 85%; margin: 20px auto 0; padding: 13px 20px; box-sizing: border-box; border: 0; color: #fff; background: var(--apasa-orange); border-radius: 40px; cursor: pointer; font: inherit; font-size: 16px; font-weight: 600; text-align: center; transition: var(--apasa-transition); }
 .asm3-adoptable-item:hover .apasa-button { background: var(--apasa-orange-dark); }
 .apasa-toolbar { margin: 0 0 28px; padding: 18px; background: #fff; border-radius: 14px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); }
-.apasa-toolbar-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; }
+.apasa-toolbar-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; align-items: end; }
 .apasa-toolbar input, .apasa-toolbar select, .apasa-clear { width: 100%; min-height: 44px; padding: 10px 12px; box-sizing: border-box; border: 1px solid #d7d7d7; border-radius: 9px; color: #444; background: #fff; font: inherit; font-size: 14px; }
+.apasa-sort-field { display: grid; gap: 4px; }
+.apasa-sort-label { color: #666; font-size: 12px; font-weight: 800; line-height: 1.2; }
 .apasa-toolbar input:focus, .apasa-toolbar select:focus, .apasa-clear:focus-visible { border-color: var(--apasa-orange); outline: 3px solid rgba(245, 163, 0, 0.2); }
 .apasa-clear { border-color: var(--apasa-green); color: #fff; background: var(--apasa-green); cursor: pointer; font-weight: 700; }
 .apasa-clear:hover { background: var(--apasa-green-dark); }
