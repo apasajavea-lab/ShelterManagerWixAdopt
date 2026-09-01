@@ -25,10 +25,11 @@ The `@main` CDN URLs can be cached. For controlled releases, use a Git tag such 
 
 ## Dog profile template
 
-The files in `templates/animalview-*.html` are the three blocks for ShelterManager's
-`animalview` publishing template. Paste them into **Publishing → Edit HTML Publishing
-Templates → animalview** as the header, body and footer respectively. The template
-loads `css/apasa-profile.css` and `js/apasa-profile.js` from this repository.
+The files in `templates/animalview-*.html` are the three blocks for a ShelterManager
+publishing template named `apasa-animalview`. Create it under **Publishing → Edit HTML
+Publishing Templates** and paste the files as the header, body and footer respectively.
+Keeping the original `animalview` unchanged provides an immediate fallback. The listing
+script selects `apasa-animalview` automatically.
 
 Profile language is passed from the Wix listing as `?lang=en`, `?lang=es` or
 `?lang=de`. The translated custom fields are `DescSpanish`, `DescGerman`,
