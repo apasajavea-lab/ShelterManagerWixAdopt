@@ -28,7 +28,42 @@
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/smview", es: "https://www.apasa.eu/es/smview", de: "https://www.apasa.eu/de/smview" };
   if (back) { back.href = backUrls[lang]; back.target = "_top"; back.textContent = back.dataset[lang] || back.textContent; }
   const main = document.querySelector(".apasa-main-photo");
-  document.querySelectorAll(".apasa-thumb").forEach(button => { const image = button.querySelector("img"); image.addEventListener("error", () => button.remove()); button.addEventListener("click", () => { main.src = image.src; document.querySelectorAll(".apasa-thumb").forEach(item => item.removeAttribute("aria-current")); button.setAttribute("aria-current", "true"); }); });
+  const thumbs = document.querySelector(".apasa-thumbs");
+  function bindThumb(button) {
+    const image = button.querySelector("img");
+    image.style.objectFit = "contain";
+    image.style.background = "#f3f4ed";
+    const removeBroken = () => { button.remove(); reportHeight(); };
+    image.addEventListener("error", removeBroken);
+    if (image.complete && image.naturalWidth === 0) removeBroken();
+    button.addEventListener("click", () => { main.src = image.src; document.querySelectorAll(".apasa-thumb").forEach(item => item.removeAttribute("aria-current")); button.setAttribute("aria-current", "true"); });
+  }
+  document.querySelectorAll(".apasa-thumb").forEach(bindThumb);
+  function loadExtraPhoto(sequence) {
+    if (!thumbs || sequence > 30 || !query.get("animalid")) return;
+    const url = new URL(location.href);
+    url.search = "";
+    url.searchParams.set("account", query.get("account") || "zz1727");
+    url.searchParams.set("method", "animal_image");
+    url.searchParams.set("animalid", query.get("animalid"));
+    url.searchParams.set("seq", sequence);
+    const image = new Image();
+    image.alt = "";
+    image.addEventListener("load", () => {
+      const button = document.createElement("button");
+      button.className = "apasa-thumb";
+      button.type = "button";
+      button.appendChild(image);
+      thumbs.appendChild(button);
+      bindThumb(button);
+      reportHeight();
+      loadExtraPhoto(sequence + 1);
+    });
+    image.addEventListener("error", reportHeight);
+    image.src = url.href;
+  }
+  loadExtraPhoto(7);
+  if (main) { main.style.height = "auto"; main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });
   function reportHeight() { if (window.parent !== window) window.parent.postMessage({ type: "apasa-profile-height", height: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) }, "https://www.apasa.eu"); }
   window.addEventListener("load", reportHeight); window.setTimeout(reportHeight, 300); window.setTimeout(reportHeight, 1200);
