@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+  const scriptUrl = document.currentScript && document.currentScript.src;
   const query = new URLSearchParams(location.search), referrer = (document.referrer || "").toLowerCase();
   const lang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : referrer.includes("/de/") ? "de" : referrer.includes("/es/") ? "es" : "en";
   const index = lang === "en" ? 0 : lang === "es" ? 1 : 2;
@@ -20,9 +21,25 @@
     const map = { marron: ["Brown", "Marrón", "Braun"], brown: ["Brown", "Marrón", "Braun"], negro: ["Black", "Negro", "Schwarz"], black: ["Black", "Negro", "Schwarz"], blanco: ["White", "Blanco", "Weiß"], white: ["White", "Blanco", "Weiß"], gris: ["Grey", "Gris", "Grau"], grey: ["Grey", "Gris", "Grau"], gray: ["Grey", "Gris", "Grau"], canela: ["Tan", "Canela", "Zimtfarben"], dorado: ["Golden", "Dorado", "Goldfarben"], atigrado: ["Brindle", "Atigrado", "Gestromt"], tricolor: ["Tricolour", "Tricolor", "Dreifarbig"] };
     return value.split(/\s*(?:-\s*(?:with|con|mit)?|\/|,|\b(?:and|with|y|con|und|mit)\b)\s*/i).filter(Boolean).map(part => { const key = part.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); return map[key] ? map[key][index] : part.trim(); }).join({ en: " and ", es: " y ", de: " und " }[lang]);
   }
+  function translateBreed() {
+    const element = document.querySelector(".apasa-subtitle");
+    if (!element || !window.APASA_BREEDS) return;
+    const raw = element.textContent.trim().toLocaleLowerCase("es");
+    const record = Object.values(window.APASA_BREEDS).find(item => Object.values(item).some(value => String(value).trim().toLocaleLowerCase("es") === raw));
+    if (record && record[lang]) element.textContent = record[lang];
+  }
+  function loadBreedTranslations() {
+    if (window.APASA_BREEDS) { translateBreed(); return; }
+    if (!scriptUrl) return;
+    const script = document.createElement("script");
+    script.src = scriptUrl.replace(/apasa-profile(?:\.min)?\.js(?:\?.*)?$/, "apasa-breeds.js");
+    script.addEventListener("load", translateBreed);
+    document.head.appendChild(script);
+  }
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-language]").forEach(element => { element.style.display = element.dataset.language === lang ? "block" : "none"; });
   document.querySelectorAll("[data-i18n]").forEach(element => { const value = element.dataset[lang]; if (value) element.textContent = value; });
+  loadBreedTranslations();
   document.querySelectorAll(".apasa-trait strong").forEach(element => { element.textContent = lookup(element.textContent); });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/smview", es: "https://www.apasa.eu/es/smview", de: "https://www.apasa.eu/de/smview" };
