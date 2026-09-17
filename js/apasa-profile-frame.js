@@ -16,6 +16,7 @@
     profileUrl.searchParams.set("template", "apasaanimalview");
     profileUrl.searchParams.set("lang", lang);
     if (query.get("colour")) profileUrl.searchParams.set("colour", query.get("colour"));
+    if (query.get("size")) profileUrl.searchParams.set("size", query.get("size"));
     const iframe = document.createElement("iframe");
     iframe.className = "apasa-profile-frame";
     iframe.title = lang === "es" ? "Perfil del perro" : lang === "de" ? "Hundeprofil" : "Dog profile";
