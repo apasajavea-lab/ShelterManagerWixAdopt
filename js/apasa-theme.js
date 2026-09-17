@@ -96,12 +96,12 @@
   }
 
   function sizeKey(a) {
-    const numeric = Number(a.SIZE);
-    if (!Number.isNaN(numeric)) return numeric === 0 ? "small" : numeric === 1 ? "medium" : numeric === 2 ? "large" : "";
     const value = String(a.SIZENAME || "");
     if (/small|peque|klein/i.test(value)) return "small";
     if (/medium|medio|mittel/i.test(value)) return "medium";
     if (/large|grande|groß|gross/i.test(value)) return "large";
+    const numeric = Number(a.SIZE);
+    if (!Number.isNaN(numeric)) return numeric === 3 ? "small" : numeric === 2 ? "medium" : numeric === 1 || numeric === 0 ? "large" : "";
     return "";
   }
 
@@ -120,7 +120,7 @@
     return localizedDuration(years, years === 0 ? months : 0, undefined);
   }
   function sex(a) { const numeric = Number(a.SEX); if (!Number.isNaN(numeric)) return numeric === 0 ? text.female : text.male; const value = String(a.SEXNAME || "").toLowerCase(); return /female|hembra|hündin/.test(value) ? text.female : text.male; }
-  function size(a) { const numeric = Number(a.SIZE); if (!Number.isNaN(numeric)) { if (numeric === 0) return text.small; if (numeric === 1) return text.medium; if (numeric === 2) return text.large; } const value = String(a.SIZENAME || "").toLowerCase(); if (/small|peque|klein/.test(value)) return text.small; if (/medium|medio|mittel/.test(value)) return text.medium; if (/large|grande|groß|gross/.test(value)) return text.large; return a.SIZENAME || ""; }
+  function size(a) { const key = sizeKey(a); return key ? text[key] : a.SIZENAME || ""; }
   function waitingTime(a) {
     const rawDays = a.DAYSONSHELTER;
     if (rawDays !== undefined && rawDays !== null && rawDays !== "") {
@@ -164,6 +164,8 @@
         wixProfile.searchParams.set("lang", lang);
         const publisherColour = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.colour;
         if (publisherColour) wixProfile.searchParams.set("colour", publisherColour);
+        const publisherSize = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.size;
+        if (publisherSize) wixProfile.searchParams.set("size", publisherSize);
         window.location.assign(wixProfile.toString());
       }
     });

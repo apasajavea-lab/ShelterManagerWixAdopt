@@ -36,10 +36,26 @@
     script.addEventListener("load", translateBreed);
     document.head.appendChild(script);
   }
+  function addSizeFact() {
+    const key = query.get("size");
+    const values = { small: ["Small", "Pequeño", "Klein"], medium: ["Medium", "Mediano", "Mittel"], large: ["Large", "Grande", "Groß"] };
+    if (!values[key]) return;
+    const facts = document.querySelector(".apasa-facts");
+    if (!facts || facts.querySelector(".apasa-size")) return;
+    const fact = document.createElement("div");
+    fact.className = "apasa-fact apasa-size";
+    const label = document.createElement("dt");
+    label.textContent = ["Size", "Tamaño", "Größe"][index];
+    const value = document.createElement("dd");
+    value.textContent = values[key][index];
+    fact.append(label, value);
+    facts.appendChild(fact);
+  }
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-language]").forEach(element => { element.style.display = element.dataset.language === lang ? "block" : "none"; });
   document.querySelectorAll("[data-i18n]").forEach(element => { const value = element.dataset[lang]; if (value) element.textContent = value; });
   loadBreedTranslations();
+  addSizeFact();
   document.querySelectorAll(".apasa-trait strong").forEach(element => { element.textContent = lookup(element.textContent); });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/smview", es: "https://www.apasa.eu/es/smview", de: "https://www.apasa.eu/de/smview" };
