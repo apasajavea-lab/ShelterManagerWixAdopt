@@ -47,8 +47,9 @@
 .apasa-badge-longstay { color: #865900; background: #fff1cc; }
 .apasa-badge-senior { color: #a0001d; background: #fde2e4; }
 .apasa-badge-senior { visibility: hidden; }
-.apasa-senior-rosette { position: absolute; top: 17px; left: 17px; z-index: 3; width: 72px; height: 72px; padding: 9px 6px 6px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-9deg); color: #fff; background: #a0001d; border: 3px solid #f7c84b; border-radius: 50%; box-shadow: 0 3px 10px rgba(0,0,0,.3), inset 0 0 0 2px rgba(255,255,255,.35); font-size: 8px; font-weight: 900; line-height: 1.05; letter-spacing: .15px; text-align: center; text-transform: uppercase; pointer-events: none; }
-.apasa-senior-rosette::before { content: "★"; margin-bottom: 2px; color: #f7c84b; font-size: 16px; line-height: 1; }
+.apasa-senior-rosette { position: absolute; top: 17px; left: 17px; z-index: 3; width: 82px; height: 82px; padding: 7px 6px 6px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-9deg); color: #fff; background: #a0001d; border: 3px solid #f7c84b; border-radius: 50%; box-shadow: 0 3px 10px rgba(0,0,0,.3), inset 0 0 0 2px rgba(255,255,255,.35); font-size: 8px; font-weight: 900; line-height: 1.02; letter-spacing: .1px; text-align: center; text-transform: uppercase; cursor: help; }
+.apasa-senior-rosette::before { content: "★"; margin-bottom: 1px; color: #f7c84b; font-size: 15px; line-height: 1; }
+.apasa-senior-rosette:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .asm3-adoptable-link:focus-visible { outline: 3px solid var(--apasa-orange); outline-offset: 4px; border-radius: 18px; }
 
 @media (max-width: 1200px) { #asm3-adoptable-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
