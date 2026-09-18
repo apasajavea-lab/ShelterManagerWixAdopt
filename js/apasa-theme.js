@@ -202,10 +202,16 @@
   }
 
   function waitForList() {
+    function alignPhotos(list) {
+      list.querySelectorAll(".asm3-adoptable-thumbnail").forEach(image => {
+        const adjust = () => image.classList.toggle("apasa-photo-contain", image.naturalHeight > image.naturalWidth * 1.05);
+        if (image.complete) adjust(); else image.addEventListener("load", adjust, { once: true });
+      });
+    }
     let attempts = 0;
     const timer = window.setInterval(() => {
       const list = document.getElementById("asm3-adoptable-list");
-      if (list && list.querySelector(".apasa-extra")) { window.clearInterval(timer); if (window.apasa_homepage_mode && typeof window.apasaHomepageReady === "function") window.apasaHomepageReady(list); else initialiseToolbar(list); }
+      if (list && list.querySelector(".apasa-extra")) { window.clearInterval(timer); alignPhotos(list); if (window.apasa_homepage_mode && typeof window.apasaHomepageReady === "function") window.apasaHomepageReady(list); else initialiseToolbar(list); }
       if (++attempts > 80) window.clearInterval(timer);
     }, 250);
   }
