@@ -69,7 +69,7 @@
   function setupGalleryNavigation() {
     if (!main || !main.parentNode) return;
     const style = document.createElement("style");
-    style.textContent = ".apasa-photo-stage{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:#f3f4ed}.apasa-photo-stage .apasa-main-photo{width:100%;height:100%!important;aspect-ratio:auto;object-fit:contain;border-radius:0}.apasa-gallery-arrow{position:absolute;top:50%;z-index:2;width:48px;height:48px;padding:0;transform:translateY(-50%);border:0;border-radius:50%;color:#333;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.22);font-size:34px;line-height:1;cursor:pointer}.apasa-gallery-arrow:hover{background:#fff}.apasa-gallery-arrow:focus-visible{outline:3px solid #f5a300}.apasa-gallery-prev{left:14px}.apasa-gallery-next{right:14px}@media(max-width:430px){.apasa-gallery-arrow{width:42px;height:42px;font-size:30px}.apasa-gallery-prev{left:9px}.apasa-gallery-next{right:9px}}";
+    style.textContent = ".apasa-photo-stage{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:#f3f4ed}.apasa-photo-stage .apasa-main-photo{width:100%;height:100%!important;aspect-ratio:auto;object-fit:contain;border-radius:0}.apasa-gallery-arrow{position:absolute;top:50%;z-index:2;width:48px;height:48px;padding:0;transform:translateY(-50%);border:0;border-radius:50%;color:#333;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.22);font-size:34px;line-height:1;cursor:pointer}.apasa-gallery-arrow:hover{background:#fff}.apasa-gallery-arrow:focus-visible{outline:3px solid #f5a300}.apasa-gallery-prev{left:14px}.apasa-gallery-next{right:14px}.apasa-senior-rosette{position:absolute;top:18px;right:18px;z-index:3;width:105px;height:105px;padding:14px 9px 9px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:#a0001d;border:5px solid #f7c84b;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.32),inset 0 0 0 2px rgba(255,255,255,.35);font-size:11px;font-weight:900;line-height:1.05;letter-spacing:.2px;text-align:center;text-transform:uppercase;pointer-events:none}.apasa-senior-rosette:before{content:'★';margin-bottom:4px;color:#f7c84b;font-size:25px;line-height:1}.apasa-senior-rosette:after{content:'';position:absolute;right:9px;bottom:-20px;left:9px;height:29px;z-index:-1;background:linear-gradient(135deg,#7d0016 0 42%,transparent 43%),linear-gradient(225deg,#7d0016 0 42%,transparent 43%);background-position:left top,right top;background-size:50% 100%;background-repeat:no-repeat}@media(max-width:430px){.apasa-gallery-arrow{width:42px;height:42px;font-size:30px}.apasa-gallery-prev{left:9px}.apasa-gallery-next{right:9px}.apasa-senior-rosette{top:12px;right:12px;width:88px;height:88px;font-size:9px;border-width:4px}}";
     document.head.appendChild(style);
     const stage = document.createElement("div");
     stage.className = "apasa-photo-stage";
@@ -90,6 +90,18 @@
       stage.appendChild(button);
     });
     updateArrowVisibility();
+  }
+  function addSeniorRosette() {
+    const birthParts = String(document.querySelector(".apasa-fact dd")?.textContent || "").trim().split(/[./-]/).map(Number);
+    const birthDate = birthParts.length === 3 ? new Date(birthParts[2], birthParts[1] - 1, birthParts[0]) : null;
+    const tenthBirthday = birthDate && !Number.isNaN(birthDate.getTime()) ? new Date(birthDate.getFullYear() + 10, birthDate.getMonth(), birthDate.getDate()) : null;
+    if (query.get("senior") !== "1" && (!tenthBirthday || tenthBirthday > new Date())) return;
+    const stage = document.querySelector(".apasa-photo-stage");
+    if (!stage || stage.querySelector(".apasa-senior-rosette")) return;
+    const rosette = document.createElement("span");
+    rosette.className = "apasa-senior-rosette";
+    rosette.textContent = ["Senior Foster Program", "Programa de Acogida Sénior", "Senioren-Pflegeprogramm"][index];
+    stage.appendChild(rosette);
   }
   function bindThumb(button) {
     const image = button.querySelector("img");
@@ -126,6 +138,7 @@
     image.src = url.href;
   }
   setupGalleryNavigation();
+  addSeniorRosette();
   loadExtraPhoto(7);
   if (main) { main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });

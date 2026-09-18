@@ -43,6 +43,8 @@
     if (colour) profile.searchParams.set("colour", colour);
     const size = item.querySelector(".apasa-extra")?.dataset.size;
     if (size) profile.searchParams.set("size", size);
+    const special = item.querySelector(".apasa-extra")?.dataset.special || "";
+    if (special.split(" ").includes("senior")) profile.searchParams.set("senior", "1");
     window.location.assign(profile.toString());
   }
 
