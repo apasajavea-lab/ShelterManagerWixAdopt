@@ -62,11 +62,40 @@
   if (back) { back.href = backUrls[lang]; back.target = "_top"; back.textContent = back.dataset[lang] || back.textContent; }
   const main = document.querySelector(".apasa-main-photo");
   const thumbs = document.querySelector(".apasa-thumbs");
+  function updateArrowVisibility() {
+    const hidden = document.querySelectorAll(".apasa-thumb").length < 2;
+    document.querySelectorAll(".apasa-gallery-arrow").forEach(button => { button.hidden = hidden; });
+  }
+  function setupGalleryNavigation() {
+    if (!main || !main.parentNode) return;
+    const style = document.createElement("style");
+    style.textContent = ".apasa-photo-stage{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:#f3f4ed}.apasa-photo-stage .apasa-main-photo{width:100%;height:100%!important;aspect-ratio:auto;object-fit:contain;border-radius:0}.apasa-gallery-arrow{position:absolute;top:50%;z-index:2;width:48px;height:48px;padding:0;transform:translateY(-50%);border:0;border-radius:50%;color:#333;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.22);font-size:34px;line-height:1;cursor:pointer}.apasa-gallery-arrow:hover{background:#fff}.apasa-gallery-arrow:focus-visible{outline:3px solid #f5a300}.apasa-gallery-prev{left:14px}.apasa-gallery-next{right:14px}@media(max-width:430px){.apasa-gallery-arrow{width:42px;height:42px;font-size:30px}.apasa-gallery-prev{left:9px}.apasa-gallery-next{right:9px}}";
+    document.head.appendChild(style);
+    const stage = document.createElement("div");
+    stage.className = "apasa-photo-stage";
+    main.parentNode.insertBefore(stage, main);
+    stage.appendChild(main);
+    [["prev", "‹", -1], ["next", "›", 1]].forEach(([name, symbol, direction]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `apasa-gallery-arrow apasa-gallery-${name}`;
+      button.textContent = symbol;
+      button.setAttribute("aria-label", direction < 0 ? ["Previous photo", "Foto anterior", "Vorheriges Foto"][index] : ["Next photo", "Foto siguiente", "Nächstes Foto"][index]);
+      button.addEventListener("click", () => {
+        const photos = Array.from(document.querySelectorAll(".apasa-thumb"));
+        if (!photos.length) return;
+        const current = Math.max(0, photos.findIndex(photo => photo.getAttribute("aria-current") === "true"));
+        photos[(current + direction + photos.length) % photos.length].click();
+      });
+      stage.appendChild(button);
+    });
+    updateArrowVisibility();
+  }
   function bindThumb(button) {
     const image = button.querySelector("img");
     image.style.objectFit = "contain";
     image.style.background = "#f3f4ed";
-    const removeBroken = () => { button.remove(); reportHeight(); };
+    const removeBroken = () => { button.remove(); updateArrowVisibility(); reportHeight(); };
     image.addEventListener("error", removeBroken);
     if (image.complete && image.naturalWidth === 0) removeBroken();
     button.addEventListener("click", () => { main.src = image.src; document.querySelectorAll(".apasa-thumb").forEach(item => item.removeAttribute("aria-current")); button.setAttribute("aria-current", "true"); });
@@ -89,14 +118,16 @@
       button.appendChild(image);
       thumbs.appendChild(button);
       bindThumb(button);
+      updateArrowVisibility();
       reportHeight();
       loadExtraPhoto(sequence + 1);
     });
     image.addEventListener("error", reportHeight);
     image.src = url.href;
   }
+  setupGalleryNavigation();
   loadExtraPhoto(7);
-  if (main) { main.style.height = "auto"; main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
+  if (main) { main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });
   function reportHeight() { if (window.parent !== window) window.parent.postMessage({ type: "apasa-profile-height", height: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) }, "https://www.apasa.eu"); }
   window.addEventListener("load", reportHeight); window.setTimeout(reportHeight, 300); window.setTimeout(reportHeight, 1200);
