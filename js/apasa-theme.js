@@ -8,7 +8,8 @@
     es: { meet: "Conoce a", female: "Hembra", male: "Macho", small: "Pequeño", medium: "Mediano", large: "Grande", atApasa: "En APASA", cross: "cruce", senior: "Senior", longstay: "Larga estancia", newArrival: "Recién llegado", search: "Buscar por nombre", allSexes: "Todos los sexos", allSizes: "Todos los tamaños", allAges: "Todas las edades", allSpecial: "Todos los perros", puppy: "Cachorro", young: "Joven", adult: "Adulto", newDogs: "Recién llegados", sortBy: "Ordenar por", sortName: "Nombre A–Z", sortLongest: "Más tiempo esperando", sortNewest: "Llegadas recientes", sortYoungest: "Más jóvenes", sortOldest: "Mayores", clear: "Borrar filtros", dogs: "perros", oneDog: "perro", noResults: "Ningún perro coincide con estos filtros." },
     de: { meet: "Triff", female: "Hündin", male: "Rüde", small: "Klein", medium: "Mittel", large: "Groß", atApasa: "Bei APASA", cross: "Mischling", senior: "Senior", longstay: "Langzeitgast", newArrival: "Neu angekommen", search: "Nach Namen suchen", allSexes: "Alle Geschlechter", allSizes: "Alle Größen", allAges: "Alle Altersgruppen", allSpecial: "Alle Hunde", puppy: "Welpe", young: "Junghund", adult: "Erwachsen", newDogs: "Neu angekommen", sortBy: "Sortieren nach", sortName: "Name A–Z", sortLongest: "Längste Wartezeit", sortNewest: "Neueste Ankünfte", sortYoungest: "Jüngste", sortOldest: "Älteste", clear: "Filter löschen", dogs: "Hunde", oneDog: "Hund", noResults: "Keine Hunde entsprechen diesen Filtern." }
   }[lang];
-  const seniorFosterText = { en: "Senior Foster Program", es: "Programa de Acogida Sénior", de: "Senioren-Pflegeprogramm" }[lang];
+  const seniorFosterText = { en: "Senior Foster", es: "Acogida Sénior", de: "Senioren-Pflege" }[lang];
+  const seniorFosterLabel = { en: "Senior Foster Program", es: "Programa de Acogida Sénior", de: "Senioren-Pflegeprogramm" }[lang];
 
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
   function shortDescription(a) { if (lang === "es") return a.WEBSHORTDESCS || a.WEBSHORTDESC || ""; if (lang === "de") return a.WEBSHORTDESCG || a.WEBSHORTDESC || ""; return a.WEBSHORTDESC || ""; }
@@ -216,6 +217,7 @@
           const rosette = document.createElement("span");
           rosette.className = "apasa-senior-rosette";
           rosette.textContent = seniorFosterText;
+          rosette.setAttribute("aria-label", seniorFosterLabel);
           item.querySelector(".asm3-adoptable-link")?.appendChild(rosette);
         }
       });
