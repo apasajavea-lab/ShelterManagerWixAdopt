@@ -45,6 +45,7 @@
     if (size) profile.searchParams.set("size", size);
     const special = item.querySelector(".apasa-extra")?.dataset.special || "";
     if (special.split(" ").includes("senior")) profile.searchParams.set("senior", "1");
+    if (item.querySelector(".apasa-extra")?.dataset.reserved === "true" || item.querySelector(".asm3-adoptable-reserved")) profile.searchParams.set("reserved", "1");
     window.location.assign(profile.toString());
   }
 

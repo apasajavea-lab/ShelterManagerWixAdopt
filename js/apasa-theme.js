@@ -41,6 +41,7 @@
       callBefore: "💬 Haben Sie Fragen vor der Adoption? ", callLink: "Rufen Sie uns an", callAfter: " während unserer Öffnungszeiten – wir helfen Ihnen gerne weiter!"
     }
   }[lang];
+  const reservedText = { en: "Reserved", es: "Reservado", de: "Reserviert" }[lang];
 
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
   function shortDescription(a) { if (lang === "es") return a.WEBSHORTDESCS || a.WEBSHORTDESC || ""; if (lang === "de") return a.WEBSHORTDESCG || a.WEBSHORTDESC || ""; return a.WEBSHORTDESC || ""; }
@@ -167,10 +168,14 @@
     return translatedStoredDuration(a.TIMEONSHELTER);
   }
   function badge(a) { const days = Number(a.DAYSONSHELTER || 0); const dob = a.DATEOFBIRTH ? new Date(`${a.DATEOFBIRTH}T00:00:00`) : null; const years = dob && !Number.isNaN(dob.getTime()) ? (Date.now() - dob.getTime()) / 31557600000 : 0; if (years >= 10) return ["apasa-badge-senior", `⭐ ${text.senior}`]; if (days > 730) return ["apasa-badge-longstay", `❤️ ${text.longstay}`]; if (days > 0 && days < 30) return ["apasa-badge-new", `● ${text.newArrival}`]; return null; }
+  function isReserved(a) {
+    const flag = [a.ANIMALISRESERVED, a.HASACTIVERESERVE, a.ISRESERVED, a.RESERVED].some(value => /^(1|true|yes|si|sí|ja)$/i.test(String(value || "").trim()));
+    return flag || /reserved|reservad[oa]|reserviert/i.test(String(a.ADOPTIONSTATUS || a.RESERVATIONSTATUS || ""));
+  }
   function card(a) {
     const dogName = escapeHtml(a.ANIMALNAME || ""); const dogBadge = badge(a); const details = [age(a), sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(waitingTime(a));
     const months = ageInMonths(a); const days = Math.max(0, Number(a.DAYSONSHELTER || 0)); const specials = [months >= 120 ? "senior" : "", days > 730 ? "longstay" : "", days > 0 && days < 30 ? "new" : ""].filter(Boolean).join(" ");
-    return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-colour="${escapeHtml(a.ADOPTAPETCOLOUR || "")}">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : `<div class="apasa-badge apasa-badge-placeholder" aria-hidden="true">Placeholder</div>`}<div class="apasa-breed">${escapeHtml(breed(a))}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details">${details}</div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
+    return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-reserved="${isReserved(a)}" data-colour="${escapeHtml(a.ADOPTAPETCOLOUR || "")}">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : `<div class="apasa-badge apasa-badge-placeholder" aria-hidden="true">Placeholder</div>`}<div class="apasa-breed">${escapeHtml(breed(a))}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details">${details}</div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
   }
 
   function toolbarHtml() {
@@ -207,6 +212,8 @@
         if (publisherSize) wixProfile.searchParams.set("size", publisherSize);
         const publisherSpecial = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.special || "";
         if (publisherSpecial.split(" ").includes("senior")) wixProfile.searchParams.set("senior", "1");
+        const reserved = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.reserved;
+        if (reserved === "true" || button.closest(".asm3-adoptable-item")?.querySelector(".asm3-adoptable-reserved")) wixProfile.searchParams.set("reserved", "1");
         window.location.assign(wixProfile.toString());
       }
     });
@@ -258,6 +265,12 @@
           rosette.title = seniorFosterDescription;
           rosette.tabIndex = 0;
           item.querySelector(".asm3-adoptable-link")?.appendChild(rosette);
+        }
+        if ((extra?.dataset.reserved === "true" || item.querySelector(".asm3-adoptable-reserved")) && !item.querySelector(".apasa-reserved-ribbon")) {
+          const ribbon = document.createElement("span");
+          ribbon.className = "apasa-reserved-ribbon";
+          ribbon.textContent = extra?.dataset.sex === "female" && lang === "es" ? "Reservada" : reservedText;
+          item.querySelector(".asm3-adoptable-link")?.appendChild(ribbon);
         }
       });
     }

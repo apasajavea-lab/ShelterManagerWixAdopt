@@ -71,6 +71,7 @@
     const style = document.createElement("style");
     style.textContent = ".apasa-photo-stage{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:#f3f4ed}.apasa-photo-stage .apasa-main-photo{width:100%;height:100%!important;aspect-ratio:auto;object-fit:contain;border-radius:0}.apasa-gallery-arrow{position:absolute;top:50%;z-index:2;width:48px;height:48px;padding:0;transform:translateY(-50%);border:0;border-radius:50%;color:#333;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.22);font-size:34px;line-height:1;cursor:pointer}.apasa-gallery-arrow:hover{background:#fff}.apasa-gallery-arrow:focus-visible{outline:3px solid #f5a300}.apasa-gallery-prev{left:14px}.apasa-gallery-next{right:14px}.apasa-senior-rosette{position:absolute;top:18px;right:18px;z-index:3;width:105px;height:105px;padding:14px 9px 9px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:#a0001d;border:5px solid #f7c84b;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.32),inset 0 0 0 2px rgba(255,255,255,.35);font-size:11px;font-weight:900;line-height:1.05;letter-spacing:.2px;text-align:center;text-transform:uppercase;pointer-events:none}.apasa-senior-rosette:before{content:'★';margin-bottom:4px;color:#f7c84b;font-size:25px;line-height:1}.apasa-senior-rosette:after{content:'';position:absolute;right:9px;bottom:-20px;left:9px;height:29px;z-index:-1;background:linear-gradient(135deg,#7d0016 0 42%,transparent 43%),linear-gradient(225deg,#7d0016 0 42%,transparent 43%);background-position:left top,right top;background-size:50% 100%;background-repeat:no-repeat}@media(max-width:430px){.apasa-gallery-arrow{width:42px;height:42px;font-size:30px}.apasa-gallery-prev{left:9px}.apasa-gallery-next{right:9px}.apasa-senior-rosette{top:12px;right:12px;width:88px;height:88px;font-size:9px;border-width:4px}}";
     style.textContent += ".apasa-senior-rosette{top:16px;right:auto;left:16px;width:90px;height:90px;padding:8px 7px 7px;transform:rotate(-9deg);border-width:4px;font-size:8.5px;line-height:1.02;pointer-events:auto;cursor:help}.apasa-senior-rosette:before{margin-bottom:2px;font-size:18px}.apasa-senior-rosette:after{content:none}.apasa-senior-rosette:focus-visible{outline:3px solid #fff;outline-offset:2px}@media(max-width:430px){.apasa-senior-rosette{top:11px;right:auto;left:11px;width:80px;height:80px;padding:7px 5px 5px;border-width:3px;font-size:7.5px}.apasa-senior-rosette:before{font-size:14px}}";
+    style.textContent += ".apasa-profile-reserved{display:inline-block;margin:-10px 0 20px;padding:7px 14px;color:#fff;background:#f5a300;border-radius:20px;font-size:13px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.4px}";
     document.head.appendChild(style);
     const stage = document.createElement("div");
     stage.className = "apasa-photo-stage";
@@ -112,6 +113,16 @@
     rosette.tabIndex = 0;
     stage.appendChild(rosette);
   }
+  function addReservedStatus() {
+    if (query.get("reserved") !== "1") return;
+    const subtitle = document.querySelector(".apasa-subtitle");
+    if (!subtitle || document.querySelector(".apasa-profile-reserved")) return;
+    const status = document.createElement("span");
+    status.className = "apasa-profile-reserved";
+    const female = /female|hembra|hündin/i.test(document.querySelector(".apasa-sex")?.textContent || "");
+    status.textContent = lang === "es" ? (female ? "Reservada" : "Reservado") : lang === "de" ? "Reserviert" : "Reserved";
+    subtitle.insertAdjacentElement("afterend", status);
+  }
   function bindThumb(button) {
     const image = button.querySelector("img");
     image.style.objectFit = "contain";
@@ -148,6 +159,7 @@
   }
   setupGalleryNavigation();
   addSeniorRosette();
+  addReservedStatus();
   loadExtraPhoto(7);
   if (main) { main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });

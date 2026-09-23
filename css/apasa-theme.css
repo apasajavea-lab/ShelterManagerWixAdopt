@@ -58,6 +58,7 @@
 .apasa-senior-rosette { position: absolute; top: 17px; left: 17px; z-index: 3; width: 82px; height: 82px; padding: 7px 6px 6px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-9deg); color: #fff; background: #a0001d; border: 3px solid #f7c84b; border-radius: 50%; box-shadow: 0 3px 10px rgba(0,0,0,.3), inset 0 0 0 2px rgba(255,255,255,.35); font-size: 8px; font-weight: 900; line-height: 1.02; letter-spacing: .1px; text-align: center; text-transform: uppercase; cursor: help; }
 .apasa-senior-rosette::before { content: "★"; margin-bottom: 1px; color: #f7c84b; font-size: 15px; line-height: 1; }
 .apasa-senior-rosette:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.apasa-reserved-ribbon { position: absolute; top: 24px; right: 15px; z-index: 4; padding: 7px 12px; transform: rotate(8deg); color: #fff; background: var(--apasa-orange); border: 2px solid #fff; border-radius: 5px; box-shadow: 0 3px 9px rgba(0,0,0,.3); font-size: 11px; font-weight: 900; line-height: 1; letter-spacing: .5px; text-transform: uppercase; pointer-events: none; }
 .asm3-adoptable-link:focus-visible { outline: 3px solid var(--apasa-orange); outline-offset: 4px; border-radius: 18px; }
 
 @media (max-width: 1200px) { #asm3-adoptable-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
