@@ -37,6 +37,14 @@
 .apasa-clear:hover { background: var(--apasa-green-dark); }
 .apasa-results { margin-top: 12px; color: #666; font-size: 14px; font-weight: 700; }
 .apasa-empty { margin-top: 18px; padding: 24px; color: #666; text-align: center; }
+.apasa-intro { max-width: 1120px; margin: 0 auto 24px; padding: 28px 28px 8px; box-sizing: border-box; color: var(--apasa-text); text-align: center; }
+.apasa-intro h1 { margin: 0 0 34px; color: #171717; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 4vw, 44px); font-weight: 700; line-height: 1.15; }
+.apasa-intro h1::before { content: "🐾"; margin-right: 14px; font-size: .8em; }
+.apasa-intro-main { margin: 0 0 18px; font-size: 17px; font-weight: 600; line-height: 1.55; text-align: left; }
+.apasa-intro-interest { margin: 0 0 4px; color: var(--apasa-orange); font-size: 18px; font-weight: 800; }
+.apasa-intro p:not(.apasa-intro-main):not(.apasa-intro-interest) { margin: 3px 0; font-size: 17px; line-height: 1.45; }
+.apasa-intro a { color: var(--apasa-orange); font-weight: 800; text-decoration: none; }
+.apasa-intro a:hover, .apasa-intro a:focus-visible { color: var(--apasa-orange-dark); text-decoration: underline; }
 .apasa-home-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; align-items: stretch; padding: 20px; }
 .apasa-home-grid .asm3-adoptable-item { width: auto !important; }
 .apasa-home-loading { padding: 40px 20px; color: #666; font-weight: 700; text-align: center; }
@@ -54,5 +62,5 @@
 
 @media (max-width: 1200px) { #asm3-adoptable-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 900px) { #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; } .asm3-adoptable-name { font-size: 28px; } }
-@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: 1fr; gap: 18px; } .apasa-home-grid { padding: 12px; } .asm3-adoptable-name { font-size: 26px; } .apasa-badge-placeholder { display: none; } .apasa-breed { min-height: auto; } .apasa-summary { height: auto; min-height: auto; -webkit-line-clamp: 4; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: 1fr; gap: 18px; } .apasa-home-grid { padding: 12px; } .asm3-adoptable-name { font-size: 26px; } .apasa-badge-placeholder { display: none; } .apasa-breed { min-height: auto; } .apasa-summary { height: auto; min-height: auto; -webkit-line-clamp: 4; } .apasa-intro { padding: 18px 14px 4px; } .apasa-intro h1 { margin-bottom: 22px; } .apasa-intro-main { font-size: 16px; text-align: center; } .apasa-intro p:not(.apasa-intro-main):not(.apasa-intro-interest) { font-size: 16px; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
 @media print { .asm3-adoptable-item { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; } }
