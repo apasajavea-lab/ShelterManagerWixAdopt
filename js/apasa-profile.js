@@ -19,7 +19,22 @@
     return [[y, words[0]], [m, words[1]], [w, words[2]], [d, words[3]]].filter(item => item[0]).map(item => `${item[0]} ${item[1][item[0] === 1 ? 0 : 1]}`).join(" ");
   }
   function colour(value) {
-    const map = { marron: ["Brown", "Marrón", "Braun"], brown: ["Brown", "Marrón", "Braun"], negro: ["Black", "Negro", "Schwarz"], black: ["Black", "Negro", "Schwarz"], blanco: ["White", "Blanco", "Weiß"], white: ["White", "Blanco", "Weiß"], gris: ["Grey", "Gris", "Grau"], grey: ["Grey", "Gris", "Grau"], gray: ["Grey", "Gris", "Grau"], canela: ["Tan", "Canela", "Zimtfarben"], dorado: ["Golden", "Dorado", "Goldfarben"], atigrado: ["Brindle", "Atigrado", "Gestromt"], tricolor: ["Tricolour", "Tricolor", "Dreifarbig"] };
+    const map = {
+      marron: ["Brown", "Marrón", "Braun"], brown: ["Brown", "Marrón", "Braun"], braun: ["Brown", "Marrón", "Braun"],
+      negro: ["Black", "Negro", "Schwarz"], black: ["Black", "Negro", "Schwarz"], schwarz: ["Black", "Negro", "Schwarz"],
+      blanco: ["White", "Blanco", "Weiß"], white: ["White", "Blanco", "Weiß"], weiss: ["White", "Blanco", "Weiß"],
+      gris: ["Grey", "Gris", "Grau"], grey: ["Grey", "Gris", "Grau"], gray: ["Grey", "Gris", "Grau"], grau: ["Grey", "Gris", "Grau"],
+      tan: ["Tan", "Canela", "Lohfarben"], canela: ["Tan", "Canela", "Lohfarben"], lohfarben: ["Tan", "Canela", "Lohfarben"],
+      yellow: ["Yellow", "Amarillo", "Gelb"], amarillo: ["Yellow", "Amarillo", "Gelb"], gelb: ["Yellow", "Amarillo", "Gelb"],
+      fawn: ["Fawn", "Leonado", "Falbfarben"], leonado: ["Fawn", "Leonado", "Falbfarben"], falbfarben: ["Fawn", "Leonado", "Falbfarben"],
+      chocolate: ["Chocolate", "Chocolate", "Schokoladenbraun"],
+      cream: ["Cream", "Crema", "Cremefarben"], crema: ["Cream", "Crema", "Cremefarben"], cremefarben: ["Cream", "Crema", "Cremefarben"],
+      red: ["Red", "Rojo", "Rot"], rojo: ["Red", "Rojo", "Rot"], rot: ["Red", "Rojo", "Rot"],
+      blue: ["Blue", "Azul", "Blau"], azul: ["Blue", "Azul", "Blau"], blau: ["Blue", "Azul", "Blau"],
+      golden: ["Golden", "Dorado", "Goldfarben"], dorado: ["Golden", "Dorado", "Goldfarben"], goldfarben: ["Golden", "Dorado", "Goldfarben"],
+      brindle: ["Brindle", "Atigrado", "Gestromt"], atigrado: ["Brindle", "Atigrado", "Gestromt"], gestromt: ["Brindle", "Atigrado", "Gestromt"],
+      tricolour: ["Tricolour", "Tricolor", "Dreifarbig"], tricolor: ["Tricolour", "Tricolor", "Dreifarbig"], dreifarbig: ["Tricolour", "Tricolor", "Dreifarbig"]
+    };
     return value.split(/\s*(?:-\s*(?:with|con|mit)?|\/|,|\b(?:and|with|y|con|und|mit)\b)\s*/i).filter(Boolean).map(part => { const key = part.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); return map[key] ? map[key][index] : part.trim(); }).join({ en: " and ", es: " y ", de: " und " }[lang]);
   }
   function translateBreed() {
