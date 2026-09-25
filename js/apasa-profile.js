@@ -4,6 +4,7 @@
   const query = new URLSearchParams(location.search), referrer = (document.referrer || "").toLowerCase();
   const lang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : referrer.includes("/de/") ? "de" : referrer.includes("/es/") ? "es" : "en";
   const index = lang === "en" ? 0 : lang === "es" ? 1 : 2;
+  const escapeHtml = value => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   const set = (selector, value) => { const element = document.querySelector(selector); if (element && value) element.textContent = value; };
   const sex = value => /female|hembra|hündin/i.test(value) ? ["Female", "Hembra", "Hündin"][index] : /male|macho|rüde/i.test(value) ? ["Male", "Macho", "Rüde"][index] : value;
   function lookup(value) {
@@ -72,6 +73,7 @@
     style.textContent = ".apasa-photo-stage{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:#f3f4ed}.apasa-photo-stage .apasa-main-photo{width:100%;height:100%!important;aspect-ratio:auto;object-fit:contain;border-radius:0}.apasa-gallery-arrow{position:absolute;top:50%;z-index:2;width:48px;height:48px;padding:0;transform:translateY(-50%);border:0;border-radius:50%;color:#333;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.22);font-size:34px;line-height:1;cursor:pointer}.apasa-gallery-arrow:hover{background:#fff}.apasa-gallery-arrow:focus-visible{outline:3px solid #f5a300}.apasa-gallery-prev{left:14px}.apasa-gallery-next{right:14px}.apasa-senior-rosette{position:absolute;top:18px;right:18px;z-index:3;width:105px;height:105px;padding:14px 9px 9px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:#a0001d;border:5px solid #f7c84b;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.32),inset 0 0 0 2px rgba(255,255,255,.35);font-size:11px;font-weight:900;line-height:1.05;letter-spacing:.2px;text-align:center;text-transform:uppercase;pointer-events:none}.apasa-senior-rosette:before{content:'★';margin-bottom:4px;color:#f7c84b;font-size:25px;line-height:1}.apasa-senior-rosette:after{content:'';position:absolute;right:9px;bottom:-20px;left:9px;height:29px;z-index:-1;background:linear-gradient(135deg,#7d0016 0 42%,transparent 43%),linear-gradient(225deg,#7d0016 0 42%,transparent 43%);background-position:left top,right top;background-size:50% 100%;background-repeat:no-repeat}@media(max-width:430px){.apasa-gallery-arrow{width:42px;height:42px;font-size:30px}.apasa-gallery-prev{left:9px}.apasa-gallery-next{right:9px}.apasa-senior-rosette{top:12px;right:12px;width:88px;height:88px;font-size:9px;border-width:4px}}";
     style.textContent += ".apasa-senior-rosette{top:16px;right:auto;left:16px;width:90px;height:90px;padding:8px 7px 7px;transform:rotate(-9deg);border-width:4px;font-size:8.5px;line-height:1.02;pointer-events:auto;cursor:help}.apasa-senior-rosette:before{margin-bottom:2px;font-size:18px}.apasa-senior-rosette:after{content:none}.apasa-senior-rosette:focus-visible{outline:3px solid #fff;outline-offset:2px}@media(max-width:430px){.apasa-senior-rosette{top:11px;right:auto;left:11px;width:80px;height:80px;padding:7px 5px 5px;border-width:3px;font-size:7.5px}.apasa-senior-rosette:before{font-size:14px}}";
     style.textContent += ".apasa-profile-reserved{display:inline-block;margin:-10px 0 20px;padding:7px 14px;color:#fff;background:#f5a300;border-radius:20px;font-size:13px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.4px}";
+    style.textContent += ".apasa-profile-footer{padding:34px 28px;color:#222;background:#fff;border-top:1px solid #eee}.apasa-profile-footer h2{margin:0 0 10px;color:#111;font-family:'Comic Sans MS','Chalkboard SE','Comic Neue',cursive;font-size:28px;line-height:1.2}.apasa-profile-footer h3{margin:28px 0 10px;color:#111;font-size:22px}.apasa-profile-footer p{margin:5px 0;line-height:1.5}.apasa-profile-footer .apasa-contact-title{margin-top:8px;font-weight:800}.apasa-profile-footer a{color:#f5a300;font-weight:800;text-decoration:none}.apasa-profile-footer a:hover,.apasa-profile-footer a:focus-visible{text-decoration:underline}.apasa-profile-share-title{margin-top:20px!important;font-weight:800}.apasa-profile-share{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 30px}.apasa-share-link,.apasa-copy-link{min-width:90px;padding:10px 14px;border:0;border-radius:22px;color:#fff!important;background:#5c8d42;font:inherit;font-weight:800!important;text-align:center;cursor:pointer}.apasa-share-link:hover,.apasa-copy-link:hover{background:#4c7537;text-decoration:none!important}.apasa-back-button{display:inline-block;min-width:190px;padding:12px 20px;color:#fff!important;background:#f5a300;border-radius:24px;text-align:center}.apasa-back-button:hover{background:#df9200;text-decoration:none!important}@media(max-width:600px){.apasa-profile-footer{padding:26px 18px}.apasa-profile-footer h2{font-size:25px}.apasa-profile-footer h3{font-size:20px}.apasa-profile-share{gap:8px}.apasa-share-link,.apasa-copy-link{min-width:auto;flex:1;padding:10px 8px;font-size:13px}}";
     document.head.appendChild(style);
     const stage = document.createElement("div");
     stage.className = "apasa-photo-stage";
@@ -123,6 +125,36 @@
     status.textContent = lang === "es" ? (female ? "Reservada" : "Reservado") : lang === "de" ? "Reserviert" : "Reserved";
     subtitle.insertAdjacentElement("afterend", status);
   }
+  function addProfileFooter() {
+    const actions = document.querySelector(".apasa-actions");
+    const card = document.querySelector(".apasa-profile-card");
+    if (!card || document.querySelector(".apasa-profile-footer")) return;
+    const dogName = String(document.querySelector(".apasa-name")?.textContent || "").trim();
+    const displayName = dogName.toLocaleUpperCase(lang);
+    const prefix = lang === "en" ? "" : `/${lang}`;
+    const canonicalProfile = new URL(`${prefix}/dogprofile`, "https://www.apasa.eu");
+    ["animalid", "lang", "colour", "size", "senior", "reserved"].forEach(key => { if (query.get(key)) canonicalProfile.searchParams.set(key, query.get(key)); });
+    const shareUrl = canonicalProfile.toString();
+    const copyLabels = { en: ["Copy link", "Copied!"], es: ["Copiar enlace", "¡Copiado!"], de: ["Link kopieren", "Kopiert!"] }[lang];
+    const words = {
+      en: { title: "Meet Your Match?", intro: `If you think ${displayName} could be the one for you, we’d love for you to meet in person. Just drop by the shelter in Jávea – no appointment needed. For opening hours, please check the footer of our homepage.`, contactTitle: "💌 Arrange a meeting or got questions?", reach: "Reach out through our", form: "ADOPTION FORM", email: "email us at", or: "or WhatsApp us at", noMatch: "Did Not Find Your Match?", wait: "JOIN OUR WAITLIST", waitText: "We will let you know when a suitable companion becomes available.", share: "Want to help this dog get adopted? Share this profile.", facebook: "Facebook", whatsapp: "WhatsApp", back: "Back to all dogs →" },
+      es: { title: "¿Has encontrado a tu compañero ideal?", intro: `Si crees que ${displayName} podría ser para ti, nos encantaría que vinieras a conocerlo en persona. Acércate al refugio en Jávea, sin cita previa. Consulta los horarios en el pie de nuestra página de inicio.`, contactTitle: "💌 ¿Concertar una visita o hacer una pregunta?", reach: "Ponte en contacto mediante nuestro", form: "FORMULARIO DE ADOPCIÓN", email: "escríbenos a", or: "o envíanos un WhatsApp al", noMatch: "¿No has encontrado a tu compañero ideal?", wait: "ÚNETE A NUESTRA LISTA DE ESPERA", waitText: "Te avisaremos cuando haya un compañero adecuado disponible.", share: "¿Quieres ayudar a este perro a encontrar hogar? Comparte este perfil.", facebook: "Facebook", whatsapp: "WhatsApp", back: "Volver a todos los perros →" },
+      de: { title: "Den passenden Hund gefunden?", intro: `Wenn Sie glauben, dass ${displayName} zu Ihnen passen könnte, würden wir uns freuen, wenn Sie den Hund persönlich kennenlernen. Besuchen Sie uns einfach im Tierheim in Jávea – ein Termin ist nicht nötig. Die Öffnungszeiten finden Sie in der Fußzeile unserer Homepage.`, contactTitle: "💌 Treffen vereinbaren oder Fragen?", reach: "Kontaktieren Sie uns über unser", form: "ADOPTIONSFORMULAR", email: "per E-Mail an", or: "oder per WhatsApp unter", noMatch: "Noch nicht den passenden Hund gefunden?", wait: "IN UNSERE WARTELISTE EINTRAGEN", waitText: "Wir informieren Sie, sobald ein passender Begleiter verfügbar ist.", share: "Möchten Sie diesem Hund bei der Adoption helfen? Teilen Sie dieses Profil.", facebook: "Facebook", whatsapp: "WhatsApp", back: "Zurück zu allen Hunden →" }
+    }[lang];
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    const whatsappShareUrl = `https://wa.me/?text=${encodeURIComponent(`${dogName} – ${shareUrl}`)}`;
+    const section = document.createElement("section");
+    section.className = "apasa-profile-footer";
+    section.innerHTML = `<h2>${escapeHtml(words.title)}</h2><p>${escapeHtml(words.intro)}</p><p class="apasa-contact-title">${escapeHtml(words.contactTitle)}</p><p>${escapeHtml(words.reach)} <a href="https://www.apasa.eu${prefix}/adoption-form" target="_top">${escapeHtml(words.form)}</a>, ${escapeHtml(words.email)} <a href="mailto:apasa.javea@gmail.com">apasa.javea@gmail.com</a>, ${escapeHtml(words.or)} <a href="https://wa.me/34618754635" target="_blank" rel="noopener">+34 618 754 635</a>.</p><h3>${escapeHtml(words.noMatch)}</h3><p><a href="https://www.apasa.eu${prefix}/wait-list" target="_top">${escapeHtml(words.wait)}</a></p><p>${escapeHtml(words.waitText)}</p><p class="apasa-profile-share-title">${escapeHtml(words.share)}</p><div class="apasa-profile-share"><a class="apasa-share-link" href="${facebookUrl}" target="_blank" rel="noopener">● ${escapeHtml(words.facebook)}</a><a class="apasa-share-link" href="${whatsappShareUrl}" target="_blank" rel="noopener">● ${escapeHtml(words.whatsapp)}</a><button class="apasa-copy-link" type="button">🔗 ${escapeHtml(copyLabels[0])}</button></div><a class="apasa-back-button" href="https://www.apasa.eu${prefix}/smview" target="_top">${escapeHtml(words.back)}</a>`;
+    const copyButton = section.querySelector(".apasa-copy-link");
+    copyButton.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(shareUrl); }
+      catch (_) { const field = document.createElement("textarea"); field.value = shareUrl; document.body.appendChild(field); field.select(); document.execCommand("copy"); field.remove(); }
+      copyButton.textContent = `✓ ${copyLabels[1]}`;
+      window.setTimeout(() => { copyButton.textContent = `🔗 ${copyLabels[0]}`; }, 1800);
+    });
+    if (actions) actions.replaceWith(section); else card.appendChild(section);
+  }
   function bindThumb(button) {
     const image = button.querySelector("img");
     image.style.objectFit = "contain";
@@ -160,6 +192,7 @@
   setupGalleryNavigation();
   addSeniorRosette();
   addReservedStatus();
+  addProfileFooter();
   loadExtraPhoto(7);
   if (main) { main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });
