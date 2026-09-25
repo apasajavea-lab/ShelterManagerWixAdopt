@@ -52,6 +52,47 @@
     fact.append(label, value);
     facts.appendChild(fact);
   }
+  function configureFacts() {
+    const facts = document.querySelector(".apasa-facts");
+    if (!facts) return;
+    const dateOfBirthFact = facts.firstElementChild;
+    const sexFact = document.querySelector(".apasa-sex")?.closest(".apasa-fact");
+    const colourFact = document.querySelector(".apasa-colour")?.closest(".apasa-fact");
+    const shelterFact = document.querySelector(".apasa-duration")?.closest(".apasa-fact");
+    const sizeFact = document.querySelector(".apasa-size");
+    const rawDate = String(dateOfBirthFact?.querySelector("dd")?.textContent || "").trim();
+    const parts = rawDate.split(/[./-]/).map(Number);
+    const isoDate = /^\d{4}-\d{1,2}-\d{1,2}$/.test(rawDate);
+    const birthDate = parts.length === 3
+      ? new Date(isoDate ? parts[0] : parts[2], parts[1] - 1, isoDate ? parts[2] : parts[0])
+      : null;
+    let ageText = "";
+    if (birthDate && !Number.isNaN(birthDate.getTime())) {
+      const now = new Date();
+      let months = (now.getFullYear() - birthDate.getFullYear()) * 12 + now.getMonth() - birthDate.getMonth();
+      if (now.getDate() < birthDate.getDate()) months -= 1;
+      months = Math.max(0, months);
+      const years = Math.floor(months / 12), remainingMonths = months % 12;
+      if (years) {
+        const yearWords = [["year", "years"], ["año", "años"], ["Jahr", "Jahre"]][index];
+        const monthWords = [["month", "months"], ["mes", "meses"], ["Monat", "Monate"]][index];
+        ageText = `${years} ${yearWords[years === 1 ? 0 : 1]}${remainingMonths ? ` ${remainingMonths} ${monthWords[remainingMonths === 1 ? 0 : 1]}` : ""}`;
+      } else if (months) {
+        const monthWords = [["month", "months"], ["mes", "meses"], ["Monat", "Monate"]][index];
+        ageText = `${months} ${monthWords[months === 1 ? 0 : 1]}`;
+      } else {
+        const days = Math.max(0, Math.floor((now - birthDate) / 86400000));
+        const weeks = Math.floor(days / 7);
+        const words = weeks ? [["week", "weeks"], ["semana", "semanas"], ["Woche", "Wochen"]][index] : [["day", "days"], ["día", "días"], ["Tag", "Tage"]][index];
+        const amount = weeks || days;
+        ageText = `${amount} ${words[amount === 1 ? 0 : 1]}`;
+      }
+    }
+    const ageFact = document.createElement("div");
+    ageFact.className = "apasa-fact apasa-age";
+    ageFact.innerHTML = `<dt>${["Age", "Edad", "Alter"][index]}</dt><dd>${escapeHtml(ageText || ["Unknown", "Desconocida", "Unbekannt"][index])}</dd>`;
+    [shelterFact, ageFact, dateOfBirthFact, sexFact, sizeFact, colourFact].filter(Boolean).forEach(fact => facts.appendChild(fact));
+  }
   function handleOptionalContent() {
     const hasContent = element => {
       const value = String(element?.textContent || "").replace(/\u00a0/g, " ").trim();
@@ -77,6 +118,7 @@
   document.querySelectorAll("[data-i18n]").forEach(element => { const value = element.dataset[lang]; if (value) element.textContent = value; });
   loadBreedTranslations();
   addSizeFact();
+  configureFacts();
   document.querySelectorAll(".apasa-trait strong").forEach(element => { element.textContent = lookup(element.textContent); });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   handleOptionalContent();
