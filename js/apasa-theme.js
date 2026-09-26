@@ -1,4 +1,4 @@
-/* APASA ShelterManager adoption cards, version 2.1.0 */
+/* APASA ShelterManager adoption cards, version 2.1.1 */
 (function () {
   "use strict";
   const path = window.location.pathname.toLowerCase();
@@ -44,7 +44,16 @@
   const reservedText = { en: "Reserved", es: "Reservado", de: "Reserviert" }[lang];
 
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
-  function shortDescription(a) { if (lang === "es") return a.WEBSHORTDESCS || a.WEBSHORTDESC || ""; if (lang === "de") return a.WEBSHORTDESCG || a.WEBSHORTDESC || ""; return a.WEBSHORTDESC || ""; }
+  function shortDescription(a) {
+    const fallback = {
+      en: "A very new arrival who we are still getting to know!",
+      es: "¡Acaba de llegar y aún estamos conociendo su personalidad!",
+      de: "Gerade erst angekommen – wir lernen diesen Hund noch kennen!"
+    }[lang];
+    if (lang === "es") return String(a.WEBSHORTDESCS || "").trim() || fallback;
+    if (lang === "de") return String(a.WEBSHORTDESCG || "").trim() || fallback;
+    return String(a.WEBSHORTDESC || "").trim() || fallback;
+  }
   function translatedBreed(id, englishName, spanishName) {
     const record = window.APASA_BREEDS && window.APASA_BREEDS[String(id || "")];
     if (record && record[lang]) return record[lang];
