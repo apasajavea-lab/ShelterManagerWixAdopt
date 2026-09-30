@@ -52,7 +52,8 @@
   window.apasaHomepageReady = function (list) {
     const all = Array.from(list.querySelectorAll(".asm3-adoptable-item")).filter(item => {
       const src = item.querySelector(".asm3-adoptable-thumbnail")?.getAttribute("src") || "";
-      return src && !/[?&]d=null(?:&|$)/i.test(src);
+      const reserved = item.querySelector(".apasa-extra")?.dataset.reserved === "true" || Boolean(item.querySelector(".asm3-adoptable-reserved"));
+      return !reserved && src && !/[?&]d=null(?:&|$)/i.test(src);
     });
     const seniors = all.filter(item => Number(item.querySelector(".apasa-extra")?.dataset.ageMonths || 0) >= 120);
     const featured = all.filter(item => Number(item.querySelector(".apasa-extra")?.dataset.ageMonths || 0) < 120);
