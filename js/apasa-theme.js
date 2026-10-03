@@ -1,4 +1,4 @@
-/* APASA ShelterManager adoption cards, version 2.1.3 */
+/* APASA ShelterManager adoption cards, version 2.1.4 */
 (function () {
   "use strict";
   const path = window.location.pathname.toLowerCase();
@@ -21,7 +21,8 @@
       main: "At APASA, our main goal is to create the perfect match between each dog and their future family. That’s why we take time to understand your lifestyle, offer guidance during the process, and stay by your side even after adoption.",
       interest: "🐾 Interested in Adopting?",
       browse: "Browse all our dogs currently available for adoption below.",
-      waitBefore: "Our adoption listings are updated frequently, so please check back soon if you didn’t find your match. You can also fill out our ", waitLink: "Waiting List Form", waitAfter: ".",
+      updateNotice: "Our adoption listings are updated frequently, so please check back soon if you didn’t find your match.",
+      waitBefore: "You can also fill out our ", waitLink: "Waiting List Form", waitAfter: ".",
       callBefore: "💬 Have questions before adopting? ", callLink: "Call us", callAfter: " during operating hours – we’re happy to help!"
     },
     es: {
@@ -29,7 +30,8 @@
       main: "En APASA, nuestro principal objetivo es encontrar la familia ideal para cada perro. Por eso, nos tomamos el tiempo necesario para comprender tu estilo de vida, te brindamos orientación durante el proceso y te acompañamos incluso después de la adopción.",
       interest: "🐾 ¿Te interesa adoptar?",
       browse: "Consulta a continuación todos nuestros perros disponibles actualmente para adopción.",
-      waitBefore: "Nuestros anuncios de adopción se actualizan con frecuencia, así que vuelve a consultarlos pronto si no has encontrado a tu compañero ideal. También puedes rellenar nuestro ", waitLink: "Formulario de Lista de Espera", waitAfter: ".",
+      updateNotice: "Nuestros anuncios de adopción se actualizan con frecuencia, así que vuelve a consultarlos pronto si no has encontrado a tu compañero ideal.",
+      waitBefore: "También puedes rellenar nuestro ", waitLink: "Formulario de Lista de Espera", waitAfter: ".",
       callBefore: "💬 ¿Tienes preguntas antes de adoptar? ", callLink: "Llámanos", callAfter: " durante nuestro horario de atención. ¡Estaremos encantados de ayudarte!"
     },
     de: {
@@ -37,7 +39,8 @@
       main: "Bei APASA ist es unser oberstes Ziel, für jeden Hund die perfekte Familie zu finden. Deshalb nehmen wir uns Zeit, Ihren Lebensstil zu verstehen, begleiten Sie durch den gesamten Prozess und stehen Ihnen auch nach der Adoption zur Seite.",
       interest: "🐾 Interesse an einer Adoption?",
       browse: "Sehen Sie sich unten alle Hunde an, die derzeit zur Adoption verfügbar sind.",
-      waitBefore: "Unsere Vermittlungsanzeigen werden regelmäßig aktualisiert. Schauen Sie also bald wieder vorbei, wenn Sie noch nicht den passenden Hund gefunden haben. Sie können auch unser ", waitLink: "Wartelistenformular", waitAfter: " ausfüllen.",
+      updateNotice: "Unsere Vermittlungsanzeigen werden regelmäßig aktualisiert. Schauen Sie also bald wieder vorbei, wenn Sie noch nicht den passenden Hund gefunden haben.",
+      waitBefore: "Sie können auch unser ", waitLink: "Wartelistenformular", waitAfter: " ausfüllen.",
       callBefore: "💬 Haben Sie Fragen vor der Adoption? ", callLink: "Rufen Sie uns an", callAfter: " während unserer Öffnungszeiten – wir helfen Ihnen gerne weiter!"
     }
   }[lang];
@@ -193,7 +196,7 @@
 
   function introHtml() {
     const prefix = lang === "en" ? "" : `/${lang}`;
-    return `<section class="apasa-intro"><h1>${escapeHtml(introText.heading)}</h1><p class="apasa-intro-main">${escapeHtml(introText.main)}</p><p class="apasa-intro-interest">${escapeHtml(introText.interest)}</p><p>${escapeHtml(introText.browse)}</p><p>${escapeHtml(introText.waitBefore)}<a href="${prefix}/wait-list">${escapeHtml(introText.waitLink)}</a>${escapeHtml(introText.waitAfter)}</p><p>${escapeHtml(introText.callBefore)}<a href="tel:+34618754635">${escapeHtml(introText.callLink)}</a>${escapeHtml(introText.callAfter)}</p></section>`;
+    return `<section class="apasa-intro"><h1>${escapeHtml(introText.heading)}</h1><p class="apasa-intro-main">${escapeHtml(introText.main)}</p><p class="apasa-intro-interest">${escapeHtml(introText.interest)}</p><p>${escapeHtml(introText.browse)}</p><p>${escapeHtml(introText.updateNotice)}</p><p>${escapeHtml(introText.waitBefore)}<a href="${prefix}/wait-list">${escapeHtml(introText.waitLink)}</a>${escapeHtml(introText.waitAfter)}</p><p>${escapeHtml(introText.callBefore)}<a href="tel:+34618754635">${escapeHtml(introText.callLink)}</a>${escapeHtml(introText.callAfter)}</p></section>`;
   }
 
   function initialiseToolbar(list) {
