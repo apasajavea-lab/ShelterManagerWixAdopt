@@ -49,7 +49,7 @@ On the Wix events page, add an empty container and use its Wix HTML ID below:
   window.apasa_events_div_id = "YOUR_WIX_CONTAINER_ID";
   window.apasa_events_count = 20;
 </script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@main/js/apasa-events-frame.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@6be95cdcc5fa4ad4b350237deeeaf8857f657768/js/apasa-events-frame.js"></script>
 ```
 
 The frame calls ShelterManager's public `html_events` service with the
