@@ -18,7 +18,7 @@
 .asm3-adoptable-item:hover { transform: translateY(-6px); }
 .asm3-adoptable-link { position: relative; display: flex; flex: 1; flex-direction: column; color: inherit; text-decoration: none; }
 .asm3-adoptable-thumbnail { width: calc(100% - 24px) !important; max-width: none !important; height: auto !important; aspect-ratio: 1 / 1; margin: 12px; display: block; object-fit: cover; object-position: center 15%; border-radius: 18px !important; }
-.asm3-adoptable-name { margin: 4px 0; padding: 0 18px; color: var(--apasa-green); font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: 30px; font-weight: 400; line-height: 1.15; }
+.asm3-adoptable-name { margin: 4px 0; padding: 0 18px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: 30px; font-weight: 400; line-height: 1.15; }
 .asm3-adoptable-tagline { display: none !important; }
 .apasa-extra { display: flex; flex: 1; flex-direction: column; padding: 0 20px 20px; }
 .apasa-breed { height: 76px; min-height: 76px; margin: 2px 0 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--apasa-orange); font-size: 18px; font-weight: 700; line-height: 1.3; }
@@ -53,7 +53,7 @@
 .apasa-hidden { display: none !important; }
 .apasa-badge { width: max-content; max-width: calc(100% - 6px); height: 27px; min-height: 27px; margin: 3px auto 8px; padding: 6px 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 30px; font-size: 12px; font-weight: 700; line-height: 1.25; white-space: nowrap; }
 .apasa-badge-placeholder { visibility: hidden; }
-.apasa-badge-new { color: #2f7d32; background: #dff6dd; }
+.apasa-badge-new { color: #111; background: #dff6dd; }
 .apasa-badge-longstay { color: #865900; background: #fff1cc; }
 .apasa-badge-senior { color: #a0001d; background: #fde2e4; }
 .apasa-badge-senior { visibility: hidden; }
@@ -65,5 +65,5 @@
 
 @media (max-width: 1200px) { #asm3-adoptable-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 900px) { #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; } .asm3-adoptable-name { font-size: 28px; } }
-@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: 1fr; gap: 18px; } .apasa-home-grid { padding: 12px; } .asm3-adoptable-name { font-size: 26px; } .apasa-badge-placeholder { display: none; } .apasa-breed { min-height: auto; } .apasa-summary { height: auto; min-height: auto; -webkit-line-clamp: 4; } .apasa-intro { padding: 18px 14px 4px; } .apasa-intro h1 { margin-bottom: 22px; } .apasa-intro-main { font-size: 16px; text-align: center; } .apasa-intro p:not(.apasa-intro-main):not(.apasa-intro-interest) { font-size: 16px; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { #asm3-adoptables { padding: 12px; } #asm3-adoptable-list, .apasa-home-grid { grid-template-columns: 1fr; gap: 18px; align-items: start; } .apasa-home-grid { padding: 12px; } .asm3-adoptable-item { height: auto; } .asm3-adoptable-link { flex: none; } .asm3-adoptable-name { font-size: 26px; } .apasa-extra { flex: none; padding: 0 16px 16px; } .apasa-badge-placeholder { display: none; } .apasa-breed { height: auto; min-height: 0; margin: 12px 0 10px; } .apasa-summary { height: auto; min-height: 0; margin-bottom: 12px; -webkit-line-clamp: 4; } .apasa-details { min-height: 0; } .apasa-waiting { min-height: 0; padding: 10px 0 14px; } .apasa-button { height: 54px; margin: 0 auto; } .apasa-intro { padding: 18px 14px 4px; } .apasa-intro h1 { margin-bottom: 22px; } .apasa-intro-main { font-size: 16px; text-align: center; } .apasa-intro p:not(.apasa-intro-main):not(.apasa-intro-interest) { font-size: 16px; } .apasa-toolbar { padding: 14px; } .apasa-toolbar-controls { grid-template-columns: 1fr; } }
 @media print { .asm3-adoptable-item { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; } }
