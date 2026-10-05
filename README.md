@@ -34,3 +34,25 @@ script selects `apasaanimalview` automatically.
 Profile language is passed from the Wix listing as `?lang=en`, `?lang=es` or
 `?lang=de`. The translated custom fields are `DescSpanish`, `DescGerman`,
 `WebSpecNote`, `WebSpecNoteS` and `WebSpecNoteG`.
+
+## Events template
+
+Create a ShelterManager HTML publishing template named `apasaevents` under
+**Publishing → Edit HTML Publishing Templates**. Paste the contents of
+`templates/events-head.html`, `templates/events-body.html` and
+`templates/events-foot.html` into the corresponding template blocks.
+
+On the Wix events page, add an empty container and use its Wix HTML ID below:
+
+```html
+<script>
+  window.apasa_events_div_id = "YOUR_WIX_CONTAINER_ID";
+  window.apasa_events_count = 20;
+</script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@main/js/apasa-events-frame.js"></script>
+```
+
+The frame calls ShelterManager's public `html_events` service with the
+`apasaevents` template. It selects English, Spanish or German from the Wix URL,
+automatically resizes to its content, hides empty links and locations, and shows
+a translated message when there are no events.

@@ -7,3 +7,11 @@
 5. Open the published English, Spanish, and German pages and check the browser console for errors.
 
 Never commit passwords, API keys, private animal information, or ShelterManager login credentials to this public repository.
+
+## Events page
+
+1. Create a ShelterManager HTML publishing template called `apasaevents`.
+2. Copy the three `templates/events-*.html` files into its header, body and footer blocks.
+3. Create or select the Wix events page and note the HTML ID of the empty events container.
+4. Add the events snippet from `README.md` as page-specific Wix custom code.
+5. Publish Wix and verify the English, Spanish and German page URLs on desktop and mobile.
