@@ -57,17 +57,20 @@
     if (lang === "de") return String(a.WEBSHORTDESCG || "").trim() || fallback;
     return String(a.WEBSHORTDESC || "").trim() || fallback;
   }
-  function translatedBreed(id, englishName, spanishName) {
-    const record = window.APASA_BREEDS && window.APASA_BREEDS[String(id || "")];
+  function translatedBreed(actualName, fallbackName) {
+    const actual = String(actualName || "").trim();
+    const fallback = String(fallbackName || "").trim();
+    const normalise = value => String(value || "").trim().toLocaleLowerCase();
+    const record = actual && window.APASA_BREEDS && Object.values(window.APASA_BREEDS).find(item =>
+      Object.values(item).some(value => normalise(value) === normalise(actual))
+    );
     if (record && record[lang]) return record[lang];
-    const english = String(englishName || spanishName || "").trim();
-    if (lang === "es") return String(spanishName || englishName || "").trim();
-    return english;
+    return actual || fallback;
   }
 
   function breed(a) {
-    const primary = translatedBreed(a.BREEDID, a.PETFINDERBREED, a.BREEDNAME1 || a.BREEDNAME);
-    const secondary = translatedBreed(a.BREED2ID, a.PETFINDERBREED2, a.BREEDNAME2);
+    const primary = translatedBreed(a.BREEDNAME1 || a.BREEDNAME, a.PETFINDERBREED);
+    const secondary = translatedBreed(a.BREEDNAME2, a.PETFINDERBREED2);
     if (Number(a.CROSSBREED) !== 1) return primary;
 
     const differentBreeds = secondary && (

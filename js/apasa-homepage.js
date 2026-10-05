@@ -5,6 +5,21 @@
   const lang = path === "/de" || path.startsWith("/de/") ? "de" : path === "/es" || path.startsWith("/es/") ? "es" : "en";
   const featuredId = window.apasa_featured_div_id || "comp-mtiqkkz2";
   const seniorId = window.apasa_senior_div_id || "comp-mtiqlr7b";
+  const homepageSectionAreas = {
+    [window.apasa_featured_heading_div_id || "comp-mtiqfgi0"]: "10 / 1 / 11 / 2",
+    [window.apasa_featured_section_id || "comp-mtiqke4k"]: "11 / 1 / 12 / 2",
+    [window.apasa_featured_button_div_id || "comp-mtiqfgmn"]: "12 / 1 / 13 / 2",
+    [window.apasa_senior_intro_div_id || "comp-mtiqfgmv1"]: "13 / 1 / 14 / 2",
+    [window.apasa_senior_section_id || "comp-mtiqlks9"]: "14 / 1 / 15 / 2",
+    [window.apasa_senior_button_div_id || "comp-mtiqfgp9"]: "15 / 1 / 16 / 2"
+  };
+
+  function keepHomepageSectionsInOrder() {
+    Object.entries(homepageSectionAreas).forEach(([id, area]) => {
+      const section = document.getElementById(id);
+      if (section) section.style.setProperty("grid-area", area, "important");
+    });
+  }
 
   function isoWeekIndex(date) {
     const utc = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -63,10 +78,13 @@
       return { html: holder.outerHTML, count: selected.length };
     };
     const sections = { [featuredId]: markup(featured, 0), [seniorId]: markup(seniors, 1) };
-    const ensure = () => Object.entries(sections).forEach(([id, section]) => {
-      const container = document.getElementById(id);
-      if (container && container.querySelectorAll(":scope > .apasa-home-grid > .asm3-adoptable-item").length !== section.count) container.innerHTML = section.html;
-    });
+    const ensure = () => {
+      keepHomepageSectionsInOrder();
+      Object.entries(sections).forEach(([id, section]) => {
+        const container = document.getElementById(id);
+        if (container && container.querySelectorAll(":scope > .apasa-home-grid > .asm3-adoptable-item").length !== section.count) container.innerHTML = section.html;
+      });
+    };
     ensure();
     window.setInterval(ensure, 1000);
   };
