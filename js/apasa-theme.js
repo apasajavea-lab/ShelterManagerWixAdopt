@@ -60,7 +60,12 @@
   function translatedBreed(actualName, fallbackName) {
     const actual = String(actualName || "").trim();
     const fallback = String(fallbackName || "").trim();
-    const normalise = value => String(value || "").trim().toLocaleLowerCase();
+    const normalise = value => String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/gi, " ")
+      .trim()
+      .toLocaleLowerCase();
     const record = actual && window.APASA_BREEDS && Object.values(window.APASA_BREEDS).find(item =>
       Object.values(item).some(value => normalise(value) === normalise(actual))
     );

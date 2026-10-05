@@ -1119,5 +1119,15 @@ window.APASA_BREEDS = {
     "en": "Spanish Mastiff",
     "es": "Mastín Español",
     "de": "Spanischer Mastiff"
+  },
+  "446": {
+    "en": "Slovakian Chuvach",
+    "es": "Pastor Eslovaco",
+    "de": "Slowakischer Tschuvatsch"
+  },
+  "447": {
+    "en": "Podenco",
+    "es": "Podenco",
+    "de": "Podenco"
   }
 };
