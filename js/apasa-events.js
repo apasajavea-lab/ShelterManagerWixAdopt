@@ -71,8 +71,13 @@
         }
       } catch (error) {}
     });
-    const hasDescriptionMedia = description?.querySelector("img,video,iframe,object,embed,svg");
-    if (description && !description.textContent.trim() && !hasDescriptionMedia) description.remove();
+    const mediaContainer = event.querySelector(".apasa-event-media");
+    description?.querySelectorAll("img,video,iframe,object,embed,svg").forEach(media => mediaContainer.appendChild(media));
+    description?.querySelectorAll("p,div,span").forEach(element => {
+      if (!element.textContent.trim() && !element.querySelector("img,video,iframe,object,embed,svg")) element.remove();
+    });
+    if (description && !description.textContent.trim()) description.remove();
+    if (mediaContainer && !mediaContainer.children.length) mediaContainer.remove();
   });
 
   const reportHeight = () => parent.postMessage({ type: "apasa-events-height", height: document.documentElement.scrollHeight }, "*");
