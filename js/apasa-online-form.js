@@ -48,13 +48,25 @@
   const translateOptions = (selector, visibleLabels) => {
     const select = document.querySelector(selector);
     if (!select) return;
-    Array.from(select.options).forEach((option, index) => {
-      if (!option.hasAttribute("value")) option.setAttribute("value", option.textContent.trim());
+    const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
+    choices.forEach((option, index) => {
       if (visibleLabels[index]) option.textContent = visibleLabels[index];
     });
+    return select;
   };
   translateOptions('select[name^="reason_"]', words.reasons);
-  translateOptions('select[name^="Howhear_"]', words.heard);
+  const heardSelect = translateOptions('select[name^="Howhear_"]', words.heard);
+  if (heardSelect) {
+    let blankOption = Array.from(heardSelect.options).find(option => !option.value.trim());
+    if (!blankOption) {
+      blankOption = document.createElement("option");
+      blankOption.value = "";
+      heardSelect.prepend(blankOption);
+    }
+    blankOption.textContent = "";
+    blankOption.selected = true;
+    heardSelect.value = "";
+  }
   const submit = document.querySelector('input[type="submit"]');
   if (submit) submit.value = words.submit;
   const phone = document.querySelector('input[name^="mobiletelephone_"]');
