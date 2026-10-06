@@ -2,6 +2,7 @@
   "use strict";
   const query = new URLSearchParams(location.search);
   const lang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : "en";
+  const formId = Number(query.get("formid") || 0);
   document.documentElement.lang = lang;
   const translations = {
     en: {
@@ -10,7 +11,14 @@
       submit: "Submit", phoneSearch: "Search countries",
       labels: { firstname: "First name", lastname: "Last name", emailaddress: "Email", emailverify: "Please confirm email address", mobiletelephone: "Phone", reason: "Reason for Contact", message: "Message", Howhear: "How Did You Hear About Us?" },
       reasons: ["I want to adopt", "I want to foster", "I'd like to donate", "I'm interested in volunteering", "I have a question about an event", "I have a general question", "Other"],
-      heard: ["Facebook", "Instagram", "Website", "Volunteer", "Other"]
+      heard: ["Facebook", "Instagram", "Website", "Volunteer", "Other"],
+      waitList: {
+        title: "Join Our Waiting List",
+        intro: "Didn't find your perfect match yet? Join our waiting list and we'll contact you when a dog that fits your lifestyle and preferences becomes available. We’ll never spam you or share your details — only relevant updates.",
+        submit: "Join the Waiting List",
+        labels: { town: "Town", country: "Country", lookingforsex: "Sex", size: "Size", lookingforolderthan: "Older than (years)", lookingforyoungerthan: "Younger than (years)", commentsperson: "What are you hoping to find?" },
+        sexes: ["Any", "Male", "Female"], sizes: ["Any", "Small", "Medium", "Large", "Giant"]
+      }
     },
     es: {
       title: "Contacta con nosotros",
@@ -18,7 +26,14 @@
       submit: "Enviar", phoneSearch: "Buscar países",
       labels: { firstname: "Nombre", lastname: "Apellidos", emailaddress: "Correo electrónico", emailverify: "Confirma tu correo electrónico", mobiletelephone: "Teléfono", reason: "Motivo del contacto", message: "Mensaje", Howhear: "¿Cómo nos conociste?" },
       reasons: ["Quiero adoptar", "Quiero acoger", "Me gustaría donar", "Me interesa ser voluntario/a", "Tengo una pregunta sobre un evento", "Tengo una pregunta general", "Otro"],
-      heard: ["Facebook", "Instagram", "Sitio web", "Voluntariado", "Otro"]
+      heard: ["Facebook", "Instagram", "Sitio web", "Voluntariado", "Otro"],
+      waitList: {
+        title: "Únete a nuestra Lista de Espera",
+        intro: "¿Todavía no has encontrado a tu compañero ideal? Únete a nuestra lista de espera y te contactaremos cuando haya un perro que se adapte a tu estilo de vida y preferencias. Nunca te enviaremos mensajes no deseados ni compartiremos tus datos; solo recibirás información relevante.",
+        submit: "Unirme a la Lista de Espera",
+        labels: { town: "Localidad", country: "País", lookingforsex: "Sexo", size: "Tamaño", lookingforolderthan: "Mayor de (años)", lookingforyoungerthan: "Menor de (años)", commentsperson: "¿Qué tipo de perro estás buscando?" },
+        sexes: ["Cualquiera", "Macho", "Hembra"], sizes: ["Cualquiera", "Pequeño", "Mediano", "Grande", "Gigante"]
+      }
     },
     de: {
       title: "Kontakt aufnehmen",
@@ -26,10 +41,20 @@
       submit: "Absenden", phoneSearch: "Länder suchen",
       labels: { firstname: "Vorname", lastname: "Nachname", emailaddress: "E-Mail-Adresse", emailverify: "E-Mail-Adresse bestätigen", mobiletelephone: "Telefon", reason: "Grund der Kontaktaufnahme", message: "Nachricht", Howhear: "Wie haben Sie von uns erfahren?" },
       reasons: ["Ich möchte adoptieren", "Ich möchte eine Pflegestelle anbieten", "Ich möchte spenden", "Ich interessiere mich für ehrenamtliche Mitarbeit", "Ich habe eine Frage zu einer Veranstaltung", "Ich habe eine allgemeine Frage", "Sonstiges"],
-      heard: ["Facebook", "Instagram", "Webseite", "Ehrenamtliche", "Sonstiges"]
+      heard: ["Facebook", "Instagram", "Webseite", "Ehrenamtliche", "Sonstiges"],
+      waitList: {
+        title: "In unsere Warteliste eintragen",
+        intro: "Noch nicht den passenden Hund gefunden? Tragen Sie sich in unsere Warteliste ein. Wir kontaktieren Sie, sobald ein Hund verfügbar ist, der zu Ihrem Lebensstil und Ihren Wünschen passt. Wir senden keine unerwünschten Nachrichten und geben Ihre Daten nicht weiter — Sie erhalten nur relevante Informationen.",
+        submit: "In die Warteliste eintragen",
+        labels: { town: "Ort", country: "Land", lookingforsex: "Geschlecht", size: "Größe", lookingforolderthan: "Älter als (Jahre)", lookingforyoungerthan: "Jünger als (Jahre)", commentsperson: "Was für einen Hund suchen Sie?" },
+        sexes: ["Beliebig", "Rüde", "Hündin"], sizes: ["Beliebig", "Klein", "Mittel", "Groß", "Sehr groß"]
+      }
     }
   };
-  const words = translations[lang];
+  const baseWords = translations[lang];
+  const words = formId === 51
+    ? { ...baseWords, ...baseWords.waitList, labels: { ...baseWords.labels, ...baseWords.waitList.labels } }
+    : baseWords;
   const title = document.querySelector(".asm-onlineform-title");
   if (title) {
     title.textContent = words.title;
@@ -55,6 +80,8 @@
     return select;
   };
   translateOptions('select[name^="reason_"]', words.reasons);
+  translateOptions('select[name^="lookingforsex_"]', words.sexes || []);
+  translateOptions('select[name^="size_"]', words.sizes || []);
   const heardSelect = translateOptions('select[name^="Howhear_"]', words.heard);
   if (heardSelect) {
     let blankOption = Array.from(heardSelect.options).find(option => !option.value.trim());
@@ -104,7 +131,7 @@
     responseFrame.addEventListener("load", () => {
       if (!completionPending) return;
       completionPending = false;
-      parent.postMessage({ type: "apasa-online-form-success", lang }, "*");
+      parent.postMessage({ type: "apasa-online-form-success", lang, formId }, "*");
     });
   }
   const existingSubmitHook = window.asm3_onlineform_submit;

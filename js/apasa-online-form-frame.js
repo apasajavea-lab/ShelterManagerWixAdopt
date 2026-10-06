@@ -8,9 +8,16 @@
   const formId = Math.max(1, Number(window.apasa_online_form_id || 48));
   const delay = Number(window.apasa_online_form_delay || 1000);
   const successMessages = {
-    en: "Thank you for contacting us and we'll be in touch shortly.",
-    es: "Gracias por contactar con nosotros. Nos pondremos en contacto contigo en breve.",
-    de: "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze bei Ihnen."
+    contact: {
+      en: "Thank you for contacting us and we'll be in touch shortly.",
+      es: "Gracias por contactar con nosotros. Nos pondremos en contacto contigo en breve.",
+      de: "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze bei Ihnen."
+    },
+    waitList: {
+      en: "Thank you for joining our Waiting List. We'll be in touch if a suitable match becomes available.",
+      es: "Gracias por unirte a nuestra Lista de Espera. Nos pondremos en contacto contigo cuando haya un compañero adecuado.",
+      de: "Vielen Dank für Ihren Eintrag in unsere Warteliste. Wir melden uns, sobald ein passender Hund verfügbar ist."
+    }
   };
   const homePages = { en: "https://www.apasa.eu/", es: "https://www.apasa.eu/es", de: "https://www.apasa.eu/de" };
 
@@ -24,7 +31,10 @@
     url.searchParams.set("lang", lang);
     const iframe = document.createElement("iframe");
     iframe.className = "apasa-online-form-frame";
-    iframe.title = { en: "Contact APASA", es: "Contacta con APASA", de: "APASA kontaktieren" }[lang];
+    const frameTitles = formId === 51
+      ? { en: "APASA Waiting List", es: "Lista de Espera de APASA", de: "APASA Warteliste" }
+      : { en: "Contact APASA", es: "Contacta con APASA", de: "APASA kontaktieren" };
+    iframe.title = frameTitles[lang];
     iframe.src = url.toString();
     iframe.style.cssText = "display:block;width:100%;height:1050px;border:0;background:#f3f4ed";
     iframe.setAttribute("scrolling", "no");
@@ -45,7 +55,8 @@
         resizeHost(height);
       }
       if (event.data?.type === "apasa-online-form-success") {
-        alert(successMessages[lang]);
+        const messageType = formId === 51 ? "waitList" : "contact";
+        alert(successMessages[messageType][lang]);
         location.assign(homePages[lang]);
       }
     });
