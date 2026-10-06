@@ -1,4 +1,4 @@
-/* APASA ShelterManager adoption cards, version 2.1.5 */
+/* APASA ShelterManager adoption cards, version 2.1.6 */
 (function () {
   "use strict";
   const path = window.location.pathname.toLowerCase();
@@ -22,7 +22,7 @@
       interest: "🐾 Interested in Adopting?",
       browse: "Browse all our dogs currently available for adoption below.",
       updateNotice: "Our adoption listings are updated frequently, so please check back soon if you didn’t find your match.",
-      waitBefore: "You can also fill out our ", waitLink: "Waiting List Form", waitAfter: ".",
+      waitBefore: "Didn't find your perfect match? Please check back soon or fill out our ", waitLink: "Waiting List Form", waitAfter: ".",
       callBefore: "💬 Have questions before adopting? ", callLink: "Call us", callAfter: " during operating hours – we’re happy to help!"
     },
     es: {
@@ -31,7 +31,7 @@
       interest: "🐾 ¿Te interesa adoptar?",
       browse: "Consulta a continuación todos nuestros perros disponibles actualmente para adopción.",
       updateNotice: "Nuestros anuncios de adopción se actualizan con frecuencia, así que vuelve a consultarlos pronto si no has encontrado a tu compañero ideal.",
-      waitBefore: "También puedes rellenar nuestro ", waitLink: "Formulario de Lista de Espera", waitAfter: ".",
+      waitBefore: "¿No has encontrado a tu compañero ideal? Vuelve a visitarnos pronto o completa nuestro ", waitLink: "Formulario de Lista de Espera", waitAfter: ".",
       callBefore: "💬 ¿Tienes preguntas antes de adoptar? ", callLink: "Llámanos", callAfter: " durante nuestro horario de atención. ¡Estaremos encantados de ayudarte!"
     },
     de: {
@@ -40,7 +40,7 @@
       interest: "🐾 Interesse an einer Adoption?",
       browse: "Sehen Sie sich unten alle Hunde an, die derzeit zur Adoption verfügbar sind.",
       updateNotice: "Unsere Vermittlungsanzeigen werden regelmäßig aktualisiert. Schauen Sie also bald wieder vorbei, wenn Sie noch nicht den passenden Hund gefunden haben.",
-      waitBefore: "Sie können auch unser ", waitLink: "Wartelistenformular", waitAfter: " ausfüllen.",
+      waitBefore: "Noch nicht den passenden Hund gefunden? Schauen Sie bald wieder vorbei oder füllen Sie unser ", waitLink: "Wartelistenformular", waitAfter: " aus.",
       callBefore: "💬 Haben Sie Fragen vor der Adoption? ", callLink: "Rufen Sie uns an", callAfter: " während unserer Öffnungszeiten – wir helfen Ihnen gerne weiter!"
     }
   }[lang];
@@ -204,7 +204,12 @@
 
   function introHtml() {
     const prefix = lang === "en" ? "" : `/${lang}`;
-    return `<section class="apasa-intro"><h1>${escapeHtml(introText.heading)}</h1><p class="apasa-intro-main">${escapeHtml(introText.main)}</p><p class="apasa-intro-interest">${escapeHtml(introText.interest)}</p><p>${escapeHtml(introText.browse)}</p><p>${escapeHtml(introText.updateNotice)}</p><p>${escapeHtml(introText.waitBefore)}<a href="${prefix}/wait-list">${escapeHtml(introText.waitLink)}</a>${escapeHtml(introText.waitAfter)}</p><p>${escapeHtml(introText.callBefore)}<a href="tel:+34618754635">${escapeHtml(introText.callLink)}</a>${escapeHtml(introText.callAfter)}</p></section>`;
+    return `<section class="apasa-intro"><h1>${escapeHtml(introText.heading)}</h1><p class="apasa-intro-main">${escapeHtml(introText.main)}</p><p class="apasa-intro-interest">${escapeHtml(introText.interest)}</p><p>${escapeHtml(introText.browse)}</p><p>${escapeHtml(introText.updateNotice)}</p><p>${escapeHtml(introText.callBefore)}<a href="tel:+34618754635">${escapeHtml(introText.callLink)}</a>${escapeHtml(introText.callAfter)}</p></section>`;
+  }
+
+  function listFooterHtml() {
+    const prefix = lang === "en" ? "" : `/${lang}`;
+    return `<section class="apasa-list-footer"><p>${escapeHtml(introText.waitBefore)}<a href="${prefix}/wait-list" target="_top">${escapeHtml(introText.waitLink)}</a>${escapeHtml(introText.waitAfter)}</p></section>`;
   }
 
   function initialiseToolbar(list) {
@@ -212,6 +217,7 @@
     list.insertAdjacentHTML("beforebegin", toolbarHtml());
     const toolbar = list.previousElementSibling;
     toolbar.insertAdjacentHTML("beforebegin", introHtml());
+    if (!document.querySelector(".apasa-list-footer")) list.insertAdjacentHTML("afterend", listFooterHtml());
     const controls = {
       search: toolbar.querySelector(".apasa-search"), sex: toolbar.querySelector(".apasa-filter-sex"), size: toolbar.querySelector(".apasa-filter-size"), age: toolbar.querySelector(".apasa-filter-age"), special: toolbar.querySelector(".apasa-filter-special"), sort: toolbar.querySelector(".apasa-sort")
     };
