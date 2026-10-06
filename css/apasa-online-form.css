@@ -24,7 +24,6 @@ form { padding: 0; background: transparent; border-radius: 0; box-shadow: none; 
 .asm-onlineform-required { color: #111 !important; }
 .asmformadditional { color: #333; font-size: 13px; }
 input[type="checkbox"], input[type="radio"] { accent-color: #111; }
-.apasa-email-verify { display: none !important; }
 .iti { display: block; width: 100%; order: 0; }
 .form-floating > .iti + label { order: 1; }
 .iti input.form-control, .iti input.form-control:focus, .iti input.form-control:not(:placeholder-shown) { width: 100%; min-height: 40px; height: 40px; padding-top: 8px !important; padding-bottom: 8px !important; color: var(--apasa-text); background: var(--apasa-field); border: 1px solid var(--apasa-border); border-radius: 22px; font: inherit; font-size: 15px; line-height: 22px; }

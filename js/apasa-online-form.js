@@ -57,15 +57,6 @@
   translateOptions('select[name^="Howhear_"]', words.heard);
   const submit = document.querySelector('input[type="submit"]');
   if (submit) submit.value = words.submit;
-  const email = document.querySelector('input[name^="emailaddress_"]:not([id$="verify"])');
-  const emailVerify = document.querySelector('input[id$="verify"]');
-  if (email && emailVerify) {
-    emailVerify.closest(".form-floating")?.classList.add("apasa-email-verify");
-    emailVerify.required = false;
-    const copyEmail = () => { emailVerify.value = email.value; };
-    email.addEventListener("input", copyEmail);
-    copyEmail();
-  }
   const phone = document.querySelector('input[name^="mobiletelephone_"]');
   let telephoneControl = null;
   if (phone && window.intlTelInput) {
@@ -84,7 +75,6 @@
     localisePhoneSearch();
   }
   const prepareForSubmit = () => {
-    if (email && emailVerify) emailVerify.value = email.value;
     if (phone && telephoneControl && phone.value.trim()) {
       const internationalNumber = telephoneControl.getNumber();
       if (internationalNumber) phone.value = internationalNumber;
