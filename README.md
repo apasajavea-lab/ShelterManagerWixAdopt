@@ -56,3 +56,25 @@ The frame calls ShelterManager's public `html_events` service with the
 `apasaevents` template. It selects English, Spanish or German from the Wix URL,
 automatically resizes to its content, hides empty links and locations, and shows
 a translated message when there are no events.
+
+## Online contact form
+
+Form 48 remains a single English form in ShelterManager. Add the contents of
+`templates/online-form-contact-header.html` and
+`templates/online-form-contact-footer.html` to the form's Header and Footer.
+The footer script translates the visitor-facing labels and options while
+preserving the English option values submitted to ShelterManager.
+
+On the Wix Contact APASA page, add an empty container and use its Wix HTML ID:
+
+```html
+<script>
+  window.apasa_online_form_div_id = "YOUR_WIX_CONTAINER_ID";
+  window.apasa_online_form_account = "apasa";
+  window.apasa_online_form_id = 48;
+</script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@main/js/apasa-online-form-frame.js"></script>
+```
+
+The loader passes the Wix page language to ShelterManager and automatically
+resizes the iframe when validation messages or conditional fields change.
