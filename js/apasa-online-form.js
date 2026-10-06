@@ -90,17 +90,33 @@
       if (internationalNumber) phone.value = internationalNumber;
     }
   };
+  const form = document.querySelector("form");
+  let completionPending = false;
+  if (form) {
+    const responseFrame = document.createElement("iframe");
+    responseFrame.name = `apasa-form-response-${Date.now()}`;
+    responseFrame.hidden = true;
+    responseFrame.setAttribute("aria-hidden", "true");
+    document.body.appendChild(responseFrame);
+    form.target = responseFrame.name;
+    responseFrame.addEventListener("load", () => {
+      if (!completionPending) return;
+      completionPending = false;
+      parent.postMessage({ type: "apasa-online-form-success", lang }, "*");
+    });
+  }
   const existingSubmitHook = window.asm3_onlineform_submit;
   window.asm3_onlineform_submit = function () {
     prepareForSubmit();
+    completionPending = true;
     if (typeof existingSubmitHook === "function") return existingSubmitHook.apply(this, arguments);
   };
-  document.querySelector("form")?.addEventListener("submit", prepareForSubmit);
+  form?.addEventListener("submit", prepareForSubmit);
   const reportHeight = () => parent.postMessage({ type: "apasa-online-form-height", height: document.documentElement.scrollHeight }, "*");
   addEventListener("load", reportHeight);
   addEventListener("resize", reportHeight);
-  document.querySelector("form")?.addEventListener("input", reportHeight);
-  document.querySelector("form")?.addEventListener("change", reportHeight);
+  form?.addEventListener("input", reportHeight);
+  form?.addEventListener("change", reportHeight);
   if ("ResizeObserver" in window) new ResizeObserver(reportHeight).observe(document.body);
   reportHeight();
 }());

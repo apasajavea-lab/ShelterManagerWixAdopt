@@ -7,6 +7,12 @@
   const account = window.apasa_online_form_account || "apasa";
   const formId = Math.max(1, Number(window.apasa_online_form_id || 48));
   const delay = Number(window.apasa_online_form_delay || 1000);
+  const successMessages = {
+    en: "Thank you for contacting us and we'll be in touch shortly.",
+    es: "Gracias por contactar con nosotros. Nos pondremos en contacto contigo en breve.",
+    de: "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze bei Ihnen."
+  };
+  const homePages = { en: "https://www.apasa.eu/", es: "https://www.apasa.eu/es", de: "https://www.apasa.eu/de" };
 
   function mount() {
     const container = document.getElementById(containerId);
@@ -24,9 +30,15 @@
     iframe.setAttribute("scrolling", "no");
     container.replaceChildren(iframe);
     addEventListener("message", event => {
-      if (event.data?.type !== "apasa-online-form-height" || !/^https:\/\/(?:service\.sheltermanager\.com|[^.]+\.sheltermanager\.com)$/.test(event.origin)) return;
-      const height = Math.max(500, Math.min(10000, Number(event.data.height) || 1050));
-      iframe.style.height = `${Math.ceil(height)}px`;
+      if (!/^https:\/\/(?:service\.sheltermanager\.com|[^.]+\.sheltermanager\.com)$/.test(event.origin)) return;
+      if (event.data?.type === "apasa-online-form-height") {
+        const height = Math.max(500, Math.min(10000, Number(event.data.height) || 1050));
+        iframe.style.height = `${Math.ceil(height)}px`;
+      }
+      if (event.data?.type === "apasa-online-form-success") {
+        alert(successMessages[lang]);
+        location.assign(homePages[lang]);
+      }
     });
     return true;
   }
