@@ -7,13 +7,13 @@ Shared CSS and JavaScript used to style APASA's ShelterManager adoptable-dog lis
 Add this as Wix Custom Code on the adoption page and place it in the **head**.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@main/css/apasa-theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@6b753cba505205b332c7523f8a17937733248490/css/apasa-theme.css">
 <script>
   window.asm3_adoptable_div_id = "comp-mp2i6zi2";
   window.asm3_adoptable_delay = 2000;
 </script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@main/js/apasa-breeds.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@main/js/apasa-theme.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@6b753cba505205b332c7523f8a17937733248490/js/apasa-breeds.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@6b753cba505205b332c7523f8a17937733248490/js/apasa-theme.js"></script>
 <script src="https://service.sheltermanager.com/asmservice?method=animal_view_adoptable_js&account=zz1727"></script>
 ```
 
