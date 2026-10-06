@@ -73,8 +73,14 @@ On the Wix Contact APASA page, add an empty container and use its Wix HTML ID:
   window.apasa_online_form_account = "apasa";
   window.apasa_online_form_id = 48;
 </script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@8dfa4fbc4a5154534c4869d544d16de1d8dcbc76/js/apasa-online-form-frame.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@48e6c6b4ca6ab00181836c2475edd6470d0294b6/js/apasa-online-form-frame.js"></script>
 ```
 
 The loader passes the Wix page language to ShelterManager and automatically
 resizes the iframe when validation messages or conditional fields change.
+
+Form 51 uses the same header and footer assets through
+`templates/online-form-waitlist-header.html` and
+`templates/online-form-waitlist-footer.html`. On the Wix Waiting List page use
+the same loader block, set the page's container ID, and change
+`window.apasa_online_form_id` to `51`.
