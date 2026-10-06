@@ -40,9 +40,32 @@
   function translateBreed() {
     const element = document.querySelector(".apasa-subtitle");
     if (!element || !window.APASA_BREEDS) return;
-    const raw = element.textContent.trim().toLocaleLowerCase("es");
-    const record = Object.values(window.APASA_BREEDS).find(item => Object.values(item).some(value => String(value).trim().toLocaleLowerCase("es") === raw));
-    if (record && record[lang]) element.textContent = record[lang];
+    const raw = element.textContent.trim();
+    const normalise = value => String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/gi, " ")
+      .trim()
+      .toLocaleLowerCase();
+    const translateSingle = value => {
+      const record = Object.values(window.APASA_BREEDS).find(item =>
+        Object.values(item).some(name => normalise(name) === normalise(value))
+      );
+      return record?.[lang] || String(value || "").trim();
+    };
+    const exact = Object.values(window.APASA_BREEDS).find(item =>
+      Object.values(item).some(value => normalise(value) === normalise(raw))
+    );
+    if (exact?.[lang]) {
+      element.textContent = exact[lang];
+      return;
+    }
+    const parts = raw.split(/\s*(?:\/|×|\+|\bx\b)\s*/i).map(value => value.trim()).filter(Boolean);
+    if (parts.length < 2) return;
+    const translated = parts.map(translateSingle);
+    element.textContent = lang === "es"
+      ? `Cruce de ${translated.slice(0, -1).join(", ")} y ${translated.at(-1)}`
+      : translated.join(" × ");
   }
   function loadBreedTranslations() {
     if (window.APASA_BREEDS) { translateBreed(); return; }
