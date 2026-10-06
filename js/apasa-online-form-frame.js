@@ -29,11 +29,20 @@
     iframe.style.cssText = "display:block;width:100%;height:1050px;border:0;background:#f3f4ed";
     iframe.setAttribute("scrolling", "no");
     container.replaceChildren(iframe);
+    const hostSection = container.closest("section");
+    const resizeHost = height => {
+      const pixels = `${Math.ceil(height)}px`;
+      container.style.height = pixels;
+      container.style.minHeight = pixels;
+      if (hostSection) hostSection.style.minHeight = `calc(${pixels} + 32px)`;
+    };
+    resizeHost(1050);
     addEventListener("message", event => {
       if (!/^https:\/\/(?:service\.sheltermanager\.com|[^.]+\.sheltermanager\.com)$/.test(event.origin)) return;
       if (event.data?.type === "apasa-online-form-height") {
         const height = Math.max(500, Math.min(10000, Number(event.data.height) || 1050));
         iframe.style.height = `${Math.ceil(height)}px`;
+        resizeHost(height);
       }
       if (event.data?.type === "apasa-online-form-success") {
         alert(successMessages[lang]);
