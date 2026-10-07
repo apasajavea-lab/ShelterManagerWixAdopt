@@ -1,4 +1,4 @@
-/* APASA ShelterManager adoption cards, version 2.1.6 */
+/* APASA ShelterManager adoption cards, version 2.1.7 */
 (function () {
   "use strict";
   const path = window.location.pathname.toLowerCase();
@@ -175,26 +175,35 @@
   }
   function sex(a) { const numeric = Number(a.SEX); if (!Number.isNaN(numeric)) return numeric === 0 ? text.female : text.male; const value = String(a.SEXNAME || "").toLowerCase(); return /female|hembra|hündin/.test(value) ? text.female : text.male; }
   function size(a) { const key = sizeKey(a); return key ? text[key] : a.SIZENAME || ""; }
-  function waitingTime(a) {
-    const rawDays = a.DAYSONSHELTER;
-    if (rawDays !== undefined && rawDays !== null && rawDays !== "") {
-      const days = Math.max(0, Math.floor(Number(rawDays)));
-      if (Number.isFinite(days)) {
-        const years = Math.floor(days / 365.2425);
-        const months = Math.floor((days - Math.floor(years * 365.2425)) / 30.4369);
-        return localizedDuration(years, months, days);
-      }
+  function originalShelterDays(a) {
+    const originalDate = String(a.DATEBROUGHTIN || "").slice(0, 10);
+    const match = originalDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (match) {
+      const entered = Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      const now = new Date();
+      const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+      const days = Math.floor((today - entered) / 86400000);
+      if (Number.isFinite(days)) return Math.max(0, days);
     }
-    return translatedStoredDuration(a.TIMEONSHELTER);
+    const totalDays = Number(a.TOTALDAYSONSHELTER);
+    if (a.TOTALDAYSONSHELTER !== undefined && a.TOTALDAYSONSHELTER !== null && a.TOTALDAYSONSHELTER !== "" && Number.isFinite(totalDays)) return Math.max(0, Math.floor(totalDays));
+    const currentStayDays = Number(a.DAYSONSHELTER);
+    return Number.isFinite(currentStayDays) ? Math.max(0, Math.floor(currentStayDays)) : 0;
   }
-  function badge(a) { const days = Number(a.DAYSONSHELTER || 0); const dob = a.DATEOFBIRTH ? new Date(`${a.DATEOFBIRTH}T00:00:00`) : null; const years = dob && !Number.isNaN(dob.getTime()) ? (Date.now() - dob.getTime()) / 31557600000 : 0; if (years >= 10) return ["apasa-badge-senior", `⭐ ${text.senior}`]; if (days > 730) return ["apasa-badge-longstay", `❤️ ${text.longstay}`]; if (days > 0 && days < 30) return ["apasa-badge-new", `● ${text.newArrival}`]; return null; }
+  function waitingTime(a) {
+    const days = originalShelterDays(a);
+    const years = Math.floor(days / 365.2425);
+    const months = Math.floor((days - Math.floor(years * 365.2425)) / 30.4369);
+    return localizedDuration(years, months, days);
+  }
+  function badge(a) { const days = originalShelterDays(a); const dob = a.DATEOFBIRTH ? new Date(`${a.DATEOFBIRTH}T00:00:00`) : null; const years = dob && !Number.isNaN(dob.getTime()) ? (Date.now() - dob.getTime()) / 31557600000 : 0; if (years >= 10) return ["apasa-badge-senior", `⭐ ${text.senior}`]; if (days > 730) return ["apasa-badge-longstay", `❤️ ${text.longstay}`]; if (days > 0 && days < 30) return ["apasa-badge-new", `● ${text.newArrival}`]; return null; }
   function isReserved(a) {
     const flag = [a.ANIMALISRESERVED, a.HASACTIVERESERVE, a.ISRESERVED, a.RESERVED].some(value => /^(1|true|yes|si|sí|ja)$/i.test(String(value || "").trim()));
     return flag || /reserved|reservad[oa]|reserviert/i.test(String(a.ADOPTIONSTATUS || a.RESERVATIONSTATUS || ""));
   }
   function card(a) {
     const dogName = escapeHtml(a.ANIMALNAME || ""); const dogBadge = badge(a); const breedName = breed(a); const breedClass = breedName.length > 38 ? " apasa-breed-long" : ""; const ageDetail = escapeHtml(age(a)); const sexAndSize = [sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(waitingTime(a));
-    const months = ageInMonths(a); const days = Math.max(0, Number(a.DAYSONSHELTER || 0)); const specials = [months >= 120 ? "senior" : "", days > 730 ? "longstay" : "", days > 0 && days < 30 ? "new" : ""].filter(Boolean).join(" ");
+    const months = ageInMonths(a); const days = originalShelterDays(a); const specials = [months >= 120 ? "senior" : "", days > 730 ? "longstay" : "", days > 0 && days < 30 ? "new" : ""].filter(Boolean).join(" ");
     return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-reserved="${isReserved(a)}" data-colour="${escapeHtml(a.ADOPTAPETCOLOUR || "")}">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : `<div class="apasa-badge apasa-badge-placeholder" aria-hidden="true">Placeholder</div>`}<div class="apasa-breed${breedClass}">${escapeHtml(breedName)}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details"><span class="apasa-details-age">${ageDetail}</span><span class="apasa-details-sex-size">${sexAndSize}</span></div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
   }
 
