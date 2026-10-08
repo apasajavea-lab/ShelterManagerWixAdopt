@@ -9,7 +9,16 @@
   const sex = value => /female|hembra|hündin/i.test(value) ? ["Female", "Hembra", "Hündin"][index] : /male|macho|rüde/i.test(value) ? ["Male", "Macho", "Rüde"][index] : value;
   function lookup(value) {
     const key = value.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const map = { yes: ["Yes", "Sí", "Ja"], si: ["Yes", "Sí", "Ja"], ja: ["Yes", "Sí", "Ja"], no: ["No", "No", "Nein"], nein: ["No", "No", "Nein"], unknown: ["Unknown", "Desconocido", "Unbekannt"], desconocido: ["Unknown", "Desconocido", "Unbekannt"], unbekannt: ["Unknown", "Desconocido", "Unbekannt"], selective: ["Selective", "Selectivo", "Selektiv"], selectivo: ["Selective", "Selectivo", "Selektiv"], selektiv: ["Selective", "Selectivo", "Selektiv"] };
+    const map = {
+      yes: ["Yes", "Sí", "Ja"], si: ["Yes", "Sí", "Ja"], ja: ["Yes", "Sí", "Ja"],
+      no: ["No", "No", "Nein"], nein: ["No", "No", "Nein"],
+      "see notes below": ["See notes below", "Ver notas a continuación", "Siehe Hinweise unten"],
+      "ver notas a continuacion": ["See notes below", "Ver notas a continuación", "Siehe Hinweise unten"],
+      "consulte las notas a continuacion": ["See notes below", "Ver notas a continuación", "Siehe Hinweise unten"],
+      "siehe hinweise unten": ["See notes below", "Ver notas a continuación", "Siehe Hinweise unten"],
+      unknown: ["Unknown", "Desconocido", "Unbekannt"], desconocido: ["Unknown", "Desconocido", "Unbekannt"], unbekannt: ["Unknown", "Desconocido", "Unbekannt"],
+      selective: ["Selective", "Selectivo", "Selektiv"], selectivo: ["Selective", "Selectivo", "Selektiv"], selektiv: ["Selective", "Selectivo", "Selektiv"]
+    };
     return map[key] ? map[key][index] : value;
   }
   function duration(value) {
