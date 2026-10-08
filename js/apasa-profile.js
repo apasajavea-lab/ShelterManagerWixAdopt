@@ -181,7 +181,7 @@
     if (!main || !main.parentNode) return;
     const style = document.createElement("style");
     style.textContent = ".apasa-photo-stage{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:18px;background:#f3f4ed}.apasa-photo-stage .apasa-main-photo{width:100%;height:100%!important;aspect-ratio:auto;object-fit:contain;border-radius:0}.apasa-gallery-arrow{position:absolute;top:50%;z-index:2;width:48px;height:48px;padding:0;transform:translateY(-50%);border:0;border-radius:50%;color:#333;background:rgba(255,255,255,.9);box-shadow:0 2px 10px rgba(0,0,0,.22);font-size:34px;line-height:1;cursor:pointer}.apasa-gallery-arrow:hover{background:#fff}.apasa-gallery-arrow:focus-visible{outline:3px solid #f5a300}.apasa-gallery-prev{left:14px}.apasa-gallery-next{right:14px}.apasa-senior-rosette{position:absolute;top:18px;right:18px;z-index:3;width:105px;height:105px;padding:14px 9px 9px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:#a0001d;border:5px solid #f7c84b;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.32),inset 0 0 0 2px rgba(255,255,255,.35);font-size:11px;font-weight:900;line-height:1.05;letter-spacing:.2px;text-align:center;text-transform:uppercase;pointer-events:none}.apasa-senior-rosette:before{content:'★';margin-bottom:4px;color:#f7c84b;font-size:25px;line-height:1}.apasa-senior-rosette:after{content:'';position:absolute;right:9px;bottom:-20px;left:9px;height:29px;z-index:-1;background:linear-gradient(135deg,#7d0016 0 42%,transparent 43%),linear-gradient(225deg,#7d0016 0 42%,transparent 43%);background-position:left top,right top;background-size:50% 100%;background-repeat:no-repeat}@media(max-width:430px){.apasa-gallery-arrow{width:42px;height:42px;font-size:30px}.apasa-gallery-prev{left:9px}.apasa-gallery-next{right:9px}.apasa-senior-rosette{top:12px;right:12px;width:88px;height:88px;font-size:9px;border-width:4px}}";
-    style.textContent += ".apasa-senior-rosette{top:16px;right:auto;left:16px;width:90px;height:90px;padding:8px 7px 7px;transform:rotate(-9deg);border-width:4px;font-size:8.5px;line-height:1.02;white-space:pre-line;pointer-events:auto;cursor:help}.apasa-senior-rosette:before{margin-bottom:2px;font-size:18px}.apasa-senior-rosette:after{content:none}.apasa-senior-rosette:focus-visible{outline:3px solid #fff;outline-offset:2px}@media(max-width:430px){.apasa-senior-rosette{top:11px;right:auto;left:11px;width:80px;height:80px;padding:7px 5px 5px;border-width:3px;font-size:7.5px}.apasa-senior-rosette:before{font-size:14px}}";
+    style.textContent += ".apasa-senior-rosette{top:16px;right:auto;left:16px;width:90px;height:90px;padding:8px 7px 7px;transform:rotate(-9deg);border-width:4px;font-size:8.5px;line-height:1.02;white-space:pre-line;pointer-events:auto;cursor:help}.apasa-senior-rosette:before{margin-bottom:2px;font-size:18px}.apasa-senior-rosette:after{content:none}.apasa-senior-rosette:focus-visible{outline:3px solid #fff;outline-offset:2px}.apasa-puppy-rosette{position:absolute;top:16px;left:16px;z-index:3;width:90px;height:90px;padding:8px 7px 7px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-9deg);color:#111;background:#f7c84b;border:4px solid #f5a300;border-radius:50%;box-shadow:0 3px 12px rgba(0,0,0,.32),inset 0 0 0 2px rgba(255,255,255,.55);font-size:11px;font-weight:900;line-height:1.02;letter-spacing:.2px;text-align:center;text-transform:uppercase;pointer-events:auto;cursor:help}.apasa-puppy-rosette:before{content:'🐾';margin-bottom:2px;font-size:25px;line-height:1}.apasa-puppy-rosette:focus-visible{outline:3px solid #fff;outline-offset:2px}@media(max-width:430px){.apasa-senior-rosette,.apasa-puppy-rosette{top:11px;right:auto;left:11px;width:80px;height:80px;padding:7px 5px 5px;border-width:3px}.apasa-senior-rosette{font-size:7.5px}.apasa-senior-rosette:before{font-size:14px}.apasa-puppy-rosette{font-size:9.5px}.apasa-puppy-rosette:before{font-size:21px}}";
     style.textContent += ".apasa-profile-reserved{display:inline-block;margin:-10px 0 20px;padding:7px 14px;color:#fff;background:#f5a300;border-radius:20px;font-size:13px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.4px}";
     style.textContent += ".apasa-description a{color:#f5a300;font-weight:800;text-decoration:none}.apasa-description a:hover,.apasa-description a:focus-visible{text-decoration:underline}";
     style.textContent += ".apasa-profile-footer{padding:34px 28px;color:#222;background:#fff;border-top:1px solid #eee}.apasa-profile-footer h2{margin:0 0 10px;color:#111;font-family:'Comic Sans MS','Chalkboard SE','Comic Neue',cursive;font-size:28px;line-height:1.2}.apasa-profile-footer h3{margin:28px 0 10px;color:#111;font-size:22px}.apasa-profile-footer p{margin:5px 0;line-height:1.5}.apasa-profile-footer .apasa-contact-title{margin-top:8px;font-weight:800}.apasa-profile-footer a{color:#f5a300;font-weight:800;text-decoration:none}.apasa-profile-footer a:hover,.apasa-profile-footer a:focus-visible{text-decoration:underline}.apasa-profile-share-title{margin-top:20px!important;font-weight:800}.apasa-profile-share{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 30px}.apasa-share-link,.apasa-copy-link{min-width:90px;padding:10px 14px;border:0;border-radius:22px;color:#fff!important;background:#5c8d42;font:inherit;font-weight:800!important;text-align:center;cursor:pointer}.apasa-share-link:hover,.apasa-copy-link:hover{background:#4c7537;text-decoration:none!important}.apasa-back-button{display:inline-block;min-width:190px;padding:12px 20px;color:#fff!important;background:#f5a300;border-radius:24px;text-align:center}.apasa-profile-footer-reserved .apasa-back-button{margin-top:24px}.apasa-back-button:hover{background:#df9200;text-decoration:none!important}@media(max-width:600px){.apasa-profile-footer{padding:26px 18px}.apasa-profile-footer h2{font-size:25px}.apasa-profile-footer h3{font-size:20px}.apasa-profile-share{gap:8px}.apasa-share-link,.apasa-copy-link{min-width:auto;flex:1;padding:10px 8px;font-size:13px}}";
@@ -220,6 +220,26 @@
       "This dog is part of our Senior Foster Program, whereby APASA will cover veterinary costs via the designated vet.",
       "Este perro forma parte de nuestro Programa de Acogida Sénior, mediante el cual APASA cubrirá los gastos veterinarios a través del veterinario designado.",
       "Dieser Hund nimmt an unserem Senioren-Pflegeprogramm teil. APASA übernimmt die Tierarztkosten bei der dafür vorgesehenen Tierarztpraxis."
+    ][index];
+    rosette.setAttribute("aria-label", description);
+    rosette.title = description;
+    rosette.tabIndex = 0;
+    stage.appendChild(rosette);
+  }
+  function addPuppyRosette() {
+    const birthParts = String(document.querySelector(".apasa-fact dd")?.textContent || "").trim().split(/[./-]/).map(Number);
+    const birthDate = birthParts.length === 3 ? new Date(birthParts[2], birthParts[1] - 1, birthParts[0]) : null;
+    const firstBirthday = birthDate && !Number.isNaN(birthDate.getTime()) ? new Date(birthDate.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate()) : null;
+    if (!firstBirthday || firstBirthday <= new Date()) return;
+    const stage = document.querySelector(".apasa-photo-stage");
+    if (!stage || stage.querySelector(".apasa-puppy-rosette, .apasa-senior-rosette")) return;
+    const rosette = document.createElement("span");
+    rosette.className = "apasa-puppy-rosette";
+    rosette.textContent = ["Puppy", "Cachorro", "Welpe"][index];
+    const description = [
+      "This dog is under 12 months old.",
+      "Este perro tiene menos de 12 meses.",
+      "Dieser Hund ist jünger als 12 Monate."
     ][index];
     rosette.setAttribute("aria-label", description);
     rosette.title = description;
@@ -311,6 +331,7 @@
   }
   setupGalleryNavigation();
   addSeniorRosette();
+  addPuppyRosette();
   addReservedStatus();
   addProfileFooter();
   loadExtraPhoto(7);

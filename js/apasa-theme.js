@@ -15,6 +15,12 @@
     es: "Este perro forma parte de nuestro Programa de Acogida Sénior, mediante el cual APASA cubrirá los gastos veterinarios a través del veterinario designado.",
     de: "Dieser Hund nimmt an unserem Senioren-Pflegeprogramm teil. APASA übernimmt die Tierarztkosten bei der dafür vorgesehenen Tierarztpraxis."
   }[lang];
+  const puppyText = { en: "Puppy", es: "Cachorro", de: "Welpe" }[lang];
+  const puppyDescription = {
+    en: "This dog is under 12 months old.",
+    es: "Este perro tiene menos de 12 meses.",
+    de: "Dieser Hund ist jünger als 12 Monate."
+  }[lang];
   const introText = {
     en: {
       heading: "Find Your New Best Friend",
@@ -298,6 +304,16 @@
           rosette.textContent = seniorFosterText;
           rosette.setAttribute("aria-label", seniorFosterLabel);
           rosette.title = seniorFosterDescription;
+          rosette.tabIndex = 0;
+          item.querySelector(".asm3-adoptable-link")?.appendChild(rosette);
+        }
+        const ageMonths = Number(extra?.dataset.ageMonths);
+        if (Number.isFinite(ageMonths) && ageMonths >= 0 && ageMonths < 12 && !item.querySelector(".apasa-puppy-rosette")) {
+          const rosette = document.createElement("span");
+          rosette.className = "apasa-puppy-rosette";
+          rosette.textContent = puppyText;
+          rosette.setAttribute("aria-label", puppyDescription);
+          rosette.title = puppyDescription;
           rosette.tabIndex = 0;
           item.querySelector(".asm3-adoptable-link")?.appendChild(rosette);
         }
