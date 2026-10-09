@@ -43,7 +43,18 @@
       blue: ["Blue", "Azul", "Blau"], azul: ["Blue", "Azul", "Blau"], blau: ["Blue", "Azul", "Blau"],
       golden: ["Golden", "Dorado", "Goldfarben"], dorado: ["Golden", "Dorado", "Goldfarben"], goldfarben: ["Golden", "Dorado", "Goldfarben"],
       brindle: ["Brindle", "Atigrado", "Gestromt"], atigrado: ["Brindle", "Atigrado", "Gestromt"], gestromt: ["Brindle", "Atigrado", "Gestromt"],
-      tricolour: ["Tricolour", "Tricolor", "Dreifarbig"], tricolor: ["Tricolour", "Tricolor", "Dreifarbig"], dreifarbig: ["Tricolour", "Tricolor", "Dreifarbig"]
+      tricolour: ["Tricolour", "Tricolor", "Dreifarbig"], tricolor: ["Tricolour", "Tricolor", "Dreifarbig"], dreifarbig: ["Tricolour", "Tricolor", "Dreifarbig"],
+      apricot: ["Apricot", "Albaricoque", "Apricot"], albaricoque: ["Apricot", "Albaricoque", "Apricot"],
+      harlequin: ["Harlequin", "Arlequín", "Harlekin"], arlequin: ["Harlequin", "Arlequín", "Harlekin"], harlekin: ["Harlequin", "Arlequín", "Harlekin"],
+      beige: ["Beige", "Beige", "Beige"],
+      bicolour: ["Bicolour", "Bicolor", "Zweifarbig"], bicolor: ["Bicolour", "Bicolor", "Zweifarbig"], zweifarbig: ["Bicolour", "Bicolor", "Zweifarbig"],
+      spotted: ["Spotted", "Manchado", "Gefleckt"], manchado: ["Spotted", "Manchado", "Gefleckt"], gefleckt: ["Spotted", "Manchado", "Gefleckt"],
+      merle: ["Merle", "Merlé", "Merle"],
+      multicolour: ["Multicolour", "Multicolor", "Mehrfarbig"], multicolor: ["Multicolour", "Multicolor", "Mehrfarbig"], mehrfarbig: ["Multicolour", "Multicolor", "Mehrfarbig"],
+      silver: ["Silver", "Plateado", "Silber"], plateado: ["Silver", "Plateado", "Silber"], silber: ["Silver", "Plateado", "Silber"],
+      sable: ["Sable", "Sable", "Zobel"], zobel: ["Sable", "Sable", "Zobel"],
+      unknown: ["Unknown", "Desconocido", "Unbekannt"], desconocido: ["Unknown", "Desconocido", "Unbekannt"], unbekannt: ["Unknown", "Desconocido", "Unbekannt"],
+      other: ["Other", "Otro", "Andere"], otro: ["Other", "Otro", "Andere"], andere: ["Other", "Otro", "Andere"]
     };
     return value.split(/\s*(?:-\s*(?:with|con|mit)?|\/|,|\b(?:and|with|y|con|und|mit)\b)\s*/i).filter(Boolean).map(part => { const key = part.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); return map[key] ? map[key][index] : part.trim(); }).join({ en: " and ", es: " y ", de: " und " }[lang]);
   }
