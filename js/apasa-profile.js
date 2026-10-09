@@ -2,6 +2,7 @@
   "use strict";
   const scriptUrl = document.currentScript && document.currentScript.src;
   const query = new URLSearchParams(location.search), referrer = (document.referrer || "").toLowerCase();
+  query.delete("colour");
   const lang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : referrer.includes("/de/") ? "de" : referrer.includes("/es/") ? "es" : "en";
   const index = lang === "en" ? 0 : lang === "es" ? 1 : 2;
   const escapeHtml = value => String(value || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
