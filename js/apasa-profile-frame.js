@@ -25,6 +25,7 @@
     iframe.className = "apasa-profile-frame";
     iframe.title = lang === "es" ? "Perfil del perro" : lang === "de" ? "Hundeprofil" : "Dog profile";
     iframe.src = profileUrl.toString();
+    iframe.allow = "web-share";
     iframe.style.cssText = "display:block;width:100%;height:1200px;border:0;background:#f3f4ed";
     iframe.setAttribute("scrolling", "no");
     container.replaceChildren(iframe);
