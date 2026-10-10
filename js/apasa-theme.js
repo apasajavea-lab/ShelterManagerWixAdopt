@@ -298,6 +298,15 @@
         const name = String(extra?.dataset.name || "").toLowerCase();
         const image = item.querySelector(".asm3-adoptable-thumbnail");
         if (image && focalPoints[name]) image.style.objectPosition = focalPoints[name];
+        if (image) {
+          const updatePhotoBottom = () => item.style.setProperty("--apasa-photo-bottom", `${image.offsetTop + image.offsetHeight}px`);
+          updatePhotoBottom();
+          if (!image.complete) image.addEventListener("load", updatePhotoBottom, { once: true });
+          if (window.ResizeObserver && !item.dataset.apasaPhotoObserved) {
+            new ResizeObserver(updatePhotoBottom).observe(image);
+            item.dataset.apasaPhotoObserved = "true";
+          }
+        }
         if (extra?.dataset.special.split(" ").includes("senior") && !item.querySelector(".apasa-senior-rosette")) {
           const rosette = document.createElement("span");
           rosette.className = "apasa-senior-rosette";
