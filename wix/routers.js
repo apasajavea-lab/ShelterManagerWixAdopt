@@ -76,7 +76,8 @@ export async function adopt_Router(request) {
 
     const lang = languageFromRequest(request);
     const languagePrefix = lang === "en" ? "" : `/${lang}`;
-    const target = new URL(`${String(request.baseUrl).replace(/\/$/, "")}${languagePrefix}/dogprofile`);
+    const siteBase = String(request.baseUrl).replace(/\/$/, "").replace(/\/(?:es|de)$/i, "");
+    const target = new URL(`${siteBase}${languagePrefix}/dogprofile`);
     target.searchParams.set("animalid", String(dog.ID));
     target.searchParams.set("lang", lang);
     target.searchParams.set("slug", dog.profileSlug);
