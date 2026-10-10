@@ -182,7 +182,15 @@
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   handleOptionalContent();
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/adopt-a-dog", es: "https://www.apasa.eu/es/adopt-a-dog", de: "https://www.apasa.eu/de/adopt-a-dog" };
-  if (back) { back.href = backUrls[lang]; back.target = "_top"; back.textContent = back.dataset[lang] || back.textContent; }
+  let backUrl = backUrls[lang];
+  const requestedReturnValue = query.get("return");
+  if (requestedReturnValue) {
+    try {
+      const requestedReturn = new URL(requestedReturnValue, "https://www.apasa.eu");
+      if (requestedReturn.protocol === "https:" && ["apasa.eu", "www.apasa.eu"].includes(requestedReturn.hostname)) backUrl = requestedReturn.toString();
+    } catch (_) { /* Use the normal adoptable-dogs page. */ }
+  }
+  if (back) { back.href = backUrl; back.target = "_top"; back.textContent = back.dataset[lang] || back.textContent; }
   const main = document.querySelector(".apasa-main-photo");
   const thumbs = document.querySelector(".apasa-thumbs");
   function updateArrowVisibility() {
@@ -296,8 +304,8 @@
     const section = document.createElement("section");
     section.className = `apasa-profile-footer${isReserved ? " apasa-profile-footer-reserved" : ""}`;
     section.innerHTML = isReserved
-      ? `<h2>${escapeHtml(reservedWords.title)}</h2><p>${escapeHtml(reservedWords.before)}<a href="https://www.apasa.eu${prefix}/wait-list" target="_top">${escapeHtml(reservedWords.link)}</a>${escapeHtml(reservedWords.after)}</p><a class="apasa-back-button" href="https://www.apasa.eu${prefix}/adopt-a-dog" target="_top">${escapeHtml(words.back)}</a>`
-      : `<h2>${escapeHtml(words.title)}</h2><p>${escapeHtml(words.intro)}</p><p class="apasa-contact-title">${escapeHtml(words.contactTitle)}</p><p>${escapeHtml(words.reach)} <a href="https://www.apasa.eu${prefix}/adoption-form" target="_top">${escapeHtml(words.form)}</a>, ${escapeHtml(words.email)} <a href="mailto:apasa.javea@gmail.com">apasa.javea@gmail.com</a>, ${escapeHtml(words.or)} <a href="https://wa.me/34618754635" target="_blank" rel="noopener">+34 618 754 635</a>.</p><h3>${escapeHtml(words.noMatch)}</h3><p><a href="https://www.apasa.eu${prefix}/wait-list" target="_top">${escapeHtml(words.wait)}</a></p><p>${escapeHtml(words.waitText)}</p><p class="apasa-profile-share-title">${escapeHtml(words.share)}</p><div class="apasa-profile-share"><a class="apasa-share-link" href="${facebookUrl}" target="_blank" rel="noopener">● ${escapeHtml(words.facebook)}</a><a class="apasa-share-link" href="${whatsappShareUrl}" target="_blank" rel="noopener">● ${escapeHtml(words.whatsapp)}</a><button class="apasa-copy-link" type="button">🔗 ${escapeHtml(copyLabels[0])}</button></div><a class="apasa-back-button" href="https://www.apasa.eu${prefix}/adopt-a-dog" target="_top">${escapeHtml(words.back)}</a>`;
+      ? `<h2>${escapeHtml(reservedWords.title)}</h2><p>${escapeHtml(reservedWords.before)}<a href="https://www.apasa.eu${prefix}/wait-list" target="_top">${escapeHtml(reservedWords.link)}</a>${escapeHtml(reservedWords.after)}</p><a class="apasa-back-button" href="${escapeHtml(backUrl)}" target="_top">${escapeHtml(words.back)}</a>`
+      : `<h2>${escapeHtml(words.title)}</h2><p>${escapeHtml(words.intro)}</p><p class="apasa-contact-title">${escapeHtml(words.contactTitle)}</p><p>${escapeHtml(words.reach)} <a href="https://www.apasa.eu${prefix}/adoption-form" target="_top">${escapeHtml(words.form)}</a>, ${escapeHtml(words.email)} <a href="mailto:apasa.javea@gmail.com">apasa.javea@gmail.com</a>, ${escapeHtml(words.or)} <a href="https://wa.me/34618754635" target="_blank" rel="noopener">+34 618 754 635</a>.</p><h3>${escapeHtml(words.noMatch)}</h3><p><a href="https://www.apasa.eu${prefix}/wait-list" target="_top">${escapeHtml(words.wait)}</a></p><p>${escapeHtml(words.waitText)}</p><p class="apasa-profile-share-title">${escapeHtml(words.share)}</p><div class="apasa-profile-share"><a class="apasa-share-link" href="${facebookUrl}" target="_blank" rel="noopener">● ${escapeHtml(words.facebook)}</a><a class="apasa-share-link" href="${whatsappShareUrl}" target="_blank" rel="noopener">● ${escapeHtml(words.whatsapp)}</a><button class="apasa-copy-link" type="button">🔗 ${escapeHtml(copyLabels[0])}</button></div><a class="apasa-back-button" href="${escapeHtml(backUrl)}" target="_top">${escapeHtml(words.back)}</a>`;
     const copyButton = section.querySelector(".apasa-copy-link");
     copyButton?.addEventListener("click", async () => {
       try { await navigator.clipboard.writeText(shareUrl); }

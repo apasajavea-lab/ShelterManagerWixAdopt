@@ -238,23 +238,26 @@
     };
 
     list.addEventListener("click", event => {
-      const button = event.target.closest(".apasa-button");
-      if (!button) return;
-      const profileLink = button.closest(".asm3-adoptable-item")?.querySelector(".asm3-adoptable-link");
+      const item = event.target.closest(".asm3-adoptable-item");
+      const profileLink = item?.querySelector(".asm3-adoptable-link");
       if (profileLink) {
         event.preventDefault();
         const profileUrl = new URL(profileLink.href, window.location.href);
+        const animalId = profileUrl.searchParams.get("animalid") || "";
         const wixProfile = new URL(`${lang === "en" ? "" : `/${lang}`}/dogprofile`, window.location.origin);
-        wixProfile.searchParams.set("animalid", profileUrl.searchParams.get("animalid") || "");
+        wixProfile.searchParams.set("animalid", animalId);
         wixProfile.searchParams.set("lang", lang);
-        const publisherColour = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.colour;
+        const returnUrl = new URL(window.location.href);
+        returnUrl.hash = animalId ? `dog-${animalId}` : "";
+        wixProfile.searchParams.set("return", returnUrl.toString());
+        const publisherColour = item.querySelector(".apasa-extra")?.dataset.colour;
         if (publisherColour) wixProfile.searchParams.set("colour", publisherColour);
-        const publisherSize = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.size;
+        const publisherSize = item.querySelector(".apasa-extra")?.dataset.size;
         if (publisherSize) wixProfile.searchParams.set("size", publisherSize);
-        const publisherSpecial = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.special || "";
+        const publisherSpecial = item.querySelector(".apasa-extra")?.dataset.special || "";
         if (publisherSpecial.split(" ").includes("senior")) wixProfile.searchParams.set("senior", "1");
-        const reserved = button.closest(".asm3-adoptable-item")?.querySelector(".apasa-extra")?.dataset.reserved;
-        if (reserved === "true" || button.closest(".asm3-adoptable-item")?.querySelector(".asm3-adoptable-reserved")) wixProfile.searchParams.set("reserved", "1");
+        const reserved = item.querySelector(".apasa-extra")?.dataset.reserved;
+        if (reserved === "true" || item.querySelector(".asm3-adoptable-reserved")) wixProfile.searchParams.set("reserved", "1");
         window.location.assign(wixProfile.toString());
       }
     });
@@ -297,6 +300,11 @@
         const extra = item.querySelector(".apasa-extra");
         const name = String(extra?.dataset.name || "").toLowerCase();
         const image = item.querySelector(".asm3-adoptable-thumbnail");
+        const profileLink = item.querySelector(".asm3-adoptable-link");
+        if (profileLink) {
+          const animalId = new URL(profileLink.href, window.location.href).searchParams.get("animalid");
+          if (animalId) item.id = `dog-${animalId}`;
+        }
         if (image && focalPoints[name]) image.style.objectPosition = focalPoints[name];
         if (image) {
           const updatePhotoBottom = () => item.style.setProperty("--apasa-photo-bottom", `${image.offsetTop + image.offsetHeight}px`);
@@ -333,6 +341,13 @@
           item.querySelector(".asm3-adoptable-link")?.appendChild(ribbon);
         }
       });
+      if (window.location.hash.startsWith("#dog-") && !list.dataset.apasaReturnRestored) {
+        const target = document.getElementById(window.location.hash.slice(1));
+        if (target) {
+          list.dataset.apasaReturnRestored = "true";
+          window.requestAnimationFrame(() => target.scrollIntoView({ behavior: "auto", block: "center" }));
+        }
+      }
     }
     let attempts = 0;
     const timer = window.setInterval(() => {
