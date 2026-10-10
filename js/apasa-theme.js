@@ -53,6 +53,14 @@
   const reservedText = { en: "Reserved", es: "Reservado", de: "Reserviert" }[lang];
 
   function escapeHtml(value) { return String(value == null ? "" : value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+  function dogSlug(value) {
+    return String(value || "dog")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "dog";
+  }
   function shortDescription(a) {
     const fallback = {
       en: "A very new arrival who we are still getting to know!",
@@ -244,20 +252,11 @@
         event.preventDefault();
         const profileUrl = new URL(profileLink.href, window.location.href);
         const animalId = profileUrl.searchParams.get("animalid") || "";
-        const wixProfile = new URL(`${lang === "en" ? "" : `/${lang}`}/dogprofile`, window.location.origin);
-        wixProfile.searchParams.set("animalid", animalId);
-        wixProfile.searchParams.set("lang", lang);
+        const slug = item.dataset.profileSlug || dogSlug(item.querySelector(".apasa-extra")?.dataset.name);
+        const wixProfile = new URL(`${lang === "en" ? "" : `/${lang}`}/adopt/${slug}`, window.location.origin);
         const returnUrl = new URL(window.location.href);
         returnUrl.hash = animalId ? `dog-${animalId}` : "";
         wixProfile.searchParams.set("return", returnUrl.toString());
-        const publisherColour = item.querySelector(".apasa-extra")?.dataset.colour;
-        if (publisherColour) wixProfile.searchParams.set("colour", publisherColour);
-        const publisherSize = item.querySelector(".apasa-extra")?.dataset.size;
-        if (publisherSize) wixProfile.searchParams.set("size", publisherSize);
-        const publisherSpecial = item.querySelector(".apasa-extra")?.dataset.special || "";
-        if (publisherSpecial.split(" ").includes("senior")) wixProfile.searchParams.set("senior", "1");
-        const reserved = item.querySelector(".apasa-extra")?.dataset.reserved;
-        if (reserved === "true" || item.querySelector(".asm3-adoptable-reserved")) wixProfile.searchParams.set("reserved", "1");
         window.location.assign(wixProfile.toString());
       }
     });
@@ -296,7 +295,20 @@
   function waitForList() {
     function positionPhotos(list) {
       const focalPoints = { digby: "center 34%", loba: "center 34%" };
-      list.querySelectorAll(".asm3-adoptable-item").forEach(item => {
+      const items = Array.from(list.querySelectorAll(".asm3-adoptable-item"));
+      const slugGroups = new Map();
+      items.forEach(item => {
+        const baseSlug = dogSlug(item.querySelector(".apasa-extra")?.dataset.name);
+        if (!slugGroups.has(baseSlug)) slugGroups.set(baseSlug, []);
+        slugGroups.get(baseSlug).push(item);
+      });
+      slugGroups.forEach((group, baseSlug) => {
+        group.sort((left, right) => {
+          const id = item => Number(new URL(item.querySelector(".asm3-adoptable-link").href, window.location.href).searchParams.get("animalid") || 0);
+          return id(left) - id(right);
+        }).forEach((item, index) => { item.dataset.profileSlug = index ? `${baseSlug}-${index + 1}` : baseSlug; });
+      });
+      items.forEach(item => {
         const extra = item.querySelector(".apasa-extra");
         const name = String(extra?.dataset.name || "").toLowerCase();
         const image = item.querySelector(".asm3-adoptable-thumbnail");

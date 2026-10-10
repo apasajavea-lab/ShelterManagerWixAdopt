@@ -50,17 +50,11 @@
   function openProfile(item) {
     const source = item?.querySelector(".asm3-adoptable-link");
     if (!source) return;
-    const sourceUrl = new URL(source.href, window.location.href);
-    const profile = new URL(`${lang === "en" ? "" : `/${lang}`}/dogprofile`, window.location.origin);
-    profile.searchParams.set("animalid", sourceUrl.searchParams.get("animalid") || "");
-    profile.searchParams.set("lang", lang);
-    const colour = item.querySelector(".apasa-extra")?.dataset.colour;
-    if (colour) profile.searchParams.set("colour", colour);
-    const size = item.querySelector(".apasa-extra")?.dataset.size;
-    if (size) profile.searchParams.set("size", size);
-    const special = item.querySelector(".apasa-extra")?.dataset.special || "";
-    if (special.split(" ").includes("senior")) profile.searchParams.set("senior", "1");
-    if (item.querySelector(".apasa-extra")?.dataset.reserved === "true" || item.querySelector(".asm3-adoptable-reserved")) profile.searchParams.set("reserved", "1");
+    const fallbackSlug = String(item.querySelector(".apasa-extra")?.dataset.name || "dog")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "dog";
+    const slug = item.dataset.profileSlug || fallbackSlug;
+    const profile = new URL(`${lang === "en" ? "" : `/${lang}`}/adopt/${slug}`, window.location.origin);
     window.location.assign(profile.toString());
   }
 

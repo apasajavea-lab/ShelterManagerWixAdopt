@@ -285,8 +285,10 @@
     const isReserved = query.get("reserved") === "1";
     const female = /female|hembra|hündin/i.test(document.querySelector(".apasa-sex")?.textContent || "");
     const prefix = lang === "en" ? "" : `/${lang}`;
-    const canonicalProfile = new URL(`${prefix}/dogprofile`, "https://www.apasa.eu");
-    ["animalid", "lang", "colour", "size", "senior", "reserved"].forEach(key => { if (query.get(key)) canonicalProfile.searchParams.set(key, query.get(key)); });
+    const canonicalProfile = query.get("slug")
+      ? new URL(`${prefix}/adopt/${encodeURIComponent(query.get("slug"))}`, "https://www.apasa.eu")
+      : new URL(`${prefix}/dogprofile`, "https://www.apasa.eu");
+    if (!query.get("slug")) ["animalid", "lang", "colour", "size", "senior", "reserved"].forEach(key => { if (query.get(key)) canonicalProfile.searchParams.set(key, query.get(key)); });
     const shareUrl = canonicalProfile.toString();
     const copyLabels = { en: ["Copy link", "Copied!"], es: ["Copiar enlace", "¡Copiado!"], de: ["Link kopieren", "Kopiert!"] }[lang];
     const words = {

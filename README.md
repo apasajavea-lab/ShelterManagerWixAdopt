@@ -23,6 +23,10 @@ The script selects English by default, Spanish for `/es/` paths, and German for 
 
 The `@main` CDN URLs can be cached. For controlled releases, use a Git tag such as `@v2.0.0` in both URLs.
 
+## Friendly dog profile URLs
+
+The optional Wix Velo router in `wix/routers.js` provides automatic profile links such as `/adopt/kylie` and `/adopt/lady-jane`. It resolves the dog name against the live public ShelterManager adoption feed, so staff continue managing dogs only in ShelterManager. See `INSTALLATION.md` for the Wix router setup and required deployment order.
+
 ## Dog profile template
 
 The files in `templates/animalview-*.html` are the three blocks for a ShelterManager

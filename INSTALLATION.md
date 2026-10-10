@@ -8,6 +8,17 @@
 
 Never commit passwords, API keys, private animal information, or ShelterManager login credentials to this public repository.
 
+## Automatic dog profile URLs
+
+1. Turn on Velo Dev Mode in Wix.
+2. In the Code sidebar, add a **Router** with the prefix `adopt`. Wix creates the router pages and the backend `routers.js` file.
+3. Copy the contents of `wix/routers.js` into Wix's generated backend `routers.js` file. If that file already contains other routers, keep them and add the imports, constants, helper functions and `adopt_Router` export from this project.
+4. Publish Wix before updating the adoption-page and homepage CDN scripts.
+5. Confirm that `/adopt/kylie` opens Kylie's profile. Also test `/es/adopt/kylie` and `/de/adopt/kylie`.
+6. Update the website CDN script URLs to the release containing the friendly-link changes, publish again, and test a card click plus the profile sharing buttons.
+
+The router reads the current public ShelterManager adoption feed each time it resolves a name, so new dogs require no Wix changes. Names are converted to lowercase URL slugs (`Lady Jane` becomes `lady-jane`). If two current dogs have the same name, the dog with the higher ShelterManager ID receives `-2`, then `-3`, and so on. The router uses temporary redirects because the current adoption list can change.
+
 ## Events page
 
 1. Create a ShelterManager HTML publishing template called `apasaevents`.

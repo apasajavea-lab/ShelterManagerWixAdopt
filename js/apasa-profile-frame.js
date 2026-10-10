@@ -20,6 +20,7 @@
     if (query.get("senior") === "1") profileUrl.searchParams.set("senior", "1");
     if (query.get("reserved") === "1") profileUrl.searchParams.set("reserved", "1");
     if (query.get("return")) profileUrl.searchParams.set("return", query.get("return"));
+    if (query.get("slug")) profileUrl.searchParams.set("slug", query.get("slug"));
     const iframe = document.createElement("iframe");
     iframe.className = "apasa-profile-frame";
     iframe.title = lang === "es" ? "Perfil del perro" : lang === "de" ? "Hundeprofil" : "Dog profile";
