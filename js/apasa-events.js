@@ -17,15 +17,58 @@
     const match = String(value || "").trim().match(/^(.*?)\s+(\d{1,2}:\d{2})(?::\d{2})?$/);
     return match ? { date: match[1], time: match[2] } : { date: String(value || "").trim(), time: "" };
   };
+  const wallClockValue = (year, month, day, hour = 0, minute = 0, second = 0) =>
+    Date.UTC(year, month - 1, day, hour, minute, second);
+  const eventDateValue = (value, endOfDay = false) => {
+    const text = String(value || "").replace(/\u00a0/g, " ").trim();
+    let match = text.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(?:[T,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    let year, month, day, hour, minute, second, hasTime;
+    if (match) {
+      [, year, month, day, hour, minute, second] = match;
+      hasTime = hour !== undefined;
+    } else {
+      match = text.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})(?:[T,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+      if (!match) return null;
+      [, day, month, year, hour, minute, second] = match;
+      hasTime = hour !== undefined;
+    }
+    const values = [year, month, day, hour || 0, minute || 0, second || 0].map(Number);
+    if (values.slice(0, 3).some(Number.isNaN) || values[1] < 1 || values[1] > 12 || values[2] < 1 || values[2] > 31) return null;
+    if (endOfDay && !hasTime) values.splice(3, 3, 23, 59, 59);
+    else if (endOfDay && second === undefined) values[5] = 59;
+    return wallClockValue(...values);
+  };
+  const madridNowValue = () => {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Madrid",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map(part => [part.type, Number(part.value)]));
+    return wallClockValue(values.year, values.month, values.day, values.hour, values.minute, values.second);
+  };
 
   document.querySelectorAll("[data-i18n]").forEach(element => {
     element.textContent = element.dataset[lang] || element.dataset.en || element.textContent;
   });
 
   const events = Array.from(document.querySelectorAll(".apasa-event"));
-  document.querySelector(".apasa-events-empty").hidden = events.length > 0;
+  const now = madridNowValue();
+  const currentEvents = events.filter(event => {
+    const rawStart = cleanText(event.querySelector(".apasa-event-start"));
+    const rawEnd = cleanText(event.querySelector(".apasa-event-end"));
+    const start = dateTimeParts(rawStart);
+    const endsAt = eventDateValue(rawEnd, true) ?? eventDateValue(start.date, true);
+    if (endsAt !== null && endsAt < now) {
+      event.remove();
+      return false;
+    }
+    return true;
+  });
+  document.querySelector(".apasa-events-empty").hidden = currentEvents.length > 0;
 
-  events.forEach(event => {
+  currentEvents.forEach(event => {
     const start = dateTimeParts(cleanText(event.querySelector(".apasa-event-start")));
     const end = dateTimeParts(cleanText(event.querySelector(".apasa-event-end")));
     const dateValue = event.querySelector(".apasa-event-date-value");
