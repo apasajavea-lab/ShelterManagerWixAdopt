@@ -216,15 +216,17 @@
     const months = Math.floor((days - Math.floor(years * 365.2425)) / 30.4369);
     return localizedDuration(years, months, days);
   }
-  function badge(a) { const days = originalShelterDays(a); const dob = a.DATEOFBIRTH ? new Date(`${a.DATEOFBIRTH}T00:00:00`) : null; const years = dob && !Number.isNaN(dob.getTime()) ? (Date.now() - dob.getTime()) / 31557600000 : 0; if (years >= 10) return ["apasa-badge-senior", `⭐ ${text.senior}`]; if (days > 730) return ["apasa-badge-longstay", `❤️ ${text.longstay}`]; if (days > 0 && days < 30) return ["apasa-badge-new", `● ${text.newArrival}`]; return null; }
   function isReserved(a) {
     const flag = [a.ANIMALISRESERVED, a.HASACTIVERESERVE, a.ISRESERVED, a.RESERVED].some(value => /^(1|true|yes|si|sí|ja)$/i.test(String(value || "").trim()));
     return flag || /reserved|reservad[oa]|reserviert/i.test(String(a.ADOPTIONSTATUS || a.RESERVATIONSTATUS || ""));
   }
   function card(a) {
-    const dogName = escapeHtml(a.ANIMALNAME || ""); const dogBadge = badge(a); const breedName = breed(a); const breedClass = breedName.length > 38 ? " apasa-breed-long" : ""; const ageDetail = escapeHtml(age(a)); const sexAndSize = [sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(waitingTime(a));
+    const dogName = escapeHtml(a.ANIMALNAME || ""); const breedName = breed(a); const breedClass = breedName.length > 38 ? " apasa-breed-long" : ""; const ageDetail = escapeHtml(age(a)); const sexAndSize = [sex(a), size(a)].filter(Boolean).map(escapeHtml).join(" &bull; "); const waiting = escapeHtml(waitingTime(a));
     const months = ageInMonths(a); const days = originalShelterDays(a); const specials = [months >= 120 ? "senior" : "", days > 730 ? "longstay" : "", days > 0 && days < 30 ? "new" : ""].filter(Boolean).join(" ");
-    return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-reserved="${isReserved(a)}" data-colour="${escapeHtml(a.BASECOLOURNAME || a.ADOPTAPETCOLOUR || "")}">${dogBadge ? `<div class="apasa-badge ${dogBadge[0]}">${escapeHtml(dogBadge[1])}</div>` : `<div class="apasa-badge apasa-badge-placeholder" aria-hidden="true">Placeholder</div>`}<div class="apasa-breed${breedClass}">${escapeHtml(breedName)}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details"><span class="apasa-details-age">${ageDetail}</span><span class="apasa-details-sex-size">${sexAndSize}</span></div>${waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : ""}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
+    const waitingRow = days > 0 && days < 30
+      ? `<div class="apasa-waiting apasa-waiting-new"><span>● ${escapeHtml(text.newArrival)}</span></div>`
+      : waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : "";
+    return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-reserved="${isReserved(a)}" data-colour="${escapeHtml(a.BASECOLOURNAME || a.ADOPTAPETCOLOUR || "")}"><div class="apasa-breed${breedClass}">${escapeHtml(breedName)}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details"><span class="apasa-details-age">${ageDetail}</span><span class="apasa-details-sex-size">${sexAndSize}</span></div>${waitingRow}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
   }
 
   function toolbarHtml() {
