@@ -12,8 +12,8 @@ Add this as Wix Custom Code on the adoption page and place it in the **head**.
   window.asm3_adoptable_div_id = "comp-mp2i6zi2";
   window.asm3_adoptable_delay = 2000;
 </script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@b1ec3c68b25a1931c1fe9bc6d8affb26ee50d6b0/js/apasa-breeds.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@b1ec3c68b25a1931c1fe9bc6d8affb26ee50d6b0/js/apasa-theme.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@d88d84773e5c55b535a0713877c893395216e876/js/apasa-breeds.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@d88d84773e5c55b535a0713877c893395216e876/js/apasa-theme.js"></script>
 <script src="https://service.sheltermanager.com/asmservice?method=animal_view_adoptable_js&account=zz1727"></script>
 ```
 
