@@ -841,9 +841,9 @@ window.APASA_BREEDS = {
     "de": "Pumi"
   },
   "169": {
-    "en": "Rat Terrier",
-    "es": "Rat Terrier",
-    "de": "Rat Terrier"
+    "en": "Andalusian Rat Terrier (Bodeguero)",
+    "es": "Bodeguero",
+    "de": "Andalusischer Rattenfänger (Bodeguero)"
   },
   "170": {
     "en": "Redbone Coonhound",
@@ -1129,5 +1129,10 @@ window.APASA_BREEDS = {
     "en": "Podenco",
     "es": "Podenco",
     "de": "Podenco"
+  },
+  "448": {
+    "en": "Pointer",
+    "es": "Braco",
+    "de": "Vorstehhund"
   }
 };

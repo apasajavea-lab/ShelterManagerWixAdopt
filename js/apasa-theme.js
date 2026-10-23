@@ -99,7 +99,7 @@
 
     if (differentBreeds) {
       if (lang === "es") return `Cruce de ${primary} y ${secondary}`;
-      return `${primary} × ${secondary}`;
+      return `${primary} / ${secondary}`;
     }
 
     if (lang === "es") return `Cruce de ${primary}`;

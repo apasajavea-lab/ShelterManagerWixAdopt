@@ -86,7 +86,7 @@
     const translated = parts.map(translateSingle);
     element.textContent = lang === "es"
       ? `Cruce de ${translated.slice(0, -1).join(", ")} y ${translated.at(-1)}`
-      : translated.join(" × ");
+      : translated.join(" / ");
   }
   function loadBreedTranslations() {
     if (window.APASA_BREEDS) { translateBreed(); return; }
