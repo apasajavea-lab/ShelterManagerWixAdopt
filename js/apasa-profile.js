@@ -84,6 +84,14 @@
     const parts = raw.split(/\s*(?:\/|×|\+|\bx\b)\s*/i).map(value => value.trim()).filter(Boolean);
     if (parts.length < 2) return;
     const translated = parts.map(translateSingle);
+    const mixedBreedNames = Object.values(window.APASA_BREEDS["442"] || {}).map(normalise);
+    if (mixedBreedNames.includes(normalise(parts.at(-1)))) {
+      const primary = translated.slice(0, -1).join(" / ");
+      element.textContent = lang === "es"
+        ? `Cruce de ${primary}`
+        : lang === "de" ? `${primary}-Mischling` : `${primary} Mix`;
+      return;
+    }
     element.textContent = lang === "es"
       ? `Cruce de ${translated.slice(0, -1).join(", ")} y ${translated.at(-1)}`
       : translated.join(" / ");

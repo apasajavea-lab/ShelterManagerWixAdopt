@@ -97,6 +97,12 @@
       secondary.toLowerCase() !== primary.toLowerCase()
     );
 
+    if (String(a.BREED2ID || "") === "442") {
+      if (lang === "es") return `Cruce de ${primary}`;
+      if (lang === "de") return `${primary}-Mischling`;
+      return `${primary} Mix`;
+    }
+
     if (differentBreeds) {
       if (lang === "es") return `Cruce de ${primary} y ${secondary}`;
       return `${primary} / ${secondary}`;
