@@ -376,6 +376,13 @@
       if (++attempts > 80) window.clearInterval(timer);
     }, 250);
   }
+  const existingAdoptableFilter = typeof window.asm3_adoptable_filter === "function" ? window.asm3_adoptable_filter : null;
+  window.asm3_adoptable_filter = function (animal, index, animals) {
+    const hasWebsitePhoto = Number(animal?.WEBSITEIMAGECOUNT || 0) > 0
+      && Number(animal?.WEBSITEMEDIAID || 0) > 0
+      && String(animal?.WEBSITEMEDIADATE || "").trim() !== "";
+    return hasWebsitePhoto && (!existingAdoptableFilter || existingAdoptableFilter(animal, index, animals));
+  };
   window.asm3_adoptable_extra = card;
   window.asm3_adoptable_sort = "ANIMALNAME";
   window.asm3_adoptable_style = "apasaanimalview";
