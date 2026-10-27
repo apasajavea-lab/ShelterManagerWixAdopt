@@ -56,6 +56,11 @@
   const events = Array.from(document.querySelectorAll(".apasa-event"));
   const now = madridNowValue();
   const currentEvents = events.filter(event => {
+    const displayOnWeb = cleanText(event.querySelector(".apasa-event-display-on-web"));
+    if (displayOnWeb !== "1") {
+      event.remove();
+      return false;
+    }
     const rawStart = cleanText(event.querySelector(".apasa-event-start"));
     const rawEnd = cleanText(event.querySelector(".apasa-event-end"));
     const start = dateTimeParts(rawStart);
