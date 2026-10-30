@@ -186,7 +186,14 @@
   loadBreedTranslations();
   addSizeFact();
   configureFacts();
-  document.querySelectorAll(".apasa-trait strong").forEach(element => { element.textContent = lookup(element.textContent); });
+  document.querySelectorAll(".apasa-trait strong").forEach((element, traitIndex) => {
+    const rawValue = String(element.textContent || "").trim();
+    const normalisedValue = rawValue.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const isNegative = ["no", "nein"].includes(normalisedValue);
+    element.textContent = traitIndex === 0 && isNegative
+      ? ["Please see description below", "Consulte la descripción a continuación", "Bitte lesen Sie die Beschreibung unten"][index]
+      : lookup(rawValue);
+  });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   handleOptionalContent();
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/adopt-a-dog", es: "https://www.apasa.eu/es/adopt-a-dog", de: "https://www.apasa.eu/de/adopt-a-dog" };
