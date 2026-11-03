@@ -39,6 +39,8 @@ input[type="submit"]:hover, input[type="submit"]:focus-visible { color: #111; ba
 .apasa-form-success p { max-width: 650px; margin: 0 auto 24px; font-size: 17px; }
 .apasa-form-success a { display: inline-block; min-width: 230px; padding: 11px 24px; color: var(--apasa-orange-dark); background: #fff; border-radius: 24px; font-weight: 700; text-decoration: none; }
 .apasa-form-success a:hover, .apasa-form-success a:focus-visible { color: #111; background: #fff8e8; transform: translateY(-1px); }
+.apasa-eligibility-message td { padding: 4px 0 18px !important; }
+.apasa-eligibility-message div { padding: 15px 18px; color: #5f160d; background: #fff4f1; border: 2px solid #a92d1c; border-radius: 14px; font-weight: 700; line-height: 1.5; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }

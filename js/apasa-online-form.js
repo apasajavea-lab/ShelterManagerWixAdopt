@@ -1,8 +1,9 @@
 (function () {
   "use strict";
   const query = new URLSearchParams(location.search);
-  const lang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : "en";
   const formId = Number(query.get("formid") || 0);
+  const requestedLang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : "en";
+  const lang = formId === 52 && requestedLang === "de" ? "en" : requestedLang;
   document.documentElement.lang = lang;
   const translations = {
     en: {
@@ -30,7 +31,8 @@
         pdfHelp: "Please attach your CV as a PDF document.",
         successTitle: "Thank you for your application",
         successMessage: "We’ll review your application and contact you if you are selected for the next stage.",
-        homeLabel: "Visit the APASA website"
+        homeLabel: "Visit the APASA website",
+        ineligible: "APASA can only employ applicants who are legally entitled to work in Spain and who can provide valid documentation confirming their right to work. Unfortunately, we cannot proceed with your application."
       }
     },
     es: {
@@ -58,7 +60,8 @@
         pdfHelp: "Adjunta tu currículum como documento PDF.",
         successTitle: "Gracias por tu solicitud",
         successMessage: "Revisaremos tu solicitud y nos pondremos en contacto contigo si pasas a la siguiente fase.",
-        homeLabel: "Visitar el sitio web de APASA"
+        homeLabel: "Visitar el sitio web de APASA",
+        ineligible: "APASA solo puede contratar a personas que tengan derecho legal a trabajar en España y que puedan aportar documentación válida que lo acredite. Lamentablemente, no podemos continuar con tu solicitud."
       }
     },
     de: {
@@ -74,19 +77,6 @@
         submit: "In die Warteliste eintragen",
         labels: { town: "Ort", country: "Land", lookingforsex: "Geschlecht", size: "Größe", lookingforolderthan: "Älter als (Jahre)", lookingforyoungerthan: "Jünger als (Jahre)", commentsperson: "Was für einen Hund suchen Sie?" },
         sexes: ["Beliebig", "Rüde", "Hündin"], sizes: ["Beliebig", "Klein", "Mittel", "Groß", "Sehr groß"]
-      },
-      jobApplication: {
-        title: "Bewerbung bei APASA",
-        intro: "Vielen Dank für Ihr Interesse an einer Mitarbeit bei APASA. Bitte füllen Sie die Bewerbung aus und laden Sie Ihren Lebenslauf als PDF-Datei hoch. Mit einem Sternchen gekennzeichnete Felder sind Pflichtfelder.",
-        submit: "Bewerbung absenden",
-        labels: { position: "Stelle, auf die Sie sich bewerben", townlive: "Wohnort", legalwork: "Sind Sie berechtigt, in Spanien zu arbeiten?", drivinglicense: "Besitzen Sie einen gültigen Führerschein?", owntransport: "Verfügen Sie über ein eigenes Fahrzeug?", languages: "Sprachkenntnisse", relevantexperience: "Berufs- oder Tierpflegeerfahrung", whywork: "Warum möchten Sie für APASA arbeiten?", available: "Wann könnten Sie anfangen?", pdfupload: "Lebenslauf als PDF-Datei anhängen" },
-        positions: ["Teilzeitkraft in der Hundebetreuung"],
-        languages: ["Englisch", "Spanisch", "Deutsch", "Niederländisch", "Französisch"],
-        yesNo: ["Nein", "Ja"],
-        pdfHelp: "Bitte hängen Sie Ihren Lebenslauf als PDF-Dokument an.",
-        successTitle: "Vielen Dank für Ihre Bewerbung",
-        successMessage: "Wir prüfen Ihre Bewerbung und melden uns bei Ihnen, wenn Sie für die nächste Runde ausgewählt werden.",
-        homeLabel: "APASA-Webseite besuchen"
       }
     }
   };
@@ -136,6 +126,32 @@
   });
   const pdfTooltip = document.querySelector('input[data-name^="PDFUpload_"]')?.closest(".asm-onlineform-tr")?.querySelector(".asm-onlineform-tooltip");
   if (pdfTooltip && words.pdfHelp) pdfTooltip.textContent = words.pdfHelp;
+  if (formId === 52) {
+    const legalWork = document.querySelector('select[name^="LegalWork_"]');
+    const legalWorkRow = legalWork?.closest(".asm-onlineform-tr");
+    const submitRow = document.querySelector('input[type="submit"]')?.closest("p");
+    if (legalWork && legalWorkRow) {
+      const messageRow = document.createElement("tr");
+      messageRow.className = "apasa-eligibility-message";
+      messageRow.hidden = true;
+      messageRow.innerHTML = `<td colspan="2"><div role="alert">${words.ineligible}</div></td>`;
+      legalWorkRow.insertAdjacentElement("afterend", messageRow);
+      const laterRows = Array.from(legalWorkRow.parentElement.children).filter(row =>
+        row.matches?.(".asm-onlineform-tr") && Array.from(legalWorkRow.parentElement.children).indexOf(row) > Array.from(legalWorkRow.parentElement.children).indexOf(messageRow)
+      );
+      const updateEligibility = () => {
+        const ineligible = legalWork.value.trim().toLowerCase() === "no";
+        messageRow.hidden = !ineligible;
+        laterRows.forEach(row => {
+          row.hidden = ineligible;
+          row.querySelectorAll("input, select, textarea").forEach(field => { field.disabled = ineligible; });
+        });
+        if (submitRow) submitRow.hidden = ineligible;
+      };
+      legalWork.addEventListener("change", updateEligibility);
+      updateEligibility();
+    }
+  }
   const heardSelect = translateOptions('select[name^="Howhear_"]', words.heard);
   if (heardSelect) {
     let blankOption = Array.from(heardSelect.options).find(option => !option.value.trim());
