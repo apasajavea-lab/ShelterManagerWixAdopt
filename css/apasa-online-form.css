@@ -34,6 +34,11 @@ input[type="checkbox"], input[type="radio"] { accent-color: #111; }
 input[type="submit"] { display: block; width: min(48%, 440px); min-width: 210px; min-height: 40px; margin: 8px 0 0 auto; padding: 8px 24px; color: var(--apasa-orange-dark); background: #fff; border: 0; border-radius: 24px; font: inherit; font-size: 16px; font-weight: 500; cursor: pointer; transition: color .2s ease, background .2s ease, transform .2s ease; }
 input[type="submit"]:hover, input[type="submit"]:focus-visible { color: #111; background: #fff8e8; transform: translateY(-1px); }
 .alert, .asm-onlineform-error { border-radius: 12px; }
+.apasa-form-success { padding: clamp(18px, 5vw, 48px) 0; text-align: center; }
+.apasa-form-success .asm-onlineform-title { justify-content: center; margin-bottom: 16px; text-align: center; }
+.apasa-form-success p { max-width: 650px; margin: 0 auto 24px; font-size: 17px; }
+.apasa-form-success a { display: inline-block; min-width: 230px; padding: 11px 24px; color: var(--apasa-orange-dark); background: #fff; border-radius: 24px; font-weight: 700; text-decoration: none; }
+.apasa-form-success a:hover, .apasa-form-success a:focus-visible { color: #111; background: #fff8e8; transform: translateY(-1px); }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }

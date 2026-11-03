@@ -27,7 +27,10 @@
         positions: ["Dog Care Assistant – Part Time"],
         languages: ["English", "Spanish", "German", "Dutch", "French"],
         yesNo: ["No", "Yes"],
-        pdfHelp: "Please attach your CV as a PDF document."
+        pdfHelp: "Please attach your CV as a PDF document.",
+        successTitle: "Thank you for your application",
+        successMessage: "We’ll review your application and contact you if you are selected for the next stage.",
+        homeLabel: "Visit the APASA website"
       }
     },
     es: {
@@ -52,7 +55,10 @@
         positions: ["Auxiliar de cuidado canino – Jornada parcial"],
         languages: ["Inglés", "Español", "Alemán", "Neerlandés", "Francés"],
         yesNo: ["No", "Sí"],
-        pdfHelp: "Adjunta tu currículum como documento PDF."
+        pdfHelp: "Adjunta tu currículum como documento PDF.",
+        successTitle: "Gracias por tu solicitud",
+        successMessage: "Revisaremos tu solicitud y nos pondremos en contacto contigo si pasas a la siguiente fase.",
+        homeLabel: "Visitar el sitio web de APASA"
       }
     },
     de: {
@@ -77,7 +83,10 @@
         positions: ["Teilzeitkraft in der Hundebetreuung"],
         languages: ["Englisch", "Spanisch", "Deutsch", "Niederländisch", "Französisch"],
         yesNo: ["Nein", "Ja"],
-        pdfHelp: "Bitte hängen Sie Ihren Lebenslauf als PDF-Dokument an."
+        pdfHelp: "Bitte hängen Sie Ihren Lebenslauf als PDF-Dokument an.",
+        successTitle: "Vielen Dank für Ihre Bewerbung",
+        successMessage: "Wir prüfen Ihre Bewerbung und melden uns bei Ihnen, wenn Sie für die nächste Runde ausgewählt werden.",
+        homeLabel: "APASA-Webseite besuchen"
       }
     }
   };
@@ -176,7 +185,19 @@
     responseFrame.addEventListener("load", () => {
       if (!completionPending) return;
       completionPending = false;
-      parent.postMessage({ type: "apasa-online-form-success", lang, formId }, "*");
+      if (parent !== window) {
+        parent.postMessage({ type: "apasa-online-form-success", lang, formId }, "*");
+        return;
+      }
+      if (formId === 52) {
+        const homePages = { en: "https://www.apasa.eu/", es: "https://www.apasa.eu/es", de: "https://www.apasa.eu/de" };
+        const page = document.querySelector("#page");
+        if (page) {
+          page.innerHTML = `<section class="apasa-form-success" role="status"><h2 class="asm-onlineform-title">${words.successTitle}</h2><p>${words.successMessage}</p><a href="${homePages[lang]}">${words.homeLabel}</a></section>`;
+          document.title = words.successTitle;
+          scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
     });
   }
   const existingSubmitHook = window.asm3_onlineform_submit;
