@@ -41,6 +41,9 @@ input[type="submit"]:hover, input[type="submit"]:focus-visible { color: #111; ba
 .apasa-form-success a:hover, .apasa-form-success a:focus-visible { color: #111; background: #fff8e8; transform: translateY(-1px); }
 .apasa-eligibility-message td { padding: 4px 0 18px !important; }
 .apasa-eligibility-message div { padding: 15px 18px; color: #5f160d; background: #fff4f1; border: 2px solid #a92d1c; border-radius: 14px; font-weight: 700; line-height: 1.5; }
+.apasa-email-error td { padding: 0 0 14px !important; }
+.apasa-email-error div { padding: 11px 14px; color: #5f160d; background: #fff4f1; border: 2px solid #a92d1c; border-radius: 12px; font-weight: 700; line-height: 1.4; }
+input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0 0 0 3px rgba(255, 255, 255, .55) !important; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }
