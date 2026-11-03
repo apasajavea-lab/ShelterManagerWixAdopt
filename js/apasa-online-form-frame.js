@@ -17,6 +17,11 @@
       en: "Thank you for joining our Waiting List. We'll be in touch if a suitable match becomes available.",
       es: "Gracias por unirte a nuestra Lista de Espera. Nos pondremos en contacto contigo cuando haya un compañero adecuado.",
       de: "Vielen Dank für Ihren Eintrag in unsere Warteliste. Wir melden uns, sobald ein passender Hund verfügbar ist."
+    },
+    jobApplication: {
+      en: "Thank you for your application. We’ll review it and contact you if you are selected for the next stage.",
+      es: "Gracias por tu solicitud. La revisaremos y nos pondremos en contacto contigo si pasas a la siguiente fase.",
+      de: "Vielen Dank für Ihre Bewerbung. Wir prüfen sie und melden uns bei Ihnen, wenn Sie für die nächste Runde ausgewählt werden."
     }
   };
   const homePages = { en: "https://www.apasa.eu/", es: "https://www.apasa.eu/es", de: "https://www.apasa.eu/de" };
@@ -33,7 +38,9 @@
     iframe.className = "apasa-online-form-frame";
     const frameTitles = formId === 51
       ? { en: "APASA Waiting List", es: "Lista de Espera de APASA", de: "APASA Warteliste" }
-      : { en: "Contact APASA", es: "Contacta con APASA", de: "APASA kontaktieren" };
+      : formId === 52
+        ? { en: "APASA Job Application", es: "Solicitud de empleo de APASA", de: "Bewerbung bei APASA" }
+        : { en: "Contact APASA", es: "Contacta con APASA", de: "APASA kontaktieren" };
     iframe.title = frameTitles[lang];
     iframe.src = url.toString();
     iframe.style.cssText = "display:block;width:100%;height:1050px;border:0;background:#f3f4ed";
@@ -55,7 +62,7 @@
         resizeHost(height);
       }
       if (event.data?.type === "apasa-online-form-success") {
-        const messageType = formId === 51 ? "waitList" : "contact";
+        const messageType = formId === 51 ? "waitList" : formId === 52 ? "jobApplication" : "contact";
         alert(successMessages[messageType][lang]);
         location.assign(homePages[lang]);
       }

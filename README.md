@@ -88,3 +88,9 @@ Form 51 uses the same header and footer assets through
 `templates/online-form-waitlist-footer.html`. On the Wix Waiting List page use
 the same loader block, set the page's container ID, and change
 `window.apasa_online_form_id` to `51`.
+
+Form 52 is the APASA job application form. Use
+`templates/online-form-job-header.html` and
+`templates/online-form-job-footer.html` for its ShelterManager header and
+footer. On the Wix job application page, use the same loader block with the
+page's container ID and set `window.apasa_online_form_id` to `52`.

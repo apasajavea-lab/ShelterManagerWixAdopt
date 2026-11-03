@@ -18,6 +18,16 @@
         submit: "Join the Waiting List",
         labels: { town: "Town", country: "Country", lookingforsex: "Sex", size: "Size", lookingforolderthan: "Older than (years)", lookingforyoungerthan: "Younger than (years)", commentsperson: "What are you hoping to find?" },
         sexes: ["Any", "Male", "Female"], sizes: ["Any", "Small", "Medium", "Large", "Giant"]
+      },
+      jobApplication: {
+        title: "Apply to Join the APASA Team",
+        intro: "Thank you for your interest in working with APASA. Please complete the application below and attach your CV in PDF format. Fields marked with an asterisk are required.",
+        submit: "Submit Application",
+        labels: { position: "Position applied for", townlive: "Town where you live", legalwork: "Are you legally entitled to work in Spain?", drivinglicense: "Do you have a valid driving licence?", owntransport: "Do you have your own transport?", languages: "Languages spoken", relevantexperience: "Relevant employment or animal-care experience", whywork: "Why would you like to work for APASA?", available: "When would you be available to start?", pdfupload: "Attach your CV in PDF format" },
+        positions: ["Dog Care Assistant – Part Time"],
+        languages: ["English", "Spanish", "German", "Dutch", "French"],
+        yesNo: ["No", "Yes"],
+        pdfHelp: "Please attach your CV as a PDF document."
       }
     },
     es: {
@@ -33,6 +43,16 @@
         submit: "Unirme a la Lista de Espera",
         labels: { town: "Localidad", country: "País", lookingforsex: "Sexo", size: "Tamaño", lookingforolderthan: "Mayor de (años)", lookingforyoungerthan: "Menor de (años)", commentsperson: "¿Qué tipo de perro estás buscando?" },
         sexes: ["Cualquiera", "Macho", "Hembra"], sizes: ["Cualquiera", "Pequeño", "Mediano", "Grande", "Gigante"]
+      },
+      jobApplication: {
+        title: "Solicitud de empleo",
+        intro: "Gracias por tu interés en trabajar con APASA. Completa la solicitud y adjunta tu currículum en formato PDF. Los campos marcados con un asterisco son obligatorios.",
+        submit: "Enviar solicitud",
+        labels: { position: "Puesto solicitado", townlive: "Localidad donde resides", legalwork: "¿Tienes derecho legal a trabajar en España?", drivinglicense: "¿Tienes un permiso de conducir válido?", owntransport: "¿Dispones de transporte propio?", languages: "Idiomas que hablas", relevantexperience: "Experiencia laboral o en el cuidado de animales", whywork: "¿Por qué te gustaría trabajar para APASA?", available: "¿Cuándo podrías empezar?", pdfupload: "Adjunta tu currículum en formato PDF" },
+        positions: ["Auxiliar de cuidado canino – Jornada parcial"],
+        languages: ["Inglés", "Español", "Alemán", "Neerlandés", "Francés"],
+        yesNo: ["No", "Sí"],
+        pdfHelp: "Adjunta tu currículum como documento PDF."
       }
     },
     de: {
@@ -48,13 +68,22 @@
         submit: "In die Warteliste eintragen",
         labels: { town: "Ort", country: "Land", lookingforsex: "Geschlecht", size: "Größe", lookingforolderthan: "Älter als (Jahre)", lookingforyoungerthan: "Jünger als (Jahre)", commentsperson: "Was für einen Hund suchen Sie?" },
         sexes: ["Beliebig", "Rüde", "Hündin"], sizes: ["Beliebig", "Klein", "Mittel", "Groß", "Sehr groß"]
+      },
+      jobApplication: {
+        title: "Bewerbung bei APASA",
+        intro: "Vielen Dank für Ihr Interesse an einer Mitarbeit bei APASA. Bitte füllen Sie die Bewerbung aus und laden Sie Ihren Lebenslauf als PDF-Datei hoch. Mit einem Sternchen gekennzeichnete Felder sind Pflichtfelder.",
+        submit: "Bewerbung absenden",
+        labels: { position: "Stelle, auf die Sie sich bewerben", townlive: "Wohnort", legalwork: "Sind Sie berechtigt, in Spanien zu arbeiten?", drivinglicense: "Besitzen Sie einen gültigen Führerschein?", owntransport: "Verfügen Sie über ein eigenes Fahrzeug?", languages: "Sprachkenntnisse", relevantexperience: "Berufs- oder Tierpflegeerfahrung", whywork: "Warum möchten Sie für APASA arbeiten?", available: "Wann könnten Sie anfangen?", pdfupload: "Lebenslauf als PDF-Datei anhängen" },
+        positions: ["Teilzeitkraft in der Hundebetreuung"],
+        languages: ["Englisch", "Spanisch", "Deutsch", "Niederländisch", "Französisch"],
+        yesNo: ["Nein", "Ja"],
+        pdfHelp: "Bitte hängen Sie Ihren Lebenslauf als PDF-Dokument an."
       }
     }
   };
   const baseWords = translations[lang];
-  const words = formId === 51
-    ? { ...baseWords, ...baseWords.waitList, labels: { ...baseWords.labels, ...baseWords.waitList.labels } }
-    : baseWords;
+  const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : null;
+  const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
   const title = document.querySelector(".asm-onlineform-title");
   if (title) {
     title.textContent = words.title;
@@ -63,11 +92,12 @@
   const fieldBaseName = element => String(element?.name || "").replace(/_\d+$/, "");
   document.querySelectorAll("input,select,textarea").forEach(field => {
     const base = field.id?.endsWith("verify") ? "emailverify" : fieldBaseName(field);
-    const label = field.id && document.querySelector(`label[for="${CSS.escape(field.id)}"]`);
-    if (label && words.labels[base]) {
+    const label = (field.id && document.querySelector(`label[for="${CSS.escape(field.id)}"]`)) || field.closest(".asm-onlineform-tr")?.querySelector("label");
+    const translatedLabel = words.labels[base] || words.labels[base.toLowerCase()];
+    if (label && translatedLabel) {
       const required = label.querySelector(".asm-onlineform-required")?.outerHTML || "";
-      label.innerHTML = `${words.labels[base]}${required ? ` ${required}` : ""}`;
-      field.placeholder = words.labels[base];
+      label.innerHTML = `${translatedLabel}${required ? ` ${required}` : ""}`;
+      field.placeholder = translatedLabel;
     }
   });
   const translateOptions = (selector, visibleLabels) => {
@@ -75,13 +105,28 @@
     if (!select) return;
     const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
     choices.forEach((option, index) => {
-      if (visibleLabels[index]) option.textContent = visibleLabels[index];
+      if (visibleLabels[index]) {
+        if (!option.hasAttribute("value")) option.value = option.textContent.trim();
+        option.textContent = visibleLabels[index];
+      }
     });
     return select;
   };
   translateOptions('select[name^="reason_"]', words.reasons);
   translateOptions('select[name^="lookingforsex_"]', words.sexes || []);
   translateOptions('select[name^="size_"]', words.sizes || []);
+  translateOptions('select[name^="Position_"]', words.positions || []);
+  translateOptions('select[data-name^="Languages_"]', words.languages || []);
+  document.querySelectorAll("select.asm-onlineform-yesno").forEach(select => {
+    const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
+    choices.forEach((option, optionIndex) => {
+      if (!words.yesNo?.[optionIndex]) return;
+      if (!option.hasAttribute("value")) option.value = option.textContent.trim();
+      option.textContent = words.yesNo[optionIndex];
+    });
+  });
+  const pdfTooltip = document.querySelector('input[data-name^="PDFUpload_"]')?.closest(".asm-onlineform-tr")?.querySelector(".asm-onlineform-tooltip");
+  if (pdfTooltip && words.pdfHelp) pdfTooltip.textContent = words.pdfHelp;
   const heardSelect = translateOptions('select[name^="Howhear_"]', words.heard);
   if (heardSelect) {
     let blankOption = Array.from(heardSelect.options).find(option => !option.value.trim());
