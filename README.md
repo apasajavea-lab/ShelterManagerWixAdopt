@@ -77,7 +77,7 @@ On the Wix Contact APASA page, add an empty container and use its Wix HTML ID:
   window.apasa_online_form_account = "apasa";
   window.apasa_online_form_id = 48;
 </script>
-<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@48e6c6b4ca6ab00181836c2475edd6470d0294b6/js/apasa-online-form-frame.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/apasajavea-lab/ShelterManagerWixAdopt@de1c712/js/apasa-online-form-frame.js"></script>
 ```
 
 The loader passes the Wix page language to ShelterManager and automatically
