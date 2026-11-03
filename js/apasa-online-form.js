@@ -24,14 +24,15 @@
         title: "Apply to Join the APASA Team",
         intro: "Thank you for your interest in working with APASA. Please <a href=\"https://service.sheltermanager.com/asmservice?account=apasa&amp;method=document_repository&amp;mediaid=2983\" target=\"_blank\" rel=\"noopener\">view the full job description</a> before completing the application below. Please attach your CV in PDF format. Fields marked with an asterisk are required.",
         submit: "Submit Application",
-        labels: { position: "Position applied for", townlive: "Town where you live", legalwork: "Are you legally entitled to work in Spain?", drivinglicense: "Do you have a valid driving licence?", owntransport: "Do you have your own transport?", languages: "Languages spoken", relevantexperience: "Relevant employment or animal-care experience", whywork: "Why would you like to work for APASA?", available: "When would you be available to start?", pdfupload: "Attach your CV in PDF format" },
+        labels: { position: "Position applied for", townlive: "Town where you live", legalwork: "Are you legally entitled to work in Spain?", drivinglicense: "Do you have a valid driving licence?", owntransport: "Do you have your own transport?", languages: "Languages spoken", relevantexperience: "Relevant employment or animal-care experience", whywork: "Why would you like to work for APASA?", additionalinfo: "Additional information", available: "When would you be available to start?", pdfupload: "Attach your CV in PDF format" },
+        tooltips: { languages: "Please select the languages you speak.", relevantexperience: "Please describe the relevant experience that you believe makes you suitable for this role.", additionalinfo: "Please include any additional information you believe is relevant to your application." },
         positions: ["Dog Care Assistant – Part Time"],
         languages: ["English", "Spanish", "German", "Dutch", "French"],
         yesNo: ["No", "Yes"],
         pdfHelp: "Please attach your CV as a PDF document.",
         successTitle: "Thank you for your application",
         successMessage: "We’ll review your application and contact you if you are selected for the next stage.",
-        homeLabel: "Visit the APASA website",
+        homeLabel: "Visit the APASA website", chooseFile: "Choose PDF", noFile: "No file selected",
         ineligible: "APASA can only employ applicants who are legally entitled to work in Spain and who can provide valid documentation confirming their right to work. Unfortunately, we cannot proceed with your application."
       }
     },
@@ -51,16 +52,17 @@
       },
       jobApplication: {
         title: "Solicitud de empleo",
-        intro: "Gracias por tu interés en trabajar con APASA. Completa la solicitud y adjunta tu currículum en formato PDF. Los campos marcados con un asterisco son obligatorios.",
+        intro: "Gracias por tu interés en trabajar con APASA. Consulta la <a href=\"https://service.sheltermanager.com/asmservice?account=apasa&amp;method=document_repository&amp;mediaid=2984\" target=\"_blank\" rel=\"noopener\">descripción completa del puesto</a> antes de completar la solicitud. Adjunta tu currículum en formato PDF. Los campos marcados con un asterisco son obligatorios.",
         submit: "Enviar solicitud",
-        labels: { position: "Puesto solicitado", townlive: "Localidad donde resides", legalwork: "¿Tienes derecho legal a trabajar en España?", drivinglicense: "¿Tienes un permiso de conducir válido?", owntransport: "¿Dispones de transporte propio?", languages: "Idiomas que hablas", relevantexperience: "Experiencia laboral o en el cuidado de animales", whywork: "¿Por qué te gustaría trabajar para APASA?", available: "¿Cuándo podrías empezar?", pdfupload: "Adjunta tu currículum en formato PDF" },
-        positions: ["Auxiliar de cuidado canino – Jornada parcial"],
+        labels: { position: "Puesto solicitado", townlive: "Localidad donde resides", legalwork: "¿Tienes derecho legal a trabajar en España?", drivinglicense: "¿Tienes un permiso de conducir válido?", owntransport: "¿Dispones de transporte propio?", languages: "Idiomas que hablas", relevantexperience: "Experiencia laboral o en el cuidado de animales", whywork: "¿Por qué te gustaría trabajar para APASA?", additionalinfo: "Información adicional", available: "¿Cuándo podrías empezar?", pdfupload: "Adjunta tu currículum en formato PDF" },
+        tooltips: { languages: "Selecciona los idiomas que hablas.", relevantexperience: "Describe la experiencia relevante que consideres que te hace adecuado/a para este puesto.", additionalinfo: "Incluye cualquier información adicional que consideres relevante para tu solicitud." },
+        positions: ["Cuidador/a de perros – Jornada parcial"],
         languages: ["Inglés", "Español", "Alemán", "Neerlandés", "Francés"],
         yesNo: ["No", "Sí"],
         pdfHelp: "Adjunta tu currículum como documento PDF.",
         successTitle: "Gracias por tu solicitud",
         successMessage: "Revisaremos tu solicitud y nos pondremos en contacto contigo si pasas a la siguiente fase.",
-        homeLabel: "Visitar el sitio web de APASA",
+        homeLabel: "Visitar el sitio web de APASA", chooseFile: "Seleccionar PDF", noFile: "Ningún archivo seleccionado",
         ineligible: "APASA solo puede contratar a personas que tengan derecho legal a trabajar en España y que puedan aportar documentación válida que lo acredite. Lamentablemente, no podemos continuar con tu solicitud."
       }
     },
@@ -126,6 +128,25 @@
   });
   const pdfTooltip = document.querySelector('input[data-name^="PDFUpload_"]')?.closest(".asm-onlineform-tr")?.querySelector(".asm-onlineform-tooltip");
   if (pdfTooltip && words.pdfHelp) pdfTooltip.textContent = words.pdfHelp;
+  if (formId === 52) {
+    document.querySelectorAll(".asm-onlineform-tr").forEach(row => {
+      const field = row.querySelector("[name], [data-name]");
+      const base = String(field?.name || field?.dataset?.name || "").replace(/_\d+$/, "").toLowerCase();
+      const tooltip = row.querySelector(".asm-onlineform-tooltip");
+      if (tooltip && words.tooltips?.[base]) tooltip.textContent = words.tooltips[base];
+    });
+    const pdfInput = document.querySelector("input.asm-onlineform-pdf");
+    if (pdfInput) {
+      pdfInput.classList.add("apasa-native-file");
+      const fileControl = document.createElement("div");
+      fileControl.className = "apasa-file-control";
+      fileControl.innerHTML = `<button type="button">${words.chooseFile}</button><span>${words.noFile}</span>`;
+      const fileName = fileControl.querySelector("span");
+      fileControl.querySelector("button").addEventListener("click", () => pdfInput.click());
+      pdfInput.addEventListener("change", () => { fileName.textContent = pdfInput.files?.[0]?.name || words.noFile; });
+      pdfInput.insertAdjacentElement("afterend", fileControl);
+    }
+  }
   if (formId === 52) {
     const legalWork = document.querySelector('select[name^="LegalWork_"]');
     const legalWorkRow = legalWork?.closest(".asm-onlineform-tr");

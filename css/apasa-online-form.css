@@ -44,6 +44,11 @@ input[type="submit"]:hover, input[type="submit"]:focus-visible { color: #111; ba
 .apasa-email-error td { padding: 0 0 14px !important; }
 .apasa-email-error div { padding: 11px 14px; color: #5f160d; background: #fff4f1; border: 2px solid #a92d1c; border-radius: 12px; font-weight: 700; line-height: 1.4; }
 input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0 0 0 3px rgba(255, 255, 255, .55) !important; }
+.apasa-native-file { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap; }
+.apasa-file-control { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.apasa-file-control button { flex: 0 0 auto; min-height: 38px; padding: 7px 15px; color: #111; background: #fff; border: 1px solid var(--apasa-border); border-radius: 20px; font: inherit; cursor: pointer; }
+.apasa-file-control button:hover, .apasa-file-control button:focus-visible { background: #fff8e8; outline: 2px solid #111; outline-offset: 1px; }
+.apasa-file-control span { min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }
