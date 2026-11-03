@@ -172,6 +172,7 @@
     telephoneControl = window.intlTelInput(phone, {
       initialCountry: "es",
       countryOrder: ["es", "gb", "de", "fr", "nl", "be"],
+      autoPlaceholder: "off",
       separateDialCode: true,
       strictMode: true,
       loadUtils: () => import("https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.3/dist/js/utils.js")
