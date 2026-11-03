@@ -22,7 +22,7 @@
       },
       jobApplication: {
         title: "Apply to Join the APASA Team",
-        intro: "Thank you for your interest in working with APASA. Please complete the application below and attach your CV in PDF format. Fields marked with an asterisk are required.",
+        intro: "Thank you for your interest in working with APASA. Please <a href=\"https://service.sheltermanager.com/asmservice?account=apasa&amp;method=document_repository&amp;mediaid=2983\" target=\"_blank\" rel=\"noopener\">view the full job description</a> before completing the application below. Please attach your CV in PDF format. Fields marked with an asterisk are required.",
         submit: "Submit Application",
         labels: { position: "Position applied for", townlive: "Town where you live", legalwork: "Are you legally entitled to work in Spain?", drivinglicense: "Do you have a valid driving licence?", owntransport: "Do you have your own transport?", languages: "Languages spoken", relevantexperience: "Relevant employment or animal-care experience", whywork: "Why would you like to work for APASA?", available: "When would you be available to start?", pdfupload: "Attach your CV in PDF format" },
         positions: ["Dog Care Assistant – Part Time"],
@@ -96,7 +96,7 @@
     if (label && translatedLabel) {
       const required = label.querySelector(".asm-onlineform-required")?.outerHTML || "";
       label.innerHTML = `${translatedLabel}${required ? ` ${required}` : ""}`;
-      field.placeholder = translatedLabel;
+      field.placeholder = formId === 52 ? "" : translatedLabel;
     }
   });
   const translateOptions = (selector, visibleLabels) => {
