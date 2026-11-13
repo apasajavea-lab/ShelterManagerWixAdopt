@@ -49,6 +49,10 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 .apasa-file-control button { flex: 0 0 auto; min-height: 38px; padding: 7px 15px; color: #111; background: #fff; border: 1px solid var(--apasa-border); border-radius: 20px; font: inherit; cursor: pointer; }
 .apasa-file-control button:hover, .apasa-file-control button:focus-visible { background: #fff8e8; outline: 2px solid #111; outline-offset: 1px; }
 .apasa-file-control span { min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
+.apasa-no-vacancies { max-width: 720px; margin: 0 auto; padding: clamp(36px, 8vw, 78px) 24px; text-align: center; }
+.apasa-no-vacancies-paw { margin-bottom: 8px; font-size: 44px; line-height: 1; }
+.apasa-no-vacancies h2 { margin: 0 0 14px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 6vw, 43px); font-weight: 400; line-height: 1.15; }
+.apasa-no-vacancies p { max-width: 590px; margin: 0 auto; font-size: clamp(16px, 2.5vw, 19px); line-height: 1.55; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }

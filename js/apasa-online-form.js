@@ -10,6 +10,7 @@
       title: "Get in Touch",
       intro: "We’d love to hear from you – whether you’re ready to volunteer, or just have questions. Fill out the form below and we’ll get back to you as soon as possible. If you are interested in adopting, please fill out the <a href=\"https://www.apasa.eu/adoption-form\" target=\"_top\">adoption form</a>.",
       submit: "Submit", phoneSearch: "Search countries", emailMismatch: "The email addresses do not match. Please check them and try again.",
+      vacancyClosed: { title: "No current job vacancies", message: "We currently have no job vacancies. Please check back again in the future." },
       labels: { firstname: "First name", lastname: "Last name", emailaddress: "Email", emailverify: "Please confirm email address", mobiletelephone: "Phone", reason: "Reason for Contact", message: "Message", Howhear: "How Did You Hear About Us?" },
       reasons: ["I want to adopt", "I want to foster", "I'd like to donate", "I'm interested in volunteering", "I have a question about an event", "I have a general question", "Other"],
       heard: ["Facebook", "Instagram", "Website", "Volunteer", "Other"],
@@ -40,6 +41,7 @@
       title: "Contacta con nosotros",
       intro: "Nos encantaría saber de ti, tanto si quieres ser voluntario/a como si solo tienes alguna pregunta. Completa el formulario y te responderemos lo antes posible. Si estás interesado/a en adoptar, completa el <a href=\"https://www.apasa.eu/es/adoption-form\" target=\"_top\">formulario de adopción</a>.",
       submit: "Enviar", phoneSearch: "Buscar países", emailMismatch: "Las direcciones de correo electrónico no coinciden. Compruébalas e inténtalo de nuevo.",
+      vacancyClosed: { title: "No hay vacantes actualmente", message: "Actualmente no tenemos ofertas de empleo. Vuelve a consultar esta página más adelante." },
       labels: { firstname: "Nombre", lastname: "Apellidos", emailaddress: "Correo electrónico", emailverify: "Confirma tu correo electrónico", mobiletelephone: "Teléfono", reason: "Motivo del contacto", message: "Mensaje", Howhear: "¿Cómo nos conociste?" },
       reasons: ["Quiero adoptar", "Quiero acoger", "Me gustaría donar", "Me interesa ser voluntario/a", "Tengo una pregunta sobre un evento", "Tengo una pregunta general", "Otro"],
       heard: ["Facebook", "Instagram", "Sitio web", "Voluntariado", "Otro"],
@@ -70,6 +72,7 @@
       title: "Kontakt aufnehmen",
       intro: "Wir freuen uns, von Ihnen zu hören – egal, ob Sie ehrenamtlich helfen möchten oder Fragen haben. Füllen Sie das Formular aus und wir melden uns so bald wie möglich. Wenn Sie einen Hund adoptieren möchten, füllen Sie bitte das <a href=\"https://www.apasa.eu/de/adoption-form\" target=\"_top\">Adoptionsformular</a> aus.",
       submit: "Absenden", phoneSearch: "Länder suchen", emailMismatch: "Die E-Mail-Adressen stimmen nicht überein. Bitte überprüfen Sie Ihre Eingaben.",
+      vacancyClosed: { title: "Derzeit keine offenen Stellen", message: "Derzeit haben wir keine offenen Stellen. Bitte schauen Sie zu einem späteren Zeitpunkt wieder vorbei." },
       labels: { firstname: "Vorname", lastname: "Nachname", emailaddress: "E-Mail-Adresse", emailverify: "E-Mail-Adresse bestätigen", mobiletelephone: "Telefon", reason: "Grund der Kontaktaufnahme", message: "Nachricht", Howhear: "Wie haben Sie von uns erfahren?" },
       reasons: ["Ich möchte adoptieren", "Ich möchte eine Pflegestelle anbieten", "Ich möchte spenden", "Ich interessiere mich für ehrenamtliche Mitarbeit", "Ich habe eine Frage zu einer Veranstaltung", "Ich habe eine allgemeine Frage", "Sonstiges"],
       heard: ["Facebook", "Instagram", "Webseite", "Ehrenamtliche", "Sonstiges"],
@@ -85,6 +88,19 @@
   const baseWords = translations[lang];
   const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : null;
   const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
+  if (formId === 52) {
+    const position = document.querySelector('select[name^="Position_"]');
+    const hasVacancy = position && Array.from(position.options).some(option => option.value.trim() || option.textContent.trim());
+    if (!hasVacancy) {
+      const vacancyWords = translations[requestedLang].vacancyClosed;
+      const page = document.querySelector("#page");
+      document.documentElement.lang = requestedLang;
+      document.title = vacancyWords.title;
+      if (page) page.innerHTML = `<section class="apasa-no-vacancies" role="status"><div class="apasa-no-vacancies-paw" aria-hidden="true">🐾</div><h2>${vacancyWords.title}</h2><p>${vacancyWords.message}</p></section>`;
+      requestAnimationFrame(() => parent.postMessage({ type: "apasa-online-form-height", height: document.documentElement.scrollHeight }, "*"));
+      return;
+    }
+  }
   const title = document.querySelector(".asm-onlineform-title");
   if (title) {
     title.textContent = words.title;
