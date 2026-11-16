@@ -47,7 +47,12 @@
         frequencies: ["€15 monthly", "€45 quarterly", "€180 yearly"],
         durations: ["1 month", "3 months", "6 months", "1 year", "Ongoing"],
         paymentMethods: ["PayPal", "Bank transfer"],
-        clearSignature: "Clear signature"
+        clearSignature: "Clear signature",
+        chooseDog: "Choose a dog",
+        dogLoading: "Loading available dogs…",
+        dogLoadError: "The available dogs could not be loaded. Please refresh the page.",
+        sexNames: { 0: "Female", 1: "Male" },
+        age: { year: "year", years: "years", month: "month", months: "months" }
       }
     },
     es: {
@@ -91,7 +96,12 @@
         frequencies: ["15 € al mes", "45 € al trimestre", "180 € al año"],
         durations: ["1 mes", "3 meses", "6 meses", "1 año", "Continuado"],
         paymentMethods: ["PayPal", "Transferencia bancaria"],
-        clearSignature: "Borrar firma"
+        clearSignature: "Borrar firma",
+        chooseDog: "Elige un perro",
+        dogLoading: "Cargando perros disponibles…",
+        dogLoadError: "No se ha podido cargar la lista de perros disponibles. Actualiza la página.",
+        sexNames: { 0: "Hembra", 1: "Macho" },
+        age: { year: "año", years: "años", month: "mes", months: "meses" }
       }
     },
     de: {
@@ -120,7 +130,12 @@
         frequencies: ["15 € monatlich", "45 € vierteljährlich", "180 € jährlich"],
         durations: ["1 Monat", "3 Monate", "6 Monate", "1 Jahr", "Fortlaufend"],
         paymentMethods: ["PayPal", "Banküberweisung"],
-        clearSignature: "Unterschrift löschen"
+        clearSignature: "Unterschrift löschen",
+        chooseDog: "Hund auswählen",
+        dogLoading: "Verfügbare Hunde werden geladen…",
+        dogLoadError: "Die verfügbaren Hunde konnten nicht geladen werden. Bitte laden Sie die Seite neu.",
+        sexNames: { 0: "Hündin", 1: "Rüde" },
+        age: { year: "Jahr", years: "Jahre", month: "Monat", months: "Monate" }
       }
     }
   };
@@ -260,6 +275,78 @@
       addSectionBefore('[name^="Signature_"]', "apasa-sponsorship-agreement", words.agreementHeading, words.agreement);
     }
     document.querySelectorAll(".asm-onlineform-signature-clear").forEach(button => { button.textContent = words.clearSignature; });
+
+    const country = document.querySelector('select[name^="country_"]');
+    if (country && window.intlTelInput?.getCountryData) {
+      const displayNames = typeof Intl.DisplayNames === "function" ? new Intl.DisplayNames([lang], { type: "region" }) : null;
+      const countries = window.intlTelInput.getCountryData().map(item => ({
+        code: item.iso2.toUpperCase(),
+        canonical: item.name,
+        label: displayNames?.of(item.iso2.toUpperCase()) || item.name
+      })).sort((a, b) => a.label.localeCompare(b.label, lang));
+      const blank = document.createElement("option");
+      blank.value = "";
+      country.replaceChildren(blank);
+      countries.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.canonical;
+        option.textContent = item.label;
+        country.appendChild(option);
+      });
+    }
+
+    const dogSelect = document.querySelector("select.asm-onlineform-shelteranimal");
+    if (dogSelect) {
+      const loading = document.createElement("option");
+      loading.value = "";
+      loading.textContent = words.dogLoading;
+      dogSelect.replaceChildren(loading);
+      dogSelect.disabled = true;
+      const ageText = dateOfBirth => {
+        const born = new Date(dateOfBirth);
+        if (Number.isNaN(born.getTime())) return "";
+        const now = new Date();
+        let months = (now.getFullYear() - born.getFullYear()) * 12 + now.getMonth() - born.getMonth();
+        if (now.getDate() < born.getDate()) months -= 1;
+        months = Math.max(0, months);
+        const years = Math.floor(months / 12), remainingMonths = months % 12;
+        if (years) return `${years} ${years === 1 ? words.age.year : words.age.years}${remainingMonths ? ` ${remainingMonths} ${remainingMonths === 1 ? words.age.month : words.age.months}` : ""}`;
+        return `${remainingMonths} ${remainingMonths === 1 ? words.age.month : words.age.months}`;
+      };
+      fetch("https://service.sheltermanager.com/asmservice?method=animal_view_adoptable_js&account=zz1727")
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.text();
+        })
+        .then(source => {
+          const match = source.match(/var adoptables = (\[.*?\]);/s);
+          if (!match) throw new Error("Adoptable data not found");
+          const dogs = JSON.parse(match[1]).filter(dog =>
+            Number(dog.SPECIESID) === 1 &&
+            Number(dog.HASACTIVERESERVE) !== 1 &&
+            Number(dog.HASTRIALADOPTION) !== 1 &&
+            Number(dog.HASPERMANENTFOSTER) !== 1 &&
+            String(dog.DISPLAYLOCATION || "").toLowerCase() === "shelter"
+          ).sort((a, b) => String(a.ANIMALNAME).localeCompare(String(b.ANIMALNAME), lang));
+          const blank = document.createElement("option");
+          blank.value = "";
+          blank.textContent = words.chooseDog;
+          dogSelect.replaceChildren(blank);
+          dogs.forEach(dog => {
+            const option = document.createElement("option");
+            const details = [words.sexNames[dog.SEX], ageText(dog.DATEOFBIRTH)].filter(Boolean).join(" · ");
+            option.value = `${dog.ANIMALNAME}::${dog.CODE || dog.SHELTERCODE || ""}`;
+            option.dataset.id = dog.ID;
+            option.textContent = `${dog.ANIMALNAME}${details ? ` — ${details}` : ""}`;
+            dogSelect.appendChild(option);
+          });
+          dogSelect.disabled = false;
+        })
+        .catch(error => {
+          console.error("APASA sponsorship dog list:", error);
+          loading.textContent = words.dogLoadError;
+        });
+    }
   }
   const phone = document.querySelector('input[name^="mobiletelephone_"], input[name^="celltelephone_"]');
   let telephoneControl = null;
