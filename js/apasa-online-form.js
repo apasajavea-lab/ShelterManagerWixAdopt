@@ -35,6 +35,19 @@
         successMessage: "We’ll review your application and contact you if you are selected for the next stage.",
         homeLabel: "Visit the APASA website", chooseFile: "Choose PDF", noFile: "No file selected",
         ineligible: "APASA can only employ applicants who are legally entitled to work in Spain and who can provide valid documentation confirming their right to work. Unfortunately, we cannot proceed with your application."
+      },
+      sponsorship: {
+        title: "Sponsor a Dog",
+        intro: "Your sponsorship helps care for a dog at the APASA shelter in Jávea (Alicante), Spain. Choose the dog you’d like to sponsor, your contribution and how long you’d like to sponsor the dog.",
+        submit: "Submit Sponsorship",
+        contactHeading: "Your contact details",
+        agreementHeading: "Sponsorship agreement",
+        agreement: "By signing below, I agree to sponsor the dog I have selected and contribute the amount shown at the frequency and for the duration I have chosen. If the dog is adopted, APASA will let me know, and I agree for my sponsorship to transfer to another dog in need.",
+        labels: { animalname: "Dog you’d like to sponsor", frequency: "Sponsorship contribution", duration: "Sponsorship duration", paymethod: "Payment method", firstname: "First name", lastname: "Last name", address: "Street address", city: "Town or city", state: "Province, state or region", zipcode: "Postcode", country: "Country", emailaddress: "Email address", celltelephone: "Mobile phone number", signature: "Your signature" },
+        frequencies: ["€15 monthly", "€45 quarterly", "€180 yearly"],
+        durations: ["1 month", "3 months", "6 months", "1 year", "Ongoing"],
+        paymentMethods: ["PayPal", "Bank transfer"],
+        clearSignature: "Clear signature"
       }
     },
     es: {
@@ -66,6 +79,19 @@
         successMessage: "Revisaremos tu solicitud y nos pondremos en contacto contigo si pasas a la siguiente fase.",
         homeLabel: "Visitar el sitio web de APASA", chooseFile: "Seleccionar PDF", noFile: "Ningún archivo seleccionado",
         ineligible: "APASA solo puede contratar a personas que tengan derecho legal a trabajar en España y que puedan aportar documentación válida que lo acredite. Lamentablemente, no podemos continuar con tu solicitud."
+      },
+      sponsorship: {
+        title: "Apadrina a un perro",
+        intro: "Con tu apadrinamiento ayudas a cuidar de un perro del refugio de APASA en Jávea (Alicante), España. Elige qué perro quieres apadrinar, qué aportación prefieres y durante cuánto tiempo quieres apadrinarlo.",
+        submit: "Enviar apadrinamiento",
+        contactHeading: "Tus datos de contacto",
+        agreementHeading: "Acuerdo de apadrinamiento",
+        agreement: "Al firmar, me comprometo a apadrinar al perro que he elegido y a aportar el importe indicado con la frecuencia y durante el periodo seleccionados. Si el perro es adoptado, APASA me avisará y acepto que mi apadrinamiento se transfiera a otro perro que lo necesite.",
+        labels: { animalname: "Perro que quieres apadrinar", frequency: "Aportación del apadrinamiento", duration: "Duración del apadrinamiento", paymethod: "Forma de pago", firstname: "Nombre", lastname: "Apellidos", address: "Calle y número", city: "Localidad", state: "Provincia, estado o región", zipcode: "Código postal", country: "País", emailaddress: "Correo electrónico", celltelephone: "Número de móvil", signature: "Tu firma" },
+        frequencies: ["15 € al mes", "45 € al trimestre", "180 € al año"],
+        durations: ["1 mes", "3 meses", "6 meses", "1 año", "Continuado"],
+        paymentMethods: ["PayPal", "Transferencia bancaria"],
+        clearSignature: "Borrar firma"
       }
     },
     de: {
@@ -82,11 +108,24 @@
         submit: "In die Warteliste eintragen",
         labels: { town: "Ort", country: "Land", lookingforsex: "Geschlecht", size: "Größe", lookingforolderthan: "Älter als (Jahre)", lookingforyoungerthan: "Jünger als (Jahre)", commentsperson: "Was für einen Hund suchen Sie?" },
         sexes: ["Beliebig", "Rüde", "Hündin"], sizes: ["Beliebig", "Klein", "Mittel", "Groß", "Sehr groß"]
+      },
+      sponsorship: {
+        title: "Eine Patenschaft übernehmen",
+        intro: "Mit Ihrer Patenschaft helfen Sie, einen Hund im APASA-Tierheim in Jávea (Alicante), Spanien, zu versorgen. Wählen Sie den Hund, Ihren Patenschaftsbeitrag und die gewünschte Dauer der Patenschaft aus.",
+        submit: "Patenschaft absenden",
+        contactHeading: "Ihre Kontaktdaten",
+        agreementHeading: "Patenschaftsvereinbarung",
+        agreement: "Mit meiner Unterschrift übernehme ich die Patenschaft für den ausgewählten Hund. Ich zahle den angegebenen Betrag im gewählten Rhythmus für die angegebene Dauer. Sollte der Hund vermittelt werden, informiert mich APASA. Ich bin damit einverstanden, dass meine Patenschaft in diesem Fall auf einen anderen Hund in Not übertragen wird.",
+        labels: { animalname: "Hund, für den Sie eine Patenschaft übernehmen möchten", frequency: "Patenschaftsbeitrag", duration: "Dauer der Patenschaft", paymethod: "Zahlungsart", firstname: "Vorname", lastname: "Nachname", address: "Straße und Hausnummer", city: "Ort", state: "Provinz, Bundesland oder Region", zipcode: "Postleitzahl", country: "Land", emailaddress: "E-Mail-Adresse", celltelephone: "Mobiltelefonnummer", signature: "Ihre Unterschrift" },
+        frequencies: ["15 € monatlich", "45 € vierteljährlich", "180 € jährlich"],
+        durations: ["1 Monat", "3 Monate", "6 Monate", "1 Jahr", "Fortlaufend"],
+        paymentMethods: ["PayPal", "Banküberweisung"],
+        clearSignature: "Unterschrift löschen"
       }
     }
   };
   const baseWords = translations[lang];
-  const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : null;
+  const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : formId === 53 ? baseWords.sponsorship : null;
   const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
   if (formId === 52) {
     const position = document.querySelector('select[name^="Position_"]');
@@ -134,6 +173,9 @@
   translateOptions('select[name^="size_"]', words.sizes || []);
   translateOptions('select[name^="Position_"]', words.positions || []);
   translateOptions('select[data-name^="Languages_"]', words.languages || []);
+  translateOptions('select[name^="Frequency_"]', words.frequencies || []);
+  translateOptions('select[name^="Duration_"]', words.durations || []);
+  translateOptions('select[name^="PayMethod_"]', words.paymentMethods || []);
   document.querySelectorAll("select.asm-onlineform-yesno").forEach(select => {
     const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
     choices.forEach((option, optionIndex) => {
@@ -203,7 +245,23 @@
   }
   const submit = document.querySelector('input[type="submit"]');
   if (submit) submit.value = words.submit;
-  const phone = document.querySelector('input[name^="mobiletelephone_"]');
+  if (formId === 53) {
+    const tableBody = document.querySelector(".asm-onlineform-table tbody") || document.querySelector(".asm-onlineform-table");
+    const addSectionBefore = (selector, className, heading, body = "") => {
+      const target = document.querySelector(selector)?.closest(".asm-onlineform-tr");
+      if (!target || document.querySelector(`.${className}`)) return;
+      const row = document.createElement("tr");
+      row.className = className;
+      row.innerHTML = `<td colspan="2"><section><h3>${heading}</h3>${body ? `<p>${body}</p>` : ""}</section></td>`;
+      target.insertAdjacentElement("beforebegin", row);
+    };
+    if (tableBody) {
+      addSectionBefore('input[name^="firstname_"]', "apasa-form-section-heading", words.contactHeading);
+      addSectionBefore('[name^="Signature_"]', "apasa-sponsorship-agreement", words.agreementHeading, words.agreement);
+    }
+    document.querySelectorAll(".asm-onlineform-signature-clear").forEach(button => { button.textContent = words.clearSignature; });
+  }
+  const phone = document.querySelector('input[name^="mobiletelephone_"], input[name^="celltelephone_"]');
   let telephoneControl = null;
   if (phone && window.intlTelInput) {
     telephoneControl = window.intlTelInput(phone, {

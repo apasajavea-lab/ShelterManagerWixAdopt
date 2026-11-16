@@ -53,6 +53,12 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 .apasa-no-vacancies-paw { margin-bottom: 8px; font-size: 44px; line-height: 1; }
 .apasa-no-vacancies h2 { margin: 0 0 14px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 6vw, 43px); font-weight: 400; line-height: 1.15; }
 .apasa-no-vacancies p { max-width: 590px; margin: 0 auto; font-size: clamp(16px, 2.5vw, 19px); line-height: 1.55; }
+.apasa-form-section-heading td, .apasa-sponsorship-agreement td { padding: 8px 0 16px !important; }
+.apasa-form-section-heading section, .apasa-sponsorship-agreement section { padding: 14px 18px; background: rgba(255, 255, 255, .72); border-radius: 16px; }
+.apasa-form-section-heading h3, .apasa-sponsorship-agreement h3 { margin: 0; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: 22px; font-weight: 400; line-height: 1.25; }
+.apasa-sponsorship-agreement p { margin: 8px 0 0; font-size: 15px; line-height: 1.55; }
+.asm-onlineform-signature { min-height: 150px; background: #fff; border: 1px solid var(--apasa-border); border-radius: 16px; overflow: hidden; }
+.asm-onlineform-signature-clear { margin-top: 8px; padding: 7px 14px; color: #111; background: #fff; border: 1px solid var(--apasa-border); border-radius: 18px; font: inherit; cursor: pointer; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }
