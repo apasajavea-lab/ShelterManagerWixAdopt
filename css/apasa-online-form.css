@@ -59,10 +59,26 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 .apasa-sponsorship-agreement p { margin: 8px 0 0; font-size: 15px; line-height: 1.55; }
 .asm-onlineform-signature { min-height: 150px; background: #fff; border: 1px solid var(--apasa-border); border-radius: 16px; overflow: hidden; }
 .asm-onlineform-signature-clear { margin-top: 8px; padding: 7px 14px; color: #111; background: #fff; border: 1px solid var(--apasa-border); border-radius: 18px; font: inherit; cursor: pointer; }
+.apasa-native-dog-select { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap; }
+.apasa-dog-picker { display: grid; gap: 8px; max-height: 430px; padding: 4px 6px 4px 2px; overflow-y: auto; scrollbar-color: #777 transparent; }
+.apasa-dog-picker-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 7px; background: rgba(255, 255, 255, .78); border: 2px solid transparent; border-radius: 16px; }
+.apasa-dog-choice { display: grid; grid-template-columns: 66px minmax(0, 1fr); align-items: center; gap: 12px; min-width: 0; padding: 0; color: #111; background: transparent; border: 0; font: inherit; text-align: left; cursor: pointer; }
+.apasa-dog-choice img { width: 66px; height: 66px; object-fit: cover; border-radius: 12px; background: #eee; }
+.apasa-dog-choice-copy { display: grid; min-width: 0; line-height: 1.3; }
+.apasa-dog-choice-copy strong { font-size: 17px; }
+.apasa-dog-choice-copy span { margin-top: 2px; color: #3f3f3f; font-size: 13px; }
+.apasa-dog-choice-copy small { display: none; margin-top: 4px; color: #7a4e00; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+.apasa-dog-choice[aria-pressed="true"] small { display: block; }
+.apasa-dog-picker-item:has(.apasa-dog-choice[aria-pressed="true"]) { background: #fff; border-color: #111; }
+.apasa-dog-choice:focus-visible, .apasa-dog-profile-link:focus-visible { outline: 3px solid #111; outline-offset: 2px; }
+.apasa-dog-profile-link { padding: 8px 10px; color: #111; border-radius: 16px; font-size: 13px; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }
   .apasa-form-intro { margin-bottom: 16px; font-size: 14px; }
   .form-floating { margin-bottom: 12px !important; }
   input[type="submit"] { width: 100%; min-width: 0; }
+  .apasa-dog-picker { max-height: 390px; }
+  .apasa-dog-picker-item { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .apasa-dog-profile-link { justify-self: start; margin-left: 78px; padding: 3px 0 5px; }
 }

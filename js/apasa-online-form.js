@@ -51,6 +51,8 @@
         chooseDog: "Choose a dog",
         dogLoading: "Loading available dogs…",
         dogLoadError: "The available dogs could not be loaded. Please refresh the page.",
+        viewProfile: "View profile",
+        selectedDog: "Selected",
         sexNames: { 0: "Female", 1: "Male" },
         age: { year: "year", years: "years", month: "month", months: "months" }
       }
@@ -100,6 +102,8 @@
         chooseDog: "Elige un perro",
         dogLoading: "Cargando perros disponibles…",
         dogLoadError: "No se ha podido cargar la lista de perros disponibles. Actualiza la página.",
+        viewProfile: "Ver perfil",
+        selectedDog: "Seleccionado",
         sexNames: { 0: "Hembra", 1: "Macho" },
         age: { year: "año", years: "años", month: "mes", months: "meses" }
       }
@@ -134,6 +138,8 @@
         chooseDog: "Hund auswählen",
         dogLoading: "Verfügbare Hunde werden geladen…",
         dogLoadError: "Die verfügbaren Hunde konnten nicht geladen werden. Bitte laden Sie die Seite neu.",
+        viewProfile: "Profil ansehen",
+        selectedDog: "Ausgewählt",
         sexNames: { 0: "Hündin", 1: "Rüde" },
         age: { year: "Jahr", years: "Jahre", month: "Monat", months: "Monate" }
       }
@@ -321,7 +327,16 @@
         .then(source => {
           const match = source.match(/var adoptables = (\[.*?\]);/s);
           if (!match) throw new Error("Adoptable data not found");
-          const dogs = JSON.parse(match[1]).filter(dog =>
+          const allDogs = JSON.parse(match[1]);
+          const slugGroups = new Map();
+          const dogSlug = value => String(value || "dog").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "dog";
+          allDogs.forEach(dog => {
+            const base = dogSlug(dog.ANIMALNAME);
+            if (!slugGroups.has(base)) slugGroups.set(base, []);
+            slugGroups.get(base).push(dog);
+          });
+          slugGroups.forEach((group, base) => group.sort((a, b) => Number(a.ID) - Number(b.ID)).forEach((dog, index) => { dog.profileSlug = index ? `${base}-${index + 1}` : base; }));
+          const dogs = allDogs.filter(dog =>
             Number(dog.SPECIESID) === 1 &&
             Number(dog.HASACTIVERESERVE) !== 1 &&
             Number(dog.HASTRIALADOPTION) !== 1 &&
@@ -332,6 +347,12 @@
           blank.value = "";
           blank.textContent = words.chooseDog;
           dogSelect.replaceChildren(blank);
+          const picker = document.createElement("div");
+          picker.className = "apasa-dog-picker";
+          picker.setAttribute("role", "list");
+          dogSelect.classList.add("apasa-native-dog-select");
+          dogSelect.insertAdjacentElement("afterend", picker);
+          const requestedAnimalId = Number(query.get("animalid") || 0);
           dogs.forEach(dog => {
             const option = document.createElement("option");
             const details = [words.sexNames[dog.SEX], ageText(dog.DATEOFBIRTH)].filter(Boolean).join(" · ");
@@ -339,6 +360,23 @@
             option.dataset.id = dog.ID;
             option.textContent = `${dog.ANIMALNAME}${details ? ` — ${details}` : ""}`;
             dogSelect.appendChild(option);
+            const profilePrefix = lang === "en" ? "" : `/${lang}`;
+            const profileUrl = `https://www.apasa.eu${profilePrefix}/adopt/${dog.profileSlug}`;
+            const imageUrl = `https://service.sheltermanager.com/asmservice?account=zz1727&method=animal_image&animalid=${encodeURIComponent(dog.ID)}&seq=0`;
+            const card = document.createElement("div");
+            card.className = "apasa-dog-picker-item";
+            card.setAttribute("role", "listitem");
+            card.innerHTML = `<button type="button" class="apasa-dog-choice" aria-pressed="false"><img src="${imageUrl}" alt="" loading="lazy"><span class="apasa-dog-choice-copy"><strong>${String(dog.ANIMALNAME).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</strong><span>${details}</span><small>${words.selectedDog}</small></span></button><a class="apasa-dog-profile-link" href="${profileUrl}" target="_blank" rel="noopener">${words.viewProfile}<span aria-hidden="true"> ↗</span></a>`;
+            const choice = card.querySelector(".apasa-dog-choice");
+            const chooseDog = () => {
+              dogSelect.value = option.value;
+              dogSelect.dispatchEvent(new Event("change", { bubbles: true }));
+              picker.querySelectorAll(".apasa-dog-choice").forEach(button => button.setAttribute("aria-pressed", "false"));
+              choice.setAttribute("aria-pressed", "true");
+            };
+            choice.addEventListener("click", chooseDog);
+            picker.appendChild(card);
+            if (requestedAnimalId === Number(dog.ID)) chooseDog();
           });
           dogSelect.disabled = false;
         })
