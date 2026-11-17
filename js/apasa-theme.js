@@ -1,4 +1,4 @@
-/* APASA ShelterManager adoption cards, version 2.1.7 */
+/* APASA ShelterManager adoption cards, version 2.1.8 */
 (function () {
   "use strict";
   const path = window.location.pathname.toLowerCase();
@@ -188,10 +188,12 @@
   }
 
   function age(a) {
-    if (!a.DATEOFBIRTH) return translatedStoredDuration(a.ANIMALAGE);
-    const dob = new Date(`${a.DATEOFBIRTH}T00:00:00`); if (Number.isNaN(dob.getTime())) return translatedStoredDuration(a.ANIMALAGE);
-    const now = new Date(); let months = (now.getFullYear() - dob.getFullYear()) * 12 + now.getMonth() - dob.getMonth(); if (now.getDate() < dob.getDate()) months -= 1; months = Math.max(0, months); const years = Math.floor(months / 12);
-    return localizedDuration(years, years === 0 ? months : 0, undefined);
+    const months = ageInMonths(a);
+    if (months < 0) return translatedStoredDuration(a.ANIMALAGE);
+    const years = Math.floor(months / 12);
+    if (lang === "es") return years ? `${years} ${years === 1 ? "año" : "años"}` : "Menos de 1 año";
+    if (lang === "de") return years ? `${years} ${years === 1 ? "Jahr alt" : "Jahre alt"}` : "Unter 1 Jahr alt";
+    return years ? `${years} ${years === 1 ? "year old" : "years old"}` : "Under 1 year old";
   }
   function sex(a) { const numeric = Number(a.SEX); if (!Number.isNaN(numeric)) return numeric === 0 ? text.female : text.male; const value = String(a.SEXNAME || "").toLowerCase(); return /female|hembra|hündin/.test(value) ? text.female : text.male; }
   function size(a) { const key = sizeKey(a); return key ? text[key] : a.SIZENAME || ""; }
@@ -212,9 +214,19 @@
   }
   function waitingTime(a) {
     const days = originalShelterDays(a);
-    const years = Math.floor(days / 365.2425);
-    const months = Math.floor((days - Math.floor(years * 365.2425)) / 30.4369);
-    return localizedDuration(years, months, days);
+    if (!days) return "";
+    if (days < 365.2425) {
+      if (lang === "es") return "En APASA menos de 1 año";
+      if (lang === "de") return "Seit weniger als 1 Jahr bei APASA";
+      return "At APASA less than 1 year";
+    }
+    const completeYears = Math.floor(days / 365.2425);
+    const remainderMonths = (days / 30.4369) - completeYears * 12;
+    const nearly = remainderMonths > 6;
+    const years = nearly ? completeYears + 1 : completeYears;
+    if (lang === "es") return `En APASA ${nearly ? "casi" : "más de"} ${years} ${years === 1 ? "año" : "años"}`;
+    if (lang === "de") return `Seit ${nearly ? "fast" : "über"} ${years} ${years === 1 ? "Jahr" : "Jahren"} bei APASA`;
+    return `At APASA ${nearly ? "nearly" : "over"} ${years} ${years === 1 ? "year" : "years"}`;
   }
   function isReserved(a) {
     const flag = [a.ANIMALISRESERVED, a.HASACTIVERESERVE, a.ISRESERVED, a.RESERVED].some(value => /^(1|true|yes|si|sí|ja)$/i.test(String(value || "").trim()));
@@ -225,7 +237,7 @@
     const months = ageInMonths(a); const days = originalShelterDays(a); const specials = [months >= 120 ? "senior" : "", days > 730 ? "longstay" : "", days > 0 && days < 30 ? "new" : ""].filter(Boolean).join(" ");
     const waitingRow = days > 0 && days < 30
       ? `<div class="apasa-waiting apasa-waiting-new"><span>● ${escapeHtml(text.newArrival)}</span></div>`
-      : waiting ? `<div class="apasa-waiting">❤️ ${escapeHtml(text.atApasa)} ${waiting}</div>` : "";
+      : waiting ? `<div class="apasa-waiting">❤️ ${waiting}</div>` : "";
     return `<div class="apasa-extra" data-name="${dogName.toLowerCase()}" data-sex="${sexKey(a)}" data-size="${sizeKey(a)}" data-age="${ageKey(months)}" data-age-months="${months}" data-days="${days}" data-special="${specials}" data-reserved="${isReserved(a)}" data-colour="${escapeHtml(a.BASECOLOURNAME || a.ADOPTAPETCOLOUR || "")}"><div class="apasa-breed${breedClass}">${escapeHtml(breedName)}</div><div class="apasa-summary">${escapeHtml(shortDescription(a))}</div><div class="apasa-details"><span class="apasa-details-age">${ageDetail}</span><span class="apasa-details-sex-size">${sexAndSize}</span></div>${waitingRow}<button class="apasa-button" type="button">${escapeHtml(text.meet)} ${dogName} →</button></div>`;
   }
 
