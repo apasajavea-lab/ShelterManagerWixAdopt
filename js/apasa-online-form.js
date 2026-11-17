@@ -294,7 +294,17 @@
         code,
         canonical: englishNames?.of(code) || code,
         label: displayNames?.of(code) || englishNames?.of(code) || code
-      })).sort((a, b) => a.label.localeCompare(b.label, lang));
+      }));
+      const preferredCountries = ["ES", "BE", "DE", "NL", "CH", "GB"];
+      countries.sort((a, b) => {
+        const aPreferred = preferredCountries.indexOf(a.code), bPreferred = preferredCountries.indexOf(b.code);
+        if (aPreferred !== -1 || bPreferred !== -1) {
+          if (aPreferred === -1) return 1;
+          if (bPreferred === -1) return -1;
+          return aPreferred - bPreferred;
+        }
+        return a.label.localeCompare(b.label, lang);
+      });
       const blank = document.createElement("option");
       blank.value = "";
       country.replaceChildren(blank);
@@ -370,6 +380,9 @@
           slugGroups.forEach((group, base) => group.sort((a, b) => Number(a.ID) - Number(b.ID)).forEach((dog, index) => { dog.profileSlug = index ? `${base}-${index + 1}` : base; }));
           const dogs = allDogs.filter(dog =>
             Number(dog.SPECIESID) === 1 &&
+            Number(dog.WEBSITEIMAGECOUNT) > 0 &&
+            Number(dog.WEBSITEMEDIAID) > 0 &&
+            String(dog.WEBSITEMEDIADATE || "").trim() !== "" &&
             Number(dog.HASACTIVERESERVE) !== 1 &&
             Number(dog.HASTRIALADOPTION) !== 1 &&
             Number(dog.HASPERMANENTFOSTER) !== 1 &&
