@@ -431,7 +431,12 @@
         const entered = new Date(String(dog.DATEBROUGHTIN || "").slice(0, 10));
         if (Number.isNaN(entered.getTime())) return "";
         const days = Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
-        if (days < 365.2425) return words.apasaTime.lessOne;
+        if (days < 365.2425) {
+          const months = Math.max(1, Math.floor(days / 30.4369));
+          if (lang === "es") return `En APASA ${months} ${months === 1 ? "mes" : "meses"}`;
+          if (lang === "de") return `Seit ${months} ${months === 1 ? "Monat" : "Monaten"} bei APASA`;
+          return `At APASA ${months} ${months === 1 ? "month" : "months"}`;
+        }
         const completeYears = Math.floor(days / 365.2425);
         const remainderMonths = (days / 30.4369) - completeYears * 12;
         const nearly = remainderMonths > 6;

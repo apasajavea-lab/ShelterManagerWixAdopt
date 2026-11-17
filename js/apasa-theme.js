@@ -217,9 +217,10 @@
     const days = originalShelterDays(a);
     if (!days) return "";
     if (days < 365.2425) {
-      if (lang === "es") return "En APASA menos de 1 año";
-      if (lang === "de") return "Seit weniger als 1 Jahr bei APASA";
-      return "At APASA less than 1 year";
+      const months = Math.max(1, Math.floor(days / 30.4369));
+      if (lang === "es") return `En APASA ${months} ${months === 1 ? "mes" : "meses"}`;
+      if (lang === "de") return `Seit ${months} ${months === 1 ? "Monat" : "Monaten"} bei APASA`;
+      return `At APASA ${months} ${months === 1 ? "month" : "months"}`;
     }
     const completeYears = Math.floor(days / 365.2425);
     const remainderMonths = (days / 30.4369) - completeYears * 12;
