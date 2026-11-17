@@ -218,7 +218,16 @@
   translateOptions('select[name^="size_"]', words.sizes || []);
   translateOptions('select[name^="Position_"]', words.positions || []);
   translateOptions('select[data-name^="Languages_"]', words.languages || []);
-  translateOptions('select[name^="Frequency_"]', words.frequencies || []);
+  const sponsorshipFrequency = document.querySelector('select[name^="Frequency_"]');
+  if (formId === 53 && sponsorshipFrequency) {
+    Array.from(sponsorshipFrequency.options).forEach(option => {
+      const original = option.textContent.trim();
+      if (!option.hasAttribute("value")) option.value = original;
+      if (/month|mes|monat/i.test(original)) option.textContent = words.frequencies[0];
+      else if (/quarter|trimestre|viertel/i.test(original)) option.textContent = words.frequencies[1];
+      else if (/year|annual|año|jähr/i.test(original)) option.textContent = words.frequencies[2];
+    });
+  }
   translateOptions('select[name^="Duration_"]', words.durations || []);
   translateOptions('select[name^="PayMethod_"]', words.paymentMethods || []);
   translateOptions('select[name^="gdprcontactoptin_"]', words.yesNo || []);
