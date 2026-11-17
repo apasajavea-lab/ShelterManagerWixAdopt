@@ -13,10 +13,10 @@ html, body { max-width: 100%; margin: 0; overflow-x: hidden; color: var(--apasa-
 .asm-onlineform-title::before { content: "🐾"; font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif; font-size: .78em; }
 .apasa-form-intro { max-width: none; margin: 0 0 18px; color: #111; font-size: 15px; text-align: left; }
 .apasa-form-intro a { color: #111; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
-form { padding: 0; background: transparent; border-radius: 0; box-shadow: none; }
+form { min-width: 0; max-width: 100%; padding: 0; background: transparent; border-radius: 0; box-shadow: none; }
 .asm-onlineform-table { display: block; width: 100%; }
-.form-floating { display: flex; flex-direction: column-reverse; margin-bottom: 14px !important; }
-.form-floating > label { position: static !important; width: auto !important; height: auto !important; margin: 0 0 5px !important; padding: 0 !important; overflow: visible !important; color: #111 !important; font-size: 14px; line-height: 1.35; opacity: 1 !important; pointer-events: auto !important; transform: none !important; }
+.form-floating { display: flex; width: 100%; min-width: 0; max-width: 100%; flex-direction: column-reverse; margin-bottom: 14px !important; }
+.form-floating > label { position: static !important; width: auto !important; max-width: 100%; height: auto !important; margin: 0 0 5px !important; padding: 0 !important; overflow: visible !important; overflow-wrap: anywhere; hyphens: auto; white-space: normal !important; color: #111 !important; font-size: 14px; line-height: 1.35; opacity: 1 !important; pointer-events: auto !important; transform: none !important; }
 .form-floating > .form-control, .form-floating > .form-select, .form-floating > .form-control:focus, .form-floating > .form-control:not(:placeholder-shown), .form-floating > .form-select:focus, .form-floating > .form-select:not([size]):not([multiple]) { min-height: 40px; height: 40px; padding: 8px 12px !important; color: var(--apasa-text); background-color: var(--apasa-field); border: 1px solid var(--apasa-border); border-radius: 22px; font: inherit; font-size: 15px; line-height: 22px; }
 .form-floating > textarea.form-control, .form-floating > textarea.form-control:focus, .form-floating > textarea.form-control:not(:placeholder-shown) { min-height: 82px !important; height: 82px; padding: 10px 12px !important; border-radius: 20px; resize: vertical; }
 .form-control:focus, .form-select:focus { border-color: #333; box-shadow: 0 0 0 3px rgba(255, 255, 255, .5); outline: none; }
@@ -57,7 +57,8 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 .apasa-form-section-heading section, .apasa-sponsorship-agreement section { padding: 14px 18px; background: rgba(255, 255, 255, .72); border-radius: 16px; }
 .apasa-form-section-heading h3, .apasa-sponsorship-agreement h3 { margin: 0; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: 22px; font-weight: 400; line-height: 1.25; }
 .apasa-sponsorship-agreement p { margin: 8px 0 0; font-size: 15px; line-height: 1.55; }
-.asm-onlineform-signature { min-height: 150px; background: #fff; border: 1px solid var(--apasa-border); border-radius: 16px; overflow: hidden; }
+.asm-onlineform-signature { width: 100% !important; min-width: 0 !important; max-width: 100% !important; min-height: 150px; background: #fff; border: 1px solid var(--apasa-border); border-radius: 16px; overflow: hidden; }
+.asm-onlineform-signature canvas { display: block; width: 100% !important; max-width: 100% !important; }
 .asm-onlineform-signature-clear { margin-top: 8px; padding: 7px 14px; color: #111; background: #fff; border: 1px solid var(--apasa-border); border-radius: 18px; font: inherit; cursor: pointer; }
 .apasa-native-dog-select { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap; }
 .apasa-dog-picker { display: grid; gap: 8px; max-height: 430px; padding: 4px 6px 4px 2px; overflow-y: auto; scrollbar-color: #777 transparent; }
@@ -79,6 +80,8 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }
   .apasa-form-intro { margin-bottom: 16px; font-size: 14px; }
   .form-floating { margin-bottom: 12px !important; }
+  .form-floating > .form-control, .form-floating > .form-select, .iti, .iti input.form-control { min-width: 0 !important; max-width: 100% !important; }
+  .apasa-dog-choice-copy, .apasa-dog-choice-copy strong, .apasa-dog-choice-copy span { min-width: 0; max-width: 100%; overflow-wrap: anywhere; hyphens: auto; }
   input[type="submit"] { width: 100%; min-width: 0; }
   .apasa-dog-picker { max-height: 390px; }
   .apasa-dog-picker-item { grid-template-columns: minmax(0, 1fr); gap: 4px; }
