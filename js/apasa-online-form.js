@@ -57,7 +57,12 @@
         sexNames: { 0: "Female", 1: "Male" },
         age: { year: "year old", years: "years old", underOne: "Under 1 year old" },
         apasaTime: { lessOne: "At APASA less than 1 year", over: "At APASA over", nearly: "At APASA nearly", year: "year", years: "years" },
-        nonEuroBank: "Bank transfers from countries that do not use the euro may incur substantial charges for APASA. Monthly and quarterly bank transfers are therefore unavailable. Please choose PayPal for those frequencies, or make a yearly bank transfer and ensure that all transfer charges are paid by the sender."
+        nonEuroBank: "Bank transfers from countries that do not use the euro may incur substantial charges for APASA. Monthly bank transfers are therefore unavailable. Please choose PayPal for monthly sponsorship, or make a yearly bank transfer and ensure that all transfer charges are paid by the sender.",
+        successTitle: "Thank you for sponsoring an APASA dog",
+        paypalSuccess: "Your sponsorship form has been submitted. Complete the final step securely with PayPal.",
+        bankSuccess: "Your sponsorship form has been submitted. APASA will contact you with the bank-transfer instructions.",
+        paypalMonthly: "Continue to PayPal – €15 monthly",
+        paypalYearly: "Continue to PayPal – €180 yearly"
       }
     },
     es: {
@@ -111,7 +116,12 @@
         sexNames: { 0: "Hembra", 1: "Macho" },
         age: { year: "año", years: "años", underOne: "Menos de 1 año" },
         apasaTime: { lessOne: "En APASA menos de 1 año", over: "En APASA más de", nearly: "En APASA casi", year: "año", years: "años" },
-        nonEuroBank: "Las transferencias bancarias desde países que no utilizan el euro pueden generar comisiones importantes para APASA. Por ello, no están disponibles las transferencias bancarias mensuales ni trimestrales. Para estas frecuencias, utiliza PayPal; como alternativa, realiza una transferencia bancaria anual y asegúrate de que todos los gastos de la transferencia sean abonados por el ordenante."
+        nonEuroBank: "Las transferencias bancarias desde países que no utilizan el euro pueden generar comisiones importantes para APASA. Por ello, no están disponibles las transferencias bancarias mensuales. Para el apadrinamiento mensual, utiliza PayPal; como alternativa, realiza una transferencia bancaria anual y asegúrate de que todos los gastos sean abonados por el ordenante.",
+        successTitle: "Gracias por apadrinar a un perro de APASA",
+        paypalSuccess: "Tu formulario de apadrinamiento se ha enviado. Completa el último paso de forma segura con PayPal.",
+        bankSuccess: "Tu formulario de apadrinamiento se ha enviado. APASA se pondrá en contacto contigo con las instrucciones para la transferencia bancaria.",
+        paypalMonthly: "Continuar a PayPal – 15 € al mes",
+        paypalYearly: "Continuar a PayPal – 180 € al año"
       }
     },
     de: {
@@ -150,7 +160,12 @@
         sexNames: { 0: "Hündin", 1: "Rüde" },
         age: { year: "Jahr alt", years: "Jahre alt", underOne: "Unter 1 Jahr alt" },
         apasaTime: { lessOne: "Seit weniger als 1 Jahr bei APASA", over: "Seit über", nearly: "Seit fast", year: "Jahr bei APASA", years: "Jahren bei APASA" },
-        nonEuroBank: "Banküberweisungen aus Ländern, die den Euro nicht verwenden, können für APASA erhebliche Gebühren verursachen. Monatliche und vierteljährliche Banküberweisungen sind daher nicht möglich. Bitte nutzen Sie für diese Zahlungsrhythmen PayPal oder tätigen Sie eine jährliche Banküberweisung und stellen Sie sicher, dass sämtliche Überweisungsgebühren vom Auftraggeber getragen werden."
+        nonEuroBank: "Banküberweisungen aus Ländern, die den Euro nicht verwenden, können für APASA erhebliche Gebühren verursachen. Monatliche Banküberweisungen sind daher nicht möglich. Bitte nutzen Sie für eine monatliche Patenschaft PayPal oder tätigen Sie eine jährliche Banküberweisung und stellen Sie sicher, dass sämtliche Überweisungsgebühren vom Auftraggeber getragen werden.",
+        successTitle: "Vielen Dank für Ihre Hundepatenschaft bei APASA",
+        paypalSuccess: "Ihr Patenschaftsformular wurde übermittelt. Schließen Sie den letzten Schritt sicher über PayPal ab.",
+        bankSuccess: "Ihr Patenschaftsformular wurde übermittelt. APASA wird Ihnen die Anweisungen für die Banküberweisung zusenden.",
+        paypalMonthly: "Weiter zu PayPal – 15 € monatlich",
+        paypalYearly: "Weiter zu PayPal – 180 € jährlich"
       }
     }
   };
@@ -277,6 +292,10 @@
   const submit = document.querySelector('input[type="submit"]');
   if (submit) submit.value = words.submit;
   if (formId === 53) {
+    const contributionSelect = document.querySelector('select[name^="Frequency_"]');
+    Array.from(contributionSelect?.options || []).forEach(option => {
+      if (/quarter|trimestre|viertel/i.test(`${option.value} ${option.textContent}`)) option.remove();
+    });
     const tableBody = document.querySelector(".asm-onlineform-table tbody") || document.querySelector(".asm-onlineform-table");
     const addSectionBefore = (selector, className, heading, body = "") => {
       const target = document.querySelector(selector)?.closest(".asm-onlineform-tr");
@@ -549,6 +568,22 @@
         const page = document.querySelector("#page");
         if (page) {
           page.innerHTML = `<section class="apasa-form-success" role="status"><h2 class="asm-onlineform-title">${words.successTitle}</h2><p>${words.successMessage}</p><a href="${homePages[lang]}">${words.homeLabel}</a></section>`;
+          document.title = words.successTitle;
+          scrollTo({ top: 0, behavior: "smooth" });
+        }
+      } else if (formId === 53) {
+        const paymentValue = document.querySelector('select[name^="PayMethod_"]')?.value || "";
+        const contributionValue = document.querySelector('select[name^="Frequency_"]')?.value || "";
+        const paypal = /paypal/i.test(paymentValue);
+        const yearly = /year|annual|año|jähr/i.test(contributionValue);
+        const locale = { en: ["en_GB", "GB"], es: ["es_ES", "ES"], de: ["de_DE", "DE"] }[lang];
+        const paypalBase = yearly
+          ? "https://www.paypal.com/donate/?hosted_button_id=JLQ756PPE8A3E"
+          : "https://www.paypal.com/donate/?hosted_button_id=R4QMMUTXSJWCN";
+        const paypalUrl = `${paypalBase}&locale.x=${locale[0]}&country.x=${locale[1]}`;
+        const page = document.querySelector("#page");
+        if (page) {
+          page.innerHTML = `<section class="apasa-form-success" role="status"><h2 class="asm-onlineform-title">${words.successTitle}</h2><p>${paypal ? words.paypalSuccess : words.bankSuccess}</p>${paypal ? `<a href="${paypalUrl}" target="_top">${yearly ? words.paypalYearly : words.paypalMonthly}</a>` : ""}</section>`;
           document.title = words.successTitle;
           scrollTo({ top: 0, behavior: "smooth" });
         }
