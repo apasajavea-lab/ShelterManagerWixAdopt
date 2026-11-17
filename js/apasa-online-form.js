@@ -38,15 +38,16 @@
       },
       sponsorship: {
         title: "Sponsor a Dog",
-        intro: "Your sponsorship helps care for a dog at the APASA shelter in Jávea (Alicante), Spain. Choose the dog you’d like to sponsor, your contribution and how long you’d like to sponsor the dog.",
+        intro: "Your sponsorship helps towards the care of our dogs. Complete the form below and start helping today! If your chosen dog gets adopted in the future, we will contact you for you to choose another dog to help.",
         submit: "Submit Sponsorship",
         contactHeading: "Your contact details",
         agreementHeading: "Sponsorship agreement",
         agreement: "By signing below, I agree to sponsor the dog I have selected and contribute the amount shown at the frequency and for the duration I have chosen. If the dog is adopted, APASA will let me know, and I agree for my sponsorship to transfer to another dog in need.",
-        labels: { animalname: "Dog you’d like to sponsor", frequency: "Sponsorship contribution", duration: "Sponsorship duration", paymethod: "Payment method", firstname: "First name", lastname: "Last name", address: "Street address", city: "Town or city", state: "Province, state or region", zipcode: "Postcode", country: "Country", emailaddress: "Email address", celltelephone: "Mobile phone number", signature: "Your signature" },
+        labels: { animalname: "Dog you’d like to sponsor", frequency: "Sponsorship contribution", duration: "Sponsorship duration", paymethod: "Payment method", firstname: "First name", lastname: "Last name", address: "Street address", city: "Town or city", state: "Province, state or region", zipcode: "Postcode", country: "Country", emailaddress: "Email address", celltelephone: "Mobile phone number", gdprcontactoptin: "Please sign me up to your newsletter", signature: "Your signature" },
         frequencies: ["€15 monthly", "€45 quarterly", "€180 yearly"],
         durations: ["1 month", "3 months", "6 months", "1 year", "Ongoing"],
         paymentMethods: ["PayPal", "Bank transfer"],
+        yesNo: ["No", "Yes"],
         clearSignature: "Clear signature",
         chooseDog: "Choose a dog",
         dogLoading: "Loading available dogs…",
@@ -90,15 +91,16 @@
       },
       sponsorship: {
         title: "Apadrina a un perro",
-        intro: "Con tu apadrinamiento ayudas a cuidar de un perro del refugio de APASA en Jávea (Alicante), España. Elige qué perro quieres apadrinar, qué aportación prefieres y durante cuánto tiempo quieres apadrinarlo.",
+        intro: "Tu apadrinamiento contribuye al cuidado de nuestros perros. Completa el formulario y empieza a ayudar hoy mismo. Si el perro que has elegido es adoptado en el futuro, nos pondremos en contacto contigo para que elijas otro perro al que ayudar.",
         submit: "Enviar apadrinamiento",
         contactHeading: "Tus datos de contacto",
         agreementHeading: "Acuerdo de apadrinamiento",
         agreement: "Al firmar, me comprometo a apadrinar al perro que he elegido y a aportar el importe indicado con la frecuencia y durante el periodo seleccionados. Si el perro es adoptado, APASA me avisará y acepto que mi apadrinamiento se transfiera a otro perro que lo necesite.",
-        labels: { animalname: "Perro que quieres apadrinar", frequency: "Aportación del apadrinamiento", duration: "Duración del apadrinamiento", paymethod: "Forma de pago", firstname: "Nombre", lastname: "Apellidos", address: "Calle y número", city: "Localidad", state: "Provincia, estado o región", zipcode: "Código postal", country: "País", emailaddress: "Correo electrónico", celltelephone: "Número de móvil", signature: "Tu firma" },
+        labels: { animalname: "Perro que quieres apadrinar", frequency: "Aportación del apadrinamiento", duration: "Duración del apadrinamiento", paymethod: "Forma de pago", firstname: "Nombre", lastname: "Apellidos", address: "Calle y número", city: "Localidad", state: "Provincia, estado o región", zipcode: "Código postal", country: "País", emailaddress: "Correo electrónico", celltelephone: "Número de móvil", gdprcontactoptin: "Quiero suscribirme a vuestro boletín informativo", signature: "Tu firma" },
         frequencies: ["15 € al mes", "45 € al trimestre", "180 € al año"],
         durations: ["1 mes", "3 meses", "6 meses", "1 año", "Continuado"],
         paymentMethods: ["PayPal", "Transferencia bancaria"],
+        yesNo: ["No", "Sí"],
         clearSignature: "Borrar firma",
         chooseDog: "Elige un perro",
         dogLoading: "Cargando perros disponibles…",
@@ -127,15 +129,16 @@
       },
       sponsorship: {
         title: "Eine Patenschaft übernehmen",
-        intro: "Mit Ihrer Patenschaft helfen Sie, einen Hund im APASA-Tierheim in Jávea (Alicante), Spanien, zu versorgen. Wählen Sie den Hund, Ihren Patenschaftsbeitrag und die gewünschte Dauer der Patenschaft aus.",
+        intro: "Mit Ihrer Patenschaft tragen Sie zur Versorgung unserer Hunde bei. Füllen Sie das folgende Formular aus und helfen Sie noch heute! Sollte der von Ihnen ausgewählte Hund künftig vermittelt werden, setzen wir uns mit Ihnen in Verbindung, damit Sie einen anderen Hund auswählen können, den Sie unterstützen möchten.",
         submit: "Patenschaft absenden",
         contactHeading: "Ihre Kontaktdaten",
         agreementHeading: "Patenschaftsvereinbarung",
         agreement: "Mit meiner Unterschrift übernehme ich die Patenschaft für den ausgewählten Hund. Ich zahle den angegebenen Betrag im gewählten Rhythmus für die angegebene Dauer. Sollte der Hund vermittelt werden, informiert mich APASA. Ich bin damit einverstanden, dass meine Patenschaft in diesem Fall auf einen anderen Hund in Not übertragen wird.",
-        labels: { animalname: "Hund, für den Sie eine Patenschaft übernehmen möchten", frequency: "Patenschaftsbeitrag", duration: "Dauer der Patenschaft", paymethod: "Zahlungsart", firstname: "Vorname", lastname: "Nachname", address: "Straße und Hausnummer", city: "Ort", state: "Provinz, Bundesland oder Region", zipcode: "Postleitzahl", country: "Land", emailaddress: "E-Mail-Adresse", celltelephone: "Mobiltelefonnummer", signature: "Ihre Unterschrift" },
+        labels: { animalname: "Hund, für den Sie eine Patenschaft übernehmen möchten", frequency: "Patenschaftsbeitrag", duration: "Dauer der Patenschaft", paymethod: "Zahlungsart", firstname: "Vorname", lastname: "Nachname", address: "Straße und Hausnummer", city: "Ort", state: "Provinz, Bundesland oder Region", zipcode: "Postleitzahl", country: "Land", emailaddress: "E-Mail-Adresse", celltelephone: "Mobiltelefonnummer", gdprcontactoptin: "Bitte melden Sie mich für Ihren Newsletter an", signature: "Ihre Unterschrift" },
         frequencies: ["15 € monatlich", "45 € vierteljährlich", "180 € jährlich"],
         durations: ["1 Monat", "3 Monate", "6 Monate", "1 Jahr", "Fortlaufend"],
         paymentMethods: ["PayPal", "Banküberweisung"],
+        yesNo: ["Nein", "Ja"],
         clearSignature: "Unterschrift löschen",
         chooseDog: "Hund auswählen",
         dogLoading: "Verfügbare Hunde werden geladen…",
@@ -200,6 +203,7 @@
   translateOptions('select[name^="Frequency_"]', words.frequencies || []);
   translateOptions('select[name^="Duration_"]', words.durations || []);
   translateOptions('select[name^="PayMethod_"]', words.paymentMethods || []);
+  translateOptions('select[name^="gdprcontactoptin_"]', words.yesNo || []);
   document.querySelectorAll("select.asm-onlineform-yesno").forEach(select => {
     const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
     choices.forEach((option, optionIndex) => {
