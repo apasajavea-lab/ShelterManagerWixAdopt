@@ -191,9 +191,10 @@
     const months = ageInMonths(a);
     if (months < 0) return translatedStoredDuration(a.ANIMALAGE);
     const years = Math.floor(months / 12);
-    if (lang === "es") return years ? `${years} ${years === 1 ? "año" : "años"}` : "Menos de 1 año";
-    if (lang === "de") return years ? `${years} ${years === 1 ? "Jahr alt" : "Jahre alt"}` : "Unter 1 Jahr alt";
-    return years ? `${years} ${years === 1 ? "year old" : "years old"}` : "Under 1 year old";
+    const puppyMonths = Math.max(1, months);
+    if (lang === "es") return years ? `${years} ${years === 1 ? "año" : "años"}` : `${puppyMonths} ${puppyMonths === 1 ? "mes" : "meses"}`;
+    if (lang === "de") return years ? `${years} ${years === 1 ? "Jahr alt" : "Jahre alt"}` : `${puppyMonths} ${puppyMonths === 1 ? "Monat alt" : "Monate alt"}`;
+    return years ? `${years} ${years === 1 ? "year old" : "years old"}` : `${puppyMonths} ${puppyMonths === 1 ? "month old" : "months old"}`;
   }
   function sex(a) { const numeric = Number(a.SEX); if (!Number.isNaN(numeric)) return numeric === 0 ? text.female : text.male; const value = String(a.SEXNAME || "").toLowerCase(); return /female|hembra|hündin/.test(value) ? text.female : text.male; }
   function size(a) { const key = sizeKey(a); return key ? text[key] : a.SIZENAME || ""; }

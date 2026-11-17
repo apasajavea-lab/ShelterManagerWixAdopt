@@ -405,7 +405,11 @@
         if (now.getDate() < born.getDate()) months -= 1;
         months = Math.max(0, months);
         const years = Math.floor(months / 12);
-        return years ? `${years} ${years === 1 ? words.age.year : words.age.years}` : words.age.underOne;
+        const puppyMonths = Math.max(1, months);
+        if (years) return `${years} ${years === 1 ? words.age.year : words.age.years}`;
+        if (lang === "es") return `${puppyMonths} ${puppyMonths === 1 ? "mes" : "meses"}`;
+        if (lang === "de") return `${puppyMonths} ${puppyMonths === 1 ? "Monat alt" : "Monate alt"}`;
+        return `${puppyMonths} ${puppyMonths === 1 ? "month old" : "months old"}`;
       };
       const breedText = dog => {
         const breedRecord = id => window.APASA_BREEDS?.[String(id)]?.[lang] || "";
