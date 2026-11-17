@@ -54,7 +54,8 @@
         viewProfile: "View profile",
         selectedDog: "Selected",
         sexNames: { 0: "Female", 1: "Male" },
-        age: { year: "year", years: "years", month: "month", months: "months" }
+        age: { year: "year old", years: "years old", underOne: "Under 1 year old" },
+        apasaTime: { lessOne: "At APASA less than 1 year", over: "At APASA over", nearly: "At APASA nearly", year: "year", years: "years" }
       }
     },
     es: {
@@ -105,7 +106,8 @@
         viewProfile: "Ver perfil",
         selectedDog: "Seleccionado",
         sexNames: { 0: "Hembra", 1: "Macho" },
-        age: { year: "año", years: "años", month: "mes", months: "meses" }
+        age: { year: "año", years: "años", underOne: "Menos de 1 año" },
+        apasaTime: { lessOne: "En APASA menos de 1 año", over: "En APASA más de", nearly: "En APASA casi", year: "año", years: "años" }
       }
     },
     de: {
@@ -141,7 +143,8 @@
         viewProfile: "Profil ansehen",
         selectedDog: "Ausgewählt",
         sexNames: { 0: "Hündin", 1: "Rüde" },
-        age: { year: "Jahr", years: "Jahre", month: "Monat", months: "Monate" }
+        age: { year: "Jahr alt", years: "Jahre alt", underOne: "Unter 1 Jahr alt" },
+        apasaTime: { lessOne: "Seit weniger als 1 Jahr bei APASA", over: "Seit über", nearly: "Seit fast", year: "Jahr bei APASA", years: "Jahren bei APASA" }
       }
     }
   };
@@ -317,9 +320,36 @@
         let months = (now.getFullYear() - born.getFullYear()) * 12 + now.getMonth() - born.getMonth();
         if (now.getDate() < born.getDate()) months -= 1;
         months = Math.max(0, months);
-        const years = Math.floor(months / 12), remainingMonths = months % 12;
-        if (years) return `${years} ${years === 1 ? words.age.year : words.age.years}${remainingMonths ? ` ${remainingMonths} ${remainingMonths === 1 ? words.age.month : words.age.months}` : ""}`;
-        return `${remainingMonths} ${remainingMonths === 1 ? words.age.month : words.age.months}`;
+        const years = Math.floor(months / 12);
+        return years ? `${years} ${years === 1 ? words.age.year : words.age.years}` : words.age.underOne;
+      };
+      const breedText = dog => {
+        const breedRecord = id => window.APASA_BREEDS?.[String(id)]?.[lang] || "";
+        const primary = breedRecord(dog.BREEDID) || (lang === "es" ? dog.BREEDNAME1 || dog.BREEDNAME : dog.PETFINDERBREED || dog.BREEDNAME1 || dog.BREEDNAME) || "";
+        const secondary = breedRecord(dog.BREED2ID) || (lang === "es" ? dog.BREEDNAME2 : dog.PETFINDERBREED2 || dog.BREEDNAME2) || "";
+        if (Number(dog.CROSSBREED) !== 1) return primary;
+        if (String(dog.BREED2ID || "") === "442") {
+          if (lang === "es") return `Cruce de ${primary}`;
+          if (lang === "de") return `${primary}-Mischling`;
+          return `${primary} Mix`;
+        }
+        const different = secondary && (String(dog.BREED2ID || "") !== String(dog.BREEDID || "") || secondary.toLowerCase() !== primary.toLowerCase());
+        if (different) return lang === "es" ? `Cruce de ${primary} y ${secondary}` : `${primary} / ${secondary}`;
+        if (lang === "es") return `Cruce de ${primary}`;
+        if (lang === "de") return `${primary}-Mischling`;
+        return `${primary} Cross`;
+      };
+      const apasaTimeText = dog => {
+        const entered = new Date(String(dog.DATEBROUGHTIN || "").slice(0, 10));
+        if (Number.isNaN(entered.getTime())) return "";
+        const days = Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
+        if (days < 365.2425) return words.apasaTime.lessOne;
+        const completeYears = Math.floor(days / 365.2425);
+        const remainderMonths = (days / 30.4369) - completeYears * 12;
+        const nearly = remainderMonths > 6;
+        const years = nearly ? completeYears + 1 : completeYears;
+        const unit = years === 1 ? words.apasaTime.year : words.apasaTime.years;
+        return `${nearly ? words.apasaTime.nearly : words.apasaTime.over} ${years} ${unit}`;
       };
       fetch("https://service.sheltermanager.com/asmservice?method=animal_view_adoptable_js&account=zz1727")
         .then(response => {
@@ -357,7 +387,8 @@
           const requestedAnimalId = Number(query.get("animalid") || 0);
           dogs.forEach(dog => {
             const option = document.createElement("option");
-            const details = [words.sexNames[dog.SEX], ageText(dog.DATEOFBIRTH)].filter(Boolean).join(" · ");
+            const details = [breedText(dog), ageText(dog.DATEOFBIRTH)].filter(Boolean).join(" · ");
+            const apasaTime = apasaTimeText(dog);
             option.value = `${dog.ANIMALNAME}::${dog.CODE || dog.SHELTERCODE || ""}`;
             option.dataset.id = dog.ID;
             option.textContent = `${dog.ANIMALNAME}${details ? ` — ${details}` : ""}`;
@@ -368,7 +399,7 @@
             const card = document.createElement("div");
             card.className = "apasa-dog-picker-item";
             card.setAttribute("role", "listitem");
-            card.innerHTML = `<button type="button" class="apasa-dog-choice" aria-pressed="false"><img src="${imageUrl}" alt="" loading="lazy"><span class="apasa-dog-choice-copy"><strong>${String(dog.ANIMALNAME).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</strong><span>${details}</span><small>${words.selectedDog}</small></span></button><a class="apasa-dog-profile-link" href="${profileUrl}" target="_blank" rel="noopener">${words.viewProfile}<span aria-hidden="true"> ↗</span></a>`;
+            card.innerHTML = `<button type="button" class="apasa-dog-choice" aria-pressed="false"><img src="${imageUrl}" alt="" loading="lazy"><span class="apasa-dog-choice-copy"><strong>${String(dog.ANIMALNAME).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</strong><span>${details}</span><span class="apasa-dog-waiting">${apasaTime}</span><small>${words.selectedDog}</small></span></button><a class="apasa-dog-profile-link" href="${profileUrl}" target="_blank" rel="noopener">${words.viewProfile}<span aria-hidden="true"> ↗</span></a>`;
             const choice = card.querySelector(".apasa-dog-choice");
             const chooseDog = () => {
               dogSelect.value = option.value;
