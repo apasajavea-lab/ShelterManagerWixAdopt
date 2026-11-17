@@ -73,6 +73,7 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 .apasa-dog-picker-item:has(.apasa-dog-choice[aria-pressed="true"]) { background: #fff; border-color: #111; }
 .apasa-dog-choice:focus-visible, .apasa-dog-profile-link:focus-visible { outline: 3px solid #111; outline-offset: 2px; }
 .apasa-dog-profile-link { padding: 8px 10px; color: #111; border-radius: 16px; font-size: 13px; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.apasa-bank-charge-notice { margin: -2px 0 16px; padding: 13px 16px; color: #4d3200; background: #fff8e5; border: 2px solid #7d5500; border-radius: 14px; font-size: 14px; font-weight: 700; line-height: 1.45; }
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }

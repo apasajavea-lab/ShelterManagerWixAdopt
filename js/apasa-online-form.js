@@ -56,7 +56,8 @@
         selectedDog: "Selected",
         sexNames: { 0: "Female", 1: "Male" },
         age: { year: "year old", years: "years old", underOne: "Under 1 year old" },
-        apasaTime: { lessOne: "At APASA less than 1 year", over: "At APASA over", nearly: "At APASA nearly", year: "year", years: "years" }
+        apasaTime: { lessOne: "At APASA less than 1 year", over: "At APASA over", nearly: "At APASA nearly", year: "year", years: "years" },
+        nonEuroBank: "Bank transfers from countries that do not use the euro may incur substantial charges for APASA. Monthly and quarterly bank transfers are therefore unavailable. Please choose PayPal for those frequencies, or make a yearly bank transfer and ensure that all transfer charges are paid by the sender."
       }
     },
     es: {
@@ -109,7 +110,8 @@
         selectedDog: "Seleccionado",
         sexNames: { 0: "Hembra", 1: "Macho" },
         age: { year: "año", years: "años", underOne: "Menos de 1 año" },
-        apasaTime: { lessOne: "En APASA menos de 1 año", over: "En APASA más de", nearly: "En APASA casi", year: "año", years: "años" }
+        apasaTime: { lessOne: "En APASA menos de 1 año", over: "En APASA más de", nearly: "En APASA casi", year: "año", years: "años" },
+        nonEuroBank: "Las transferencias bancarias desde países que no utilizan el euro pueden generar comisiones importantes para APASA. Por ello, no están disponibles las transferencias bancarias mensuales ni trimestrales. Para estas frecuencias, utiliza PayPal; como alternativa, realiza una transferencia bancaria anual y asegúrate de que todos los gastos de la transferencia sean abonados por el ordenante."
       }
     },
     de: {
@@ -147,7 +149,8 @@
         selectedDog: "Ausgewählt",
         sexNames: { 0: "Hündin", 1: "Rüde" },
         age: { year: "Jahr alt", years: "Jahre alt", underOne: "Unter 1 Jahr alt" },
-        apasaTime: { lessOne: "Seit weniger als 1 Jahr bei APASA", over: "Seit über", nearly: "Seit fast", year: "Jahr bei APASA", years: "Jahren bei APASA" }
+        apasaTime: { lessOne: "Seit weniger als 1 Jahr bei APASA", over: "Seit über", nearly: "Seit fast", year: "Jahr bei APASA", years: "Jahren bei APASA" },
+        nonEuroBank: "Banküberweisungen aus Ländern, die den Euro nicht verwenden, können für APASA erhebliche Gebühren verursachen. Monatliche und vierteljährliche Banküberweisungen sind daher nicht möglich. Bitte nutzen Sie für diese Zahlungsrhythmen PayPal oder tätigen Sie eine jährliche Banküberweisung und stellen Sie sicher, dass sämtliche Überweisungsgebühren vom Auftraggeber getragen werden."
       }
     }
   };
@@ -315,9 +318,48 @@
       countries.forEach(item => {
         const option = document.createElement("option");
         option.value = item.canonical;
+        option.dataset.code = item.code;
         option.textContent = item.label;
         country.appendChild(option);
       });
+
+      const payment = document.querySelector('select[name^="PayMethod_"]');
+      const contribution = document.querySelector('select[name^="Frequency_"]');
+      const fieldContainer = field => field?.closest(".form-floating") || field?.closest(".asm-onlineform-tr");
+      const countryContainer = fieldContainer(country), paymentContainer = fieldContainer(payment), contributionContainer = fieldContainer(contribution);
+      if (countryContainer && paymentContainer && contributionContainer) {
+        contributionContainer.parentElement.insertBefore(countryContainer, contributionContainer);
+        countryContainer.insertAdjacentElement("afterend", paymentContainer);
+        paymentContainer.insertAdjacentElement("afterend", contributionContainer);
+      }
+      if (payment && contribution && contributionContainer) {
+        const notice = document.createElement("div");
+        notice.className = "apasa-bank-charge-notice";
+        notice.setAttribute("role", "status");
+        notice.hidden = true;
+        notice.textContent = words.nonEuroBank;
+        contributionContainer.insertAdjacentElement("afterend", notice);
+        const euroCountries = new Set(["AD", "AT", "BE", "BG", "HR", "CY", "EE", "FI", "FR", "DE", "GR", "IE", "IT", "XK", "LV", "LT", "LU", "MT", "MC", "ME", "NL", "PT", "SM", "SK", "SI", "ES", "VA"]);
+        const updatePaymentChoices = () => {
+          const selectedCountry = country.selectedOptions[0]?.dataset.code || "";
+          const bankTransfer = /bank|transfer|transferencia|überweisung/i.test(payment.value);
+          const restricted = Boolean(selectedCountry) && !euroCountries.has(selectedCountry) && bankTransfer;
+          let yearlyOption = null;
+          Array.from(contribution.options).forEach(option => {
+            if (!option.value.trim() && !option.textContent.trim()) return;
+            const yearly = /year|annual|año|jähr/i.test(`${option.value} ${option.textContent}`);
+            if (yearly) yearlyOption = option;
+            option.hidden = restricted && !yearly;
+            option.disabled = restricted && !yearly;
+          });
+          if (restricted && contribution.selectedOptions[0]?.disabled && yearlyOption) contribution.value = yearlyOption.value;
+          notice.hidden = !restricted;
+          contribution.dispatchEvent(new Event("change", { bubbles: true }));
+        };
+        country.addEventListener("change", updatePaymentChoices);
+        payment.addEventListener("change", updatePaymentChoices);
+        updatePaymentChoices();
+      }
     }
 
     const dogSelect = document.querySelector('select[name^="animalname_"]');
