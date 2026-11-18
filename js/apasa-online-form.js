@@ -307,19 +307,19 @@
     Array.from(contributionSelect?.options || []).forEach(option => {
       if (/quarter|trimestre|viertel/i.test(`${option.value} ${option.textContent}`)) option.remove();
     });
-    const tableBody = document.querySelector(".asm-onlineform-table tbody") || document.querySelector(".asm-onlineform-table");
     const addSectionBefore = (selector, className, heading, body = "") => {
-      const target = document.querySelector(selector)?.closest(".asm-onlineform-tr");
+      const field = document.querySelector(selector);
+      const target = field?.closest(".asm-onlineform-tr, .form-floating") ||
+        (selector.includes("Signature_") ? document.querySelector(".asm-onlineform-signature") : field);
       if (!target || document.querySelector(`.${className}`)) return;
-      const row = document.createElement("tr");
-      row.className = className;
-      row.innerHTML = `<td colspan="2"><section><h3>${heading}</h3>${body ? `<p>${body}</p>` : ""}</section></td>`;
-      target.insertAdjacentElement("beforebegin", row);
+      const sectionHtml = `<section><h3>${heading}</h3>${body ? `<p>${body}</p>` : ""}</section>`;
+      const wrapper = document.createElement(target.matches("tr") ? "tr" : "div");
+      wrapper.className = className;
+      wrapper.innerHTML = target.matches("tr") ? `<td colspan="2">${sectionHtml}</td>` : sectionHtml;
+      target.insertAdjacentElement("beforebegin", wrapper);
     };
-    if (tableBody) {
-      addSectionBefore('input[name^="firstname_"]', "apasa-form-section-heading", words.contactHeading);
-      addSectionBefore('[name^="Signature_"]', "apasa-sponsorship-agreement", words.agreementHeading, words.agreement);
-    }
+    addSectionBefore('input[name^="firstname_"]', "apasa-form-section-heading", words.contactHeading);
+    addSectionBefore('[name^="Signature_"]', "apasa-sponsorship-agreement", words.agreementHeading, words.agreement);
     document.querySelectorAll(".asm-onlineform-signature-clear").forEach(button => { button.textContent = words.clearSignature; });
 
     const country = document.querySelector('select[name^="country_"]');
