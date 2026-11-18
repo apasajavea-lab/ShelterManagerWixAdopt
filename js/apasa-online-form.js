@@ -3,7 +3,9 @@
   const query = new URLSearchParams(location.search);
   const formId = Number(query.get("formid") || 0);
   const requestedLang = /^(en|es|de)$/.test(query.get("lang")) ? query.get("lang") : "en";
-  const lang = formId === 52 && requestedLang === "de" ? "en" : requestedLang;
+  const sponsorshipLanguages = { 53: "en", 54: "de", 55: "es" };
+  const isSponsorshipForm = Object.prototype.hasOwnProperty.call(sponsorshipLanguages, formId);
+  const lang = sponsorshipLanguages[formId] || (formId === 52 && requestedLang === "de" ? "en" : requestedLang);
   document.documentElement.lang = lang;
   const translations = {
     en: {
@@ -170,7 +172,7 @@
     }
   };
   const baseWords = translations[lang];
-  const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : formId === 53 ? baseWords.sponsorship : null;
+  const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : isSponsorshipForm ? baseWords.sponsorship : null;
   const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
   if (formId === 52) {
     const position = document.querySelector('select[name^="Position_"]');
@@ -219,7 +221,7 @@
   translateOptions('select[name^="Position_"]', words.positions || []);
   translateOptions('select[data-name^="Languages_"]', words.languages || []);
   const sponsorshipFrequency = document.querySelector('select[name^="Frequency_"]');
-  if (formId === 53 && sponsorshipFrequency) {
+  if (isSponsorshipForm && sponsorshipFrequency) {
     Array.from(sponsorshipFrequency.options).forEach(option => {
       const original = option.textContent.trim();
       if (!option.hasAttribute("value")) option.value = original;
@@ -300,7 +302,7 @@
   }
   const submit = document.querySelector('input[type="submit"]');
   if (submit) submit.value = words.submit;
-  if (formId === 53) {
+  if (isSponsorshipForm) {
     const contributionSelect = document.querySelector('select[name^="Frequency_"]');
     Array.from(contributionSelect?.options || []).forEach(option => {
       if (/quarter|trimestre|viertel/i.test(`${option.value} ${option.textContent}`)) option.remove();
@@ -589,7 +591,7 @@
           document.title = words.successTitle;
           scrollTo({ top: 0, behavior: "smooth" });
         }
-      } else if (formId === 53) {
+      } else if (isSponsorshipForm) {
         const paymentValue = document.querySelector('select[name^="PayMethod_"]')?.value || "";
         const contributionValue = document.querySelector('select[name^="Frequency_"]')?.value || "";
         const paypal = /paypal/i.test(paymentValue);
