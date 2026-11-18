@@ -40,6 +40,8 @@
       },
       sponsorship: {
         title: "Sponsor a Dog",
+        backLabel: "Back",
+        backUrl: "https://www.apasa.eu/get-involved",
         intro: "Your sponsorship helps towards the care of our dogs. Complete the form below and start helping today! If your chosen dog gets adopted in the future, we will contact you for you to choose another dog to help.",
         submit: "Submit Sponsorship",
         contactHeading: "Your contact details",
@@ -99,6 +101,8 @@
       },
       sponsorship: {
         title: "Apadrina a un perro",
+        backLabel: "Volver",
+        backUrl: "https://www.apasa.eu/es/get-involved",
         intro: "Tu apadrinamiento contribuye al cuidado de nuestros perros. Completa el formulario y empieza a ayudar hoy mismo. Si el perro que has elegido es adoptado en el futuro, nos pondremos en contacto contigo para que elijas otro perro al que ayudar.",
         submit: "Enviar apadrinamiento",
         contactHeading: "Tus datos de contacto",
@@ -143,6 +147,8 @@
       },
       sponsorship: {
         title: "Eine Patenschaft übernehmen",
+        backLabel: "Zurück",
+        backUrl: "https://www.apasa.eu/de/get-involved",
         intro: "Mit Ihrer Patenschaft tragen Sie zur Versorgung unserer Hunde bei. Füllen Sie das folgende Formular aus und helfen Sie noch heute! Sollte der von Ihnen ausgewählte Hund künftig vermittelt werden, setzen wir uns mit Ihnen in Verbindung, damit Sie einen anderen Hund auswählen können, den Sie unterstützen möchten.",
         submit: "Patenschaft absenden",
         contactHeading: "Ihre Kontaktdaten",
@@ -208,6 +214,28 @@
   if (title) {
     title.textContent = words.title;
     if (!document.querySelector(".apasa-form-intro")) title.insertAdjacentHTML("afterend", `<p class="apasa-form-intro">${words.intro}</p>`);
+    if (isSponsorshipForm) {
+      const header = document.createElement("header");
+      header.className = "apasa-form-header";
+      title.insertAdjacentElement("beforebegin", header);
+      const logo = document.createElement("img");
+      logo.className = "apasa-form-logo";
+      logo.src = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA%20transparente.PNG";
+      logo.alt = "APASA";
+      logo.addEventListener("error", () => {
+        if (!logo.dataset.fallback) {
+          logo.dataset.fallback = "true";
+          logo.src = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA.png";
+        }
+      });
+      const back = document.createElement("a");
+      back.className = "apasa-form-back";
+      back.href = words.backUrl;
+      back.target = "_top";
+      back.setAttribute("aria-label", words.backLabel);
+      back.innerHTML = `<span aria-hidden="true">←</span><span class="apasa-form-back-text">${words.backLabel}</span>`;
+      header.append(logo, title, back);
+    }
   }
   const fieldBaseName = element => String(element?.name || "").replace(/_\d+$/, "");
   document.querySelectorAll("input,select,textarea").forEach(field => {

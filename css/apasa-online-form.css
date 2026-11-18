@@ -9,8 +9,13 @@
 html, body { max-width: 100%; margin: 0; overflow-x: hidden; color: var(--apasa-text); background: transparent; font-family: Lato, "Helvetica Neue", Arial, sans-serif; line-height: 1.45; }
 #page { width: calc(100% - 16px) !important; max-width: 1000px !important; margin: 8px auto !important; padding: 24px 22px 22px !important; background: var(--apasa-orange); border-radius: 24px; }
 #page > p:first-child:has(#logo), #logo { display: none !important; }
-.asm-onlineform-title { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 5vw, 40px); font-weight: 400; line-height: 1.15; text-align: left; }
-.asm-onlineform-title::before { content: "🐾"; font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif; font-size: .78em; }
+.asm-onlineform-title { display: flex; min-width: 0; align-items: center; gap: 12px; margin: 0 0 18px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 5vw, 40px); font-weight: 400; line-height: 1.15; text-align: left; }
+.asm-onlineform-title::after { content: "🐾"; flex: 0 0 auto; font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif; font-size: .78em; }
+.apasa-form-header { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 14px; margin: 0 0 18px; }
+.apasa-form-header .asm-onlineform-title { align-self: center; margin: 0; }
+.apasa-form-logo { display: block; width: 64px; height: 64px; object-fit: contain; }
+.apasa-form-back { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 7px 14px; color: #111; background: #fff; border: 2px solid #111; border-radius: 22px; font-size: 14px; font-weight: 800; line-height: 1; text-decoration: none; white-space: nowrap; }
+.apasa-form-back:hover, .apasa-form-back:focus-visible { background: #fff8e8; outline: 3px solid rgba(255, 255, 255, .7); outline-offset: 2px; transform: translateY(-1px); }
 .apasa-form-intro { max-width: none; margin: 0 0 18px; color: #111; font-size: 15px; text-align: left; }
 .apasa-form-intro a { color: #111; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
 form { min-width: 0; max-width: 100%; padding: 0; background: transparent; border-radius: 0; box-shadow: none; }
@@ -78,6 +83,11 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 @media (max-width: 640px) {
   #page { width: calc(100% - 12px) !important; margin: 6px auto !important; padding: 20px 14px !important; border-radius: 18px; }
   .asm-onlineform-title { margin-bottom: 14px; font-size: 31px; }
+  .apasa-form-header { grid-template-columns: 48px minmax(0, 1fr) auto; gap: 9px; margin-bottom: 14px; }
+  .apasa-form-header .asm-onlineform-title { margin: 0; font-size: clamp(25px, 7.5vw, 31px); }
+  .apasa-form-logo { width: 48px; height: 48px; }
+  .apasa-form-back { min-width: 40px; min-height: 40px; justify-content: center; padding: 7px 10px; }
+  .apasa-form-back-text { position: absolute; width: 1px; height: 1px; padding: 0; clip: rect(0 0 0 0); overflow: hidden; white-space: nowrap; }
   .apasa-form-intro { margin-bottom: 16px; font-size: 14px; }
   .form-floating { margin-bottom: 12px !important; }
   .form-floating > .form-control, .form-floating > .form-select, .iti, .iti input.form-control { min-width: 0 !important; max-width: 100% !important; }
