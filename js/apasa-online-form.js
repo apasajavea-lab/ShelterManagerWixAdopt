@@ -174,6 +174,23 @@
   const baseWords = translations[lang];
   const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : isSponsorshipForm ? baseWords.sponsorship : null;
   const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
+  if (isSponsorshipForm) {
+    const languageField = document.querySelector('[name^="additionalLanguage_" i]');
+    if (languageField) {
+      const personLanguage = { en: "English", es: "Spanish", de: "German" }[lang];
+      if (languageField.matches("select")) {
+        const option = Array.from(languageField.options).find(item =>
+          item.value.trim().toLowerCase() === personLanguage.toLowerCase() ||
+          item.textContent.trim().toLowerCase() === personLanguage.toLowerCase()
+        );
+        if (option) languageField.value = option.value;
+      } else {
+        languageField.value = personLanguage;
+      }
+      const languageContainer = languageField.closest(".asm-onlineform-tr, .form-floating") || languageField.parentElement;
+      if (languageContainer) languageContainer.hidden = true;
+    }
+  }
   if (formId === 52) {
     const position = document.querySelector('select[name^="Position_"]');
     const hasVacancy = position && Array.from(position.options).some(option => option.value.trim() || option.textContent.trim());
