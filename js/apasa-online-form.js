@@ -446,17 +446,21 @@
         if (lang === "de") return `${primary}-Mischling`;
         return `${primary} Cross`;
       };
-      const apasaTimeText = dog => {
+      const daysAtApasa = dog => {
         const entered = new Date(String(dog.DATEBROUGHTIN || "").slice(0, 10));
-        if (Number.isNaN(entered.getTime())) return "";
-        const days = Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
-        if (days < 365.2425) {
+        if (Number.isNaN(entered.getTime())) return -1;
+        return Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
+      };
+      const apasaTimeText = dog => {
+        const days = daysAtApasa(dog);
+        if (days < 0) return "";
+        if (days < 365) {
           const months = Math.max(1, Math.floor(days / 30.4369));
           if (lang === "es") return `En APASA ${months} ${months === 1 ? "mes" : "meses"}`;
           if (lang === "de") return `Seit ${months} ${months === 1 ? "Monat" : "Monaten"} bei APASA`;
           return `At APASA ${months} ${months === 1 ? "month" : "months"}`;
         }
-        const completeYears = Math.floor(days / 365.2425);
+        const completeYears = Math.max(1, Math.floor(days / 365.2425));
         const remainderMonths = (days / 30.4369) - completeYears * 12;
         const nearly = remainderMonths > 6;
         const years = nearly ? completeYears + 1 : completeYears;
@@ -488,6 +492,7 @@
             Number(dog.HASACTIVERESERVE) !== 1 &&
             Number(dog.HASTRIALADOPTION) !== 1 &&
             Number(dog.HASPERMANENTFOSTER) !== 1 &&
+            daysAtApasa(dog) >= 365 &&
             String(dog.DISPLAYLOCATION || "").toLowerCase() === "shelter"
           ).sort((a, b) => String(a.ANIMALNAME).localeCompare(String(b.ANIMALNAME), lang));
           const blank = document.createElement("option");
