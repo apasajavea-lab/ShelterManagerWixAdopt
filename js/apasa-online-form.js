@@ -708,6 +708,17 @@
       }
       return true;
     };
+    form.addEventListener("click", event => {
+      const submitControl = event.target.closest?.('input[type="submit"], button[type="submit"]');
+      if (!submitControl || validateRequiredFieldsInOrder()) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }, true);
+    form.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || event.target.matches("textarea") || validateRequiredFieldsInOrder()) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }, true);
   }
   let emailError = null;
   const clearEmailError = () => {
