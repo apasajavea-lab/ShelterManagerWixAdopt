@@ -64,6 +64,9 @@
         nonEuroBank: "Bank transfers from countries that do not use the euro may incur substantial charges for APASA. Monthly bank transfers are therefore unavailable. Please choose PayPal for monthly sponsorship, or make a yearly bank transfer and ensure that all transfer charges are paid by the sender.",
         successTitle: "Thank you for sponsoring {dogName}",
         successDogFallback: "an APASA dog",
+        requiredField: "Please complete the “{field}” field.",
+        requiredFallback: "Please complete all required fields.",
+        alertClose: "OK",
         paypalSuccess: "Your sponsorship form has been submitted. Please now complete the final step securely with PayPal at the link below. We have also sent you an email with the details.",
         bankSuccess: "Your sponsorship form has been submitted. We have sent you an email with the bank-transfer details.",
         paypalMonthly: "Continue to PayPal – €15 monthly",
@@ -126,6 +129,9 @@
         nonEuroBank: "Las transferencias bancarias desde países que no utilizan el euro pueden generar comisiones importantes para APASA. Por ello, no están disponibles las transferencias bancarias mensuales. Para el apadrinamiento mensual, utiliza PayPal; como alternativa, realiza una transferencia bancaria anual y asegúrate de que todos los gastos sean abonados por el ordenante.",
         successTitle: "Gracias por apadrinar a {dogName}",
         successDogFallback: "un perro de APASA",
+        requiredField: "Debes completar el campo «{field}».",
+        requiredFallback: "Completa todos los campos obligatorios.",
+        alertClose: "Aceptar",
         paypalSuccess: "Tu formulario de apadrinamiento se ha enviado. Ahora completa el último paso de forma segura con PayPal mediante el enlace de abajo. También te hemos enviado un correo electrónico con los datos.",
         bankSuccess: "Tu formulario de apadrinamiento se ha enviado. Te hemos enviado un correo electrónico con los datos para la transferencia bancaria.",
         paypalMonthly: "Continuar a PayPal – 15 € al mes",
@@ -173,6 +179,9 @@
         nonEuroBank: "Banküberweisungen aus Ländern, die den Euro nicht verwenden, können für APASA erhebliche Gebühren verursachen. Monatliche Banküberweisungen sind daher nicht möglich. Bitte nutzen Sie für eine monatliche Patenschaft PayPal oder tätigen Sie eine jährliche Banküberweisung und stellen Sie sicher, dass sämtliche Überweisungsgebühren vom Auftraggeber getragen werden.",
         successTitle: "Vielen Dank für Ihre Patenschaft für {dogName}",
         successDogFallback: "einen APASA-Hund",
+        requiredField: "Bitte füllen Sie das Feld „{field}“ aus.",
+        requiredFallback: "Bitte füllen Sie alle Pflichtfelder aus.",
+        alertClose: "OK",
         paypalSuccess: "Ihr Patenschaftsformular wurde übermittelt. Bitte schließen Sie nun den letzten Schritt sicher über PayPal mithilfe des untenstehenden Links ab. Wir haben Ihnen außerdem eine E-Mail mit den Einzelheiten gesendet.",
         bankSuccess: "Ihr Patenschaftsformular wurde übermittelt. Wir haben Ihnen eine E-Mail mit den Angaben für die Banküberweisung gesendet.",
         paypalMonthly: "Weiter zu PayPal – 15 € monatlich",
@@ -184,6 +193,52 @@
   const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : isSponsorshipForm ? baseWords.sponsorship : null;
   const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
   const sponsorshipLogoUrl = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA%20transparente%20circulo.png";
+  if (isSponsorshipForm) {
+    const nativeAlert = window.alert.bind(window);
+    const fieldNames = {
+      signature: words.labels.signature,
+      "dog you'd like to sponsor": words.labels.animalname,
+      "dog you’d like to sponsor": words.labels.animalname,
+      "sponsorship contribution": words.labels.frequency,
+      "payment method": words.labels.paymethod,
+      "first name": words.labels.firstname,
+      "last name": words.labels.lastname,
+      "street address": words.labels.address,
+      "town or city": words.labels.city,
+      postcode: words.labels.zipcode,
+      country: words.labels.country,
+      "email address": words.labels.emailaddress,
+      "mobile phone number": words.labels.celltelephone
+    };
+    const localiseAlert = message => {
+      const text = String(message || "").trim();
+      if (lang === "en") return text;
+      const requiredMatch = text.match(/^(.+?)\s+is required\.?$/i);
+      if (requiredMatch) {
+        const field = fieldNames[requiredMatch[1].trim().toLowerCase()] || requiredMatch[1].trim();
+        return words.requiredField.replace("{field}", field);
+      }
+      if (/required fields?|complete all/i.test(text)) return words.requiredFallback;
+      return text;
+    };
+    window.alert = message => {
+      const localisedMessage = localiseAlert(message);
+      try {
+        document.querySelector(".apasa-alert-overlay")?.remove();
+        const overlay = document.createElement("div");
+        overlay.className = "apasa-alert-overlay";
+        overlay.innerHTML = `<div class="apasa-alert-dialog" role="alertdialog" aria-modal="true"><div class="apasa-alert-paw" aria-hidden="true">🐾</div><p></p><button type="button">${words.alertClose}</button></div>`;
+        overlay.querySelector("p").textContent = localisedMessage;
+        const close = () => overlay.remove();
+        overlay.querySelector("button").addEventListener("click", close);
+        overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+        document.body.appendChild(overlay);
+        overlay.querySelector("button").focus();
+      } catch (error) {
+        nativeAlert(localisedMessage);
+      }
+    };
+  }
   if (isSponsorshipForm) {
     const languageField = document.querySelector('[name^="additionalLanguage_" i]');
     if (languageField) {
@@ -625,10 +680,12 @@
   }));
   let completionPending = false;
   let submittedDogName = "";
+  let submittedDogId = "";
   const captureSubmittedDogName = () => {
     if (!isSponsorshipForm) return;
     const selectedDog = document.querySelector('select[name^="animalname_"]')?.selectedOptions?.[0];
     submittedDogName = String(selectedDog?.dataset?.name || selectedDog?.value || "").split("::")[0].trim();
+    submittedDogId = String(selectedDog?.dataset?.id || "").trim();
   };
   if (form) {
     const responseFrame = document.createElement("iframe");
@@ -666,7 +723,11 @@
         if (page) {
           const successTitle = words.successTitle.replace("{dogName}", submittedDogName || words.successDogFallback);
           const safeSuccessTitle = successTitle.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-          page.innerHTML = `<section class="apasa-form-success apasa-sponsorship-success" role="status"><img class="apasa-success-logo" src="${sponsorshipLogoUrl}" alt="APASA"><h2 class="asm-onlineform-title">${safeSuccessTitle}</h2><p>${paypal ? words.paypalSuccess : words.bankSuccess}</p>${paypal ? `<a class="apasa-success-action" href="${paypalUrl}" target="_top">${yearly ? words.paypalYearly : words.paypalMonthly}</a>` : ""}</section>`;
+          const dogImageUrl = submittedDogId ? `https://service.sheltermanager.com/asmservice?account=zz1727&method=animal_image&animalid=${encodeURIComponent(submittedDogId)}&seq=0` : sponsorshipLogoUrl;
+          document.body.style.margin = "0";
+          document.body.style.background = "#f5a300";
+          Object.assign(page.style, { width: "100%", maxWidth: "none", minHeight: "100vh", margin: "0", padding: "clamp(18px,4vw,48px)", background: "#f5a300", borderRadius: "0" });
+          page.innerHTML = `<style>.apasa-inline-success{width:min(100%,900px);margin:0 auto;padding:clamp(22px,5vw,46px);background:#fff8e8;border:2px solid #111;border-radius:26px;box-shadow:0 12px 32px rgba(77,50,0,.18);font-family:Lato,"Helvetica Neue",Arial,sans-serif}.apasa-inline-brand{display:flex;justify-content:center;margin-bottom:22px}.apasa-inline-logo{display:block!important;width:86px!important;height:86px!important;max-width:86px!important;object-fit:contain}.apasa-inline-content{display:grid;grid-template-columns:clamp(130px,24vw,210px) minmax(0,1fr);align-items:center;gap:clamp(22px,4vw,42px)}.apasa-inline-dog{display:block!important;width:100%!important;aspect-ratio:1;object-fit:cover;border:3px solid #111;border-radius:22px}.apasa-inline-copy h2{display:flex;align-items:center;gap:10px;margin:0 0 16px;color:#111;font-family:"Comic Sans MS","Chalkboard SE","Comic Neue",cursive;font-size:clamp(28px,5vw,42px);font-weight:400;line-height:1.2}.apasa-inline-copy h2::after{content:"🐾";flex:0 0 auto;font-family:"Apple Color Emoji","Segoe UI Emoji",sans-serif;font-size:.72em}.apasa-inline-copy p{margin:0 0 24px;color:#222;font-size:clamp(16px,2.2vw,18px);line-height:1.6}.apasa-inline-action{display:inline-block;min-width:230px;padding:12px 25px;color:#111!important;background:#f5a300!important;border:2px solid #111;border-radius:24px;box-shadow:0 5px 0 #111;font-weight:800;text-align:center;text-decoration:none!important}@media(max-width:600px){.apasa-inline-success{padding:22px 16px}.apasa-inline-brand{margin-bottom:18px}.apasa-inline-logo{width:70px!important;height:70px!important;max-width:70px!important}.apasa-inline-content{grid-template-columns:1fr;text-align:center}.apasa-inline-dog{width:min(190px,65vw)!important;margin:0 auto}.apasa-inline-copy h2{justify-content:center}.apasa-inline-action{width:100%;min-width:0}}</style><section class="apasa-inline-success" role="status"><div class="apasa-inline-brand"><img class="apasa-inline-logo" src="${sponsorshipLogoUrl}" alt="APASA"></div><div class="apasa-inline-content"><img class="apasa-inline-dog" src="${dogImageUrl}" alt="${safeSuccessTitle}"><div class="apasa-inline-copy"><h2>${safeSuccessTitle}</h2><p>${paypal ? words.paypalSuccess : words.bankSuccess}</p>${paypal ? `<a class="apasa-inline-action" href="${paypalUrl}" target="_top">${yearly ? words.paypalYearly : words.paypalMonthly}</a>` : ""}</div></div></section>`;
           document.title = successTitle;
           scrollTo({ top: 0, behavior: "smooth" });
         }
