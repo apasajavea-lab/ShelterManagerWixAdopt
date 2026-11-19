@@ -44,6 +44,13 @@ input[type="submit"]:hover, input[type="submit"]:focus-visible { color: #111; ba
 .apasa-form-success p { max-width: 650px; margin: 0 auto 24px; font-size: 17px; }
 .apasa-form-success a { display: inline-block; min-width: 230px; padding: 11px 24px; color: var(--apasa-orange-dark); background: #fff; border-radius: 24px; font-weight: 700; text-decoration: none; }
 .apasa-form-success a:hover, .apasa-form-success a:focus-visible { color: #111; background: #fff8e8; transform: translateY(-1px); }
+.apasa-sponsorship-success { width: min(100%, 760px); margin: 0 auto; padding: clamp(28px, 6vw, 54px) clamp(18px, 5vw, 52px); background: rgba(255, 255, 255, .88); border: 2px solid #111; border-radius: 24px; box-shadow: 0 12px 32px rgba(77, 50, 0, .16); }
+.apasa-success-logo { display: block; width: clamp(82px, 16vw, 112px); height: clamp(82px, 16vw, 112px); margin: 0 auto 20px; object-fit: contain; }
+.apasa-sponsorship-success .asm-onlineform-title { color: #111; font-size: clamp(28px, 5vw, 40px); line-height: 1.2; }
+.apasa-sponsorship-success .asm-onlineform-title::after { margin-left: 2px; }
+.apasa-sponsorship-success p { color: #222; font-size: clamp(16px, 2.4vw, 18px); line-height: 1.6; }
+.apasa-form-success a.apasa-success-action { color: #111; background: var(--apasa-orange); border: 2px solid #111; box-shadow: 0 5px 0 #111; }
+.apasa-form-success a.apasa-success-action:hover, .apasa-form-success a.apasa-success-action:focus-visible { color: #111; background: #ffb21c; box-shadow: 0 3px 0 #111; transform: translateY(2px); }
 .apasa-eligibility-message td { padding: 4px 0 18px !important; }
 .apasa-eligibility-message div { padding: 15px 18px; color: #5f160d; background: #fff4f1; border: 2px solid #a92d1c; border-radius: 14px; font-weight: 700; line-height: 1.5; }
 .apasa-email-error td { padding: 0 0 14px !important; }

@@ -62,9 +62,10 @@
         age: { year: "year old", years: "years old", underOne: "Under 1 year old" },
         apasaTime: { lessOne: "At APASA less than 1 year", over: "At APASA over", nearly: "At APASA nearly", year: "year", years: "years" },
         nonEuroBank: "Bank transfers from countries that do not use the euro may incur substantial charges for APASA. Monthly bank transfers are therefore unavailable. Please choose PayPal for monthly sponsorship, or make a yearly bank transfer and ensure that all transfer charges are paid by the sender.",
-        successTitle: "Thank you for sponsoring an APASA dog",
-        paypalSuccess: "Your sponsorship form has been submitted. Complete the final step securely with PayPal.",
-        bankSuccess: "Your sponsorship form has been submitted. APASA will contact you with the bank-transfer instructions.",
+        successTitle: "Thank you for sponsoring {dogName}",
+        successDogFallback: "an APASA dog",
+        paypalSuccess: "Your sponsorship form has been submitted. Please now complete the final step securely with PayPal at the link below. We have also sent you an email with the details.",
+        bankSuccess: "Your sponsorship form has been submitted. We have sent you an email with the bank-transfer details.",
         paypalMonthly: "Continue to PayPal – €15 monthly",
         paypalYearly: "Continue to PayPal – €180 yearly"
       }
@@ -123,9 +124,10 @@
         age: { year: "año", years: "años", underOne: "Menos de 1 año" },
         apasaTime: { lessOne: "En APASA menos de 1 año", over: "En APASA más de", nearly: "En APASA casi", year: "año", years: "años" },
         nonEuroBank: "Las transferencias bancarias desde países que no utilizan el euro pueden generar comisiones importantes para APASA. Por ello, no están disponibles las transferencias bancarias mensuales. Para el apadrinamiento mensual, utiliza PayPal; como alternativa, realiza una transferencia bancaria anual y asegúrate de que todos los gastos sean abonados por el ordenante.",
-        successTitle: "Gracias por apadrinar a un perro de APASA",
-        paypalSuccess: "Tu formulario de apadrinamiento se ha enviado. Completa el último paso de forma segura con PayPal.",
-        bankSuccess: "Tu formulario de apadrinamiento se ha enviado. APASA se pondrá en contacto contigo con las instrucciones para la transferencia bancaria.",
+        successTitle: "Gracias por apadrinar a {dogName}",
+        successDogFallback: "un perro de APASA",
+        paypalSuccess: "Tu formulario de apadrinamiento se ha enviado. Ahora completa el último paso de forma segura con PayPal mediante el enlace de abajo. También te hemos enviado un correo electrónico con los datos.",
+        bankSuccess: "Tu formulario de apadrinamiento se ha enviado. Te hemos enviado un correo electrónico con los datos para la transferencia bancaria.",
         paypalMonthly: "Continuar a PayPal – 15 € al mes",
         paypalYearly: "Continuar a PayPal – 180 € al año"
       }
@@ -169,9 +171,10 @@
         age: { year: "Jahr alt", years: "Jahre alt", underOne: "Unter 1 Jahr alt" },
         apasaTime: { lessOne: "Seit weniger als 1 Jahr bei APASA", over: "Seit über", nearly: "Seit fast", year: "Jahr bei APASA", years: "Jahren bei APASA" },
         nonEuroBank: "Banküberweisungen aus Ländern, die den Euro nicht verwenden, können für APASA erhebliche Gebühren verursachen. Monatliche Banküberweisungen sind daher nicht möglich. Bitte nutzen Sie für eine monatliche Patenschaft PayPal oder tätigen Sie eine jährliche Banküberweisung und stellen Sie sicher, dass sämtliche Überweisungsgebühren vom Auftraggeber getragen werden.",
-        successTitle: "Vielen Dank für Ihre Hundepatenschaft bei APASA",
-        paypalSuccess: "Ihr Patenschaftsformular wurde übermittelt. Schließen Sie den letzten Schritt sicher über PayPal ab.",
-        bankSuccess: "Ihr Patenschaftsformular wurde übermittelt. APASA wird Ihnen die Anweisungen für die Banküberweisung zusenden.",
+        successTitle: "Vielen Dank für Ihre Patenschaft für {dogName}",
+        successDogFallback: "einen APASA-Hund",
+        paypalSuccess: "Ihr Patenschaftsformular wurde übermittelt. Bitte schließen Sie nun den letzten Schritt sicher über PayPal mithilfe des untenstehenden Links ab. Wir haben Ihnen außerdem eine E-Mail mit den Einzelheiten gesendet.",
+        bankSuccess: "Ihr Patenschaftsformular wurde übermittelt. Wir haben Ihnen eine E-Mail mit den Angaben für die Banküberweisung gesendet.",
         paypalMonthly: "Weiter zu PayPal – 15 € monatlich",
         paypalYearly: "Weiter zu PayPal – 180 € jährlich"
       }
@@ -180,6 +183,7 @@
   const baseWords = translations[lang];
   const formWords = formId === 51 ? baseWords.waitList : formId === 52 ? baseWords.jobApplication : isSponsorshipForm ? baseWords.sponsorship : null;
   const words = formWords ? { ...baseWords, ...formWords, labels: { ...baseWords.labels, ...formWords.labels } } : baseWords;
+  const sponsorshipLogoUrl = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA%20transparente%20circulo.png";
   if (isSponsorshipForm) {
     const languageField = document.querySelector('[name^="additionalLanguage_" i]');
     if (languageField) {
@@ -220,7 +224,7 @@
       title.insertAdjacentElement("beforebegin", header);
       const logo = document.createElement("img");
       logo.className = "apasa-form-logo";
-      logo.src = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA%20transparente%20circulo.png";
+      logo.src = sponsorshipLogoUrl;
       logo.alt = "APASA";
       logo.addEventListener("error", () => {
         if (!logo.dataset.fallback) {
@@ -539,6 +543,7 @@
             const apasaTime = apasaTimeText(dog);
             option.value = `${dog.ANIMALNAME}::${dog.CODE || dog.SHELTERCODE || ""}`;
             option.dataset.id = dog.ID;
+            option.dataset.name = dog.ANIMALNAME;
             option.textContent = `${dog.ANIMALNAME}${details ? ` — ${details}` : ""}`;
             dogSelect.appendChild(option);
             const profilePrefix = lang === "en" ? "" : `/${lang}`;
@@ -619,6 +624,12 @@
     if (emailError && email.value.trim().toLowerCase() === emailVerify.value.trim().toLowerCase()) clearEmailError();
   }));
   let completionPending = false;
+  let submittedDogName = "";
+  const captureSubmittedDogName = () => {
+    if (!isSponsorshipForm) return;
+    const selectedDog = document.querySelector('select[name^="animalname_"]')?.selectedOptions?.[0];
+    submittedDogName = String(selectedDog?.dataset?.name || selectedDog?.value || "").split("::")[0].trim();
+  };
   if (form) {
     const responseFrame = document.createElement("iframe");
     responseFrame.name = `apasa-form-response-${Date.now()}`;
@@ -653,8 +664,10 @@
         const paypalUrl = `${paypalBase}&locale.x=${locale[0]}&country.x=${locale[1]}`;
         const page = document.querySelector("#page");
         if (page) {
-          page.innerHTML = `<section class="apasa-form-success" role="status"><h2 class="asm-onlineform-title">${words.successTitle}</h2><p>${paypal ? words.paypalSuccess : words.bankSuccess}</p>${paypal ? `<a href="${paypalUrl}" target="_top">${yearly ? words.paypalYearly : words.paypalMonthly}</a>` : ""}</section>`;
-          document.title = words.successTitle;
+          const successTitle = words.successTitle.replace("{dogName}", submittedDogName || words.successDogFallback);
+          const safeSuccessTitle = successTitle.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          page.innerHTML = `<section class="apasa-form-success apasa-sponsorship-success" role="status"><img class="apasa-success-logo" src="${sponsorshipLogoUrl}" alt="APASA"><h2 class="asm-onlineform-title">${safeSuccessTitle}</h2><p>${paypal ? words.paypalSuccess : words.bankSuccess}</p>${paypal ? `<a class="apasa-success-action" href="${paypalUrl}" target="_top">${yearly ? words.paypalYearly : words.paypalMonthly}</a>` : ""}</section>`;
+          document.title = successTitle;
           scrollTo({ top: 0, behavior: "smooth" });
         }
       }
@@ -667,6 +680,7 @@
       return false;
     }
     prepareForSubmit();
+    captureSubmittedDogName();
     completionPending = true;
     if (typeof existingSubmitHook === "function") return existingSubmitHook.apply(this, arguments);
   };
@@ -677,6 +691,7 @@
       return;
     }
     prepareForSubmit();
+    captureSubmittedDogName();
   }, true);
   const reportHeight = () => parent.postMessage({ type: "apasa-online-form-height", height: document.documentElement.scrollHeight }, "*");
   addEventListener("load", reportHeight);
