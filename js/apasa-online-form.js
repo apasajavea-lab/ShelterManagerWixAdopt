@@ -675,15 +675,24 @@
     email.autocomplete = "email";
   }
   if (isSponsorshipForm && form) {
-    const clearValidationMessage = event => event.target?.setCustomValidity?.("");
-    form.addEventListener("input", clearValidationMessage, true);
-    form.addEventListener("change", clearValidationMessage, true);
-    form.addEventListener("invalid", event => {
-      const field = event.target;
+    form.querySelectorAll(".asm-onlineform-required").forEach(marker => {
+      const container = marker.closest(".asm-onlineform-tr, .form-floating");
+      const field = container?.querySelector('input:not([type="hidden"]), select, textarea');
+      if (field && !field.disabled) {
+        field.required = true;
+        field.setAttribute("aria-required", "true");
+      }
+    });
+    const setLocalValidationMessage = field => {
+      if (!field?.setCustomValidity) return;
       field.setCustomValidity("");
-      if (field.validity.typeMismatch && field.type === "email") field.setCustomValidity(words.validationEmail);
-      else if (field.validity.valueMissing) field.setCustomValidity(field.matches("select") ? words.validationSelect : words.validationRequired);
-    }, true);
+      if (field.type === "email" && field.value.trim() && field.validity.typeMismatch) field.setCustomValidity(words.validationEmail);
+      else if (field.required && !String(field.value || "").trim()) field.setCustomValidity(field.matches("select") ? words.validationSelect : words.validationRequired);
+    };
+    form.querySelectorAll("input, select, textarea").forEach(setLocalValidationMessage);
+    form.addEventListener("input", event => setLocalValidationMessage(event.target), true);
+    form.addEventListener("change", event => setLocalValidationMessage(event.target), true);
+    form.addEventListener("invalid", event => setLocalValidationMessage(event.target), true);
   }
   let emailError = null;
   const clearEmailError = () => {
