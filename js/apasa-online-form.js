@@ -70,6 +70,7 @@
         validationRequired: "Please fill out this field.",
         validationSelect: "Please select an item from the list.",
         validationEmail: "Please enter a valid email address.",
+        validationDog: "Please select the dog you would like to sponsor.",
         returnHome: "Return to the APASA website",
         homeUrl: "https://www.apasa.eu/",
         paypalSuccess: "Your sponsorship form has been submitted. Please now complete the final step securely with PayPal at the link below. We have also sent you an email with the details.",
@@ -140,6 +141,7 @@
         validationRequired: "Completa este campo.",
         validationSelect: "Selecciona una opción de la lista.",
         validationEmail: "Introduce una dirección de correo electrónico válida.",
+        validationDog: "Selecciona el perro que te gustaría apadrinar.",
         returnHome: "Volver a la web de APASA",
         homeUrl: "https://www.apasa.eu/es",
         paypalSuccess: "Tu formulario de apadrinamiento se ha enviado. Ahora completa el último paso de forma segura con PayPal mediante el enlace de abajo. También te hemos enviado un correo electrónico con los datos.",
@@ -195,6 +197,7 @@
         validationRequired: "Bitte füllen Sie dieses Feld aus.",
         validationSelect: "Bitte wählen Sie einen Eintrag aus der Liste aus.",
         validationEmail: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        validationDog: "Bitte wählen Sie den Hund aus, für den Sie eine Patenschaft übernehmen möchten.",
         returnHome: "Zurück zur APASA-Webseite",
         homeUrl: "https://www.apasa.eu/de",
         paypalSuccess: "Ihr Patenschaftsformular wurde übermittelt. Bitte schließen Sie nun den letzten Schritt sicher über PayPal mithilfe des untenstehenden Links ab. Wir haben Ihnen außerdem eine E-Mail mit den Einzelheiten gesendet.",
@@ -315,7 +318,7 @@
   document.querySelectorAll("input,select,textarea").forEach(field => {
     const base = field.id?.endsWith("verify") ? "emailverify" : fieldBaseName(field);
     const label = (field.id && document.querySelector(`label[for="${CSS.escape(field.id)}"]`)) || field.closest(".asm-onlineform-tr")?.querySelector("label");
-    const translatedLabel = words.labels[base] || words.labels[base.toLowerCase()];
+    const translatedLabel = isSponsorshipForm ? null : (words.labels[base] || words.labels[base.toLowerCase()]);
     if (label && translatedLabel) {
       const required = label.querySelector(".asm-onlineform-required")?.outerHTML || "";
       label.innerHTML = `${translatedLabel}${required ? ` ${required}` : ""}`;
@@ -339,27 +342,19 @@
   translateOptions('select[name^="size_"]', words.sizes || []);
   translateOptions('select[name^="Position_"]', words.positions || []);
   translateOptions('select[data-name^="Languages_"]', words.languages || []);
-  const sponsorshipFrequency = document.querySelector('select[name^="Frequency_"]');
-  if (isSponsorshipForm && sponsorshipFrequency) {
-    Array.from(sponsorshipFrequency.options).forEach(option => {
-      const original = option.textContent.trim();
-      if (!option.hasAttribute("value")) option.value = original;
-      if (/month|mes|monat/i.test(original)) option.textContent = words.frequencies[0];
-      else if (/quarter|trimestre|viertel/i.test(original)) option.textContent = words.frequencies[1];
-      else if (/year|annual|año|jähr/i.test(original)) option.textContent = words.frequencies[2];
+  if (!isSponsorshipForm) {
+    translateOptions('select[name^="Duration_"]', words.durations || []);
+    translateOptions('select[name^="PayMethod_"]', words.paymentMethods || []);
+    translateOptions('select[name^="gdprcontactoptin_"]', words.yesNo || []);
+    document.querySelectorAll("select.asm-onlineform-yesno").forEach(select => {
+      const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
+      choices.forEach((option, optionIndex) => {
+        if (!words.yesNo?.[optionIndex]) return;
+        if (!option.hasAttribute("value")) option.value = option.textContent.trim();
+        option.textContent = words.yesNo[optionIndex];
+      });
     });
   }
-  translateOptions('select[name^="Duration_"]', words.durations || []);
-  translateOptions('select[name^="PayMethod_"]', words.paymentMethods || []);
-  translateOptions('select[name^="gdprcontactoptin_"]', words.yesNo || []);
-  document.querySelectorAll("select.asm-onlineform-yesno").forEach(select => {
-    const choices = Array.from(select.options).filter(option => option.value.trim() || option.textContent.trim());
-    choices.forEach((option, optionIndex) => {
-      if (!words.yesNo?.[optionIndex]) return;
-      if (!option.hasAttribute("value")) option.value = option.textContent.trim();
-      option.textContent = words.yesNo[optionIndex];
-    });
-  });
   const pdfTooltip = document.querySelector('input[data-name^="PDFUpload_"]')?.closest(".asm-onlineform-tr")?.querySelector(".asm-onlineform-tooltip");
   if (pdfTooltip && words.pdfHelp) pdfTooltip.textContent = words.pdfHelp;
   if (formId === 52) {
@@ -674,6 +669,7 @@
     email.inputMode = "email";
     email.autocomplete = "email";
   }
+  let validateRequiredFieldsInOrder = () => true;
   if (isSponsorshipForm && form) {
     form.querySelectorAll(".asm-onlineform-required").forEach(marker => {
       const container = marker.closest(".asm-onlineform-tr, .form-floating");
@@ -693,6 +689,25 @@
     form.addEventListener("input", event => setLocalValidationMessage(event.target), true);
     form.addEventListener("change", event => setLocalValidationMessage(event.target), true);
     form.addEventListener("invalid", event => setLocalValidationMessage(event.target), true);
+    validateRequiredFieldsInOrder = () => {
+      const requiredFields = Array.from(form.querySelectorAll("input[required], select[required], textarea[required]"))
+        .filter(field => !field.disabled && field.type !== "hidden");
+      for (const field of requiredFields) {
+        setLocalValidationMessage(field);
+        if (field.checkValidity()) continue;
+        completionPending = false;
+        const container = field.closest(".asm-onlineform-tr, .form-floating") || field;
+        container.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (/^animalname_/i.test(field.name || "")) {
+          window.alert(words.validationDog);
+        } else {
+          field.focus({ preventScroll: true });
+          field.reportValidity();
+        }
+        return false;
+      }
+      return true;
+    };
   }
   let emailError = null;
   const clearEmailError = () => {
@@ -779,6 +794,7 @@
   }
   const existingSubmitHook = window.asm3_onlineform_submit;
   window.asm3_onlineform_submit = function () {
+    if (!validateRequiredFieldsInOrder()) return false;
     if (!validateEmails()) {
       completionPending = false;
       return false;
@@ -789,6 +805,11 @@
     if (typeof existingSubmitHook === "function") return existingSubmitHook.apply(this, arguments);
   };
   form?.addEventListener("submit", event => {
+    if (!validateRequiredFieldsInOrder()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      return;
+    }
     if (!validateEmails()) {
       event.preventDefault();
       event.stopImmediatePropagation();
