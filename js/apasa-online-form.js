@@ -220,7 +220,7 @@
       title.insertAdjacentElement("beforebegin", header);
       const logo = document.createElement("img");
       logo.className = "apasa-form-logo";
-      logo.src = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA%20transparente.PNG";
+      logo.src = "https://service.sheltermanager.com/asmservice?account=apasa&method=extra_image&title=logotipo%20APASA%20transparente%20circulo.png";
       logo.alt = "APASA";
       logo.addEventListener("error", () => {
         if (!logo.dataset.fallback) {
