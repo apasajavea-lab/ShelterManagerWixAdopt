@@ -180,6 +180,48 @@
     };
     if (description) description.innerHTML = `<p>${messages[lang]}</p>`;
   }
+  function addSponsorAction() {
+    const animalId = Number(query.get("animalid") || 0);
+    const actions = document.querySelector(".apasa-actions");
+    if (!animalId || !actions || query.get("reserved") === "1" || actions.querySelector(".apasa-sponsor-action")) return;
+    const daysAtApasa = dog => {
+      const entered = new Date(String(dog.DATEBROUGHTIN || "").slice(0, 10));
+      if (Number.isNaN(entered.getTime())) return -1;
+      return Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
+    };
+    fetch("https://service.sheltermanager.com/asmservice?method=animal_view_adoptable_js&account=zz1727")
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
+      .then(source => {
+        const match = source.match(/var adoptables = (\[.*?\]);/s);
+        if (!match) throw new Error("Adoptable data not found");
+        const dog = JSON.parse(match[1]).find(item => Number(item.ID) === animalId);
+        const eligible = dog &&
+          Number(dog.SPECIESID) === 1 &&
+          Number(dog.WEBSITEIMAGECOUNT) > 0 &&
+          Number(dog.WEBSITEMEDIAID) > 0 &&
+          String(dog.WEBSITEMEDIADATE || "").trim() !== "" &&
+          Number(dog.HASACTIVERESERVE) !== 1 &&
+          Number(dog.HASTRIALADOPTION) !== 1 &&
+          Number(dog.HASPERMANENTFOSTER) !== 1 &&
+          daysAtApasa(dog) >= 365 &&
+          String(dog.DISPLAYLOCATION || "").toLowerCase() === "shelter";
+        if (!eligible) return;
+        const formIds = { en: 53, es: 55, de: 54 };
+        const labels = { en: "Sponsor me", es: "Apadríname", de: "Patenschaft übernehmen" };
+        const sponsor = document.createElement("a");
+        sponsor.className = "apasa-action apasa-sponsor-action";
+        sponsor.href = `https://service.sheltermanager.com/asmservice?account=apasa&method=online_form_html&formid=${formIds[lang]}&animalid=${animalId}`;
+        sponsor.target = "_top";
+        sponsor.textContent = labels[lang];
+        const adoptionAction = actions.querySelector(".apasa-action");
+        adoptionAction?.insertAdjacentElement("afterend", sponsor) || actions.prepend(sponsor);
+        reportHeight();
+      })
+      .catch(error => console.error("APASA sponsor action:", error));
+  }
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-language]").forEach(element => { element.style.display = element.dataset.language === lang ? "block" : "none"; });
   document.querySelectorAll("[data-i18n]").forEach(element => { const value = element.dataset[lang]; if (value) element.textContent = value; });
@@ -196,6 +238,7 @@
   });
   set(".apasa-sex", sex(document.querySelector(".apasa-sex")?.textContent || "")); set(".apasa-duration", duration(document.querySelector(".apasa-duration")?.textContent || "")); set(".apasa-colour", colour(query.get("colour") || document.querySelector(".apasa-colour")?.textContent || ""));
   handleOptionalContent();
+  addSponsorAction();
   const back = document.querySelector(".apasa-back"), backUrls = { en: "https://www.apasa.eu/adopt-a-dog", es: "https://www.apasa.eu/es/adopt-a-dog", de: "https://www.apasa.eu/de/adopt-a-dog" };
   let backUrl = backUrls[lang];
   const requestedReturnValue = query.get("return");
