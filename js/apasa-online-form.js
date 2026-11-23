@@ -602,6 +602,7 @@
           dogSelect.classList.add("apasa-native-dog-select");
           dogSelect.insertAdjacentElement("afterend", picker);
           const requestedAnimalId = Number(query.get("animalid") || 0);
+          let requestedCard = null;
           dogs.forEach(dog => {
             const option = document.createElement("option");
             const details = [breedText(dog), ageText(dog.DATEOFBIRTH)].filter(Boolean).join(" · ");
@@ -627,7 +628,13 @@
             };
             choice.addEventListener("click", chooseDog);
             picker.appendChild(card);
-            if (requestedAnimalId === Number(dog.ID)) chooseDog();
+            if (requestedAnimalId === Number(dog.ID)) {
+              requestedCard = card;
+              chooseDog();
+            }
+          });
+          if (requestedCard) requestAnimationFrame(() => {
+            picker.scrollTop = Math.max(0, requestedCard.offsetTop - picker.offsetTop - 4);
           });
           dogSelect.disabled = false;
         })
