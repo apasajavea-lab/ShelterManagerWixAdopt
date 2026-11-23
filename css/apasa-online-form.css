@@ -9,7 +9,7 @@
 html, body { max-width: 100%; margin: 0; overflow-x: hidden; color: var(--apasa-text); background: transparent; font-family: Lato, "Helvetica Neue", Arial, sans-serif; line-height: 1.45; }
 #page { width: calc(100% - 16px) !important; max-width: 1000px !important; margin: 8px auto !important; padding: 24px 22px 22px !important; background: var(--apasa-orange); border-radius: 24px; }
 #page > p:first-child:has(#logo), #logo { display: none !important; }
-.asm-onlineform-title { display: flex; min-width: 0; align-items: center; gap: 12px; margin: 0 0 18px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 5vw, 40px); font-weight: 400; line-height: 1.15; text-align: left; }
+.asm-onlineform-title { display: flex; min-width: 0; align-items: center; gap: 12px; margin: 0 0 18px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", "Trebuchet MS", Arial, sans-serif; font-size: clamp(30px, 5vw, 40px); font-weight: 400; line-height: 1.15; text-align: left; }
 .asm-onlineform-title::after { content: "🐾"; flex: 0 0 auto; font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif; font-size: .78em; }
 .apasa-form-header { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: start; gap: 14px; margin: 0 0 18px; }
 .apasa-form-header .asm-onlineform-title { align-self: center; margin: 0; }
@@ -69,11 +69,11 @@ input[aria-invalid="true"] { border: 2px solid #a92d1c !important; box-shadow: 0
 .apasa-file-control span { min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
 .apasa-no-vacancies { max-width: 720px; margin: 0 auto; padding: clamp(36px, 8vw, 78px) 24px; text-align: center; }
 .apasa-no-vacancies-paw { margin-bottom: 8px; font-size: 44px; line-height: 1; }
-.apasa-no-vacancies h2 { margin: 0 0 14px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: clamp(30px, 6vw, 43px); font-weight: 400; line-height: 1.15; }
+.apasa-no-vacancies h2 { margin: 0 0 14px; color: #111; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", "Trebuchet MS", Arial, sans-serif; font-size: clamp(30px, 6vw, 43px); font-weight: 400; line-height: 1.15; }
 .apasa-no-vacancies p { max-width: 590px; margin: 0 auto; font-size: clamp(16px, 2.5vw, 19px); line-height: 1.55; }
 .apasa-form-section-heading td, .apasa-sponsorship-agreement td { padding: 8px 0 16px !important; }
 .apasa-form-section-heading section, .apasa-sponsorship-agreement section { padding: 14px 18px; background: rgba(255, 255, 255, .72); border-radius: 16px; }
-.apasa-form-section-heading h3, .apasa-sponsorship-agreement h3 { margin: 0; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", cursive; font-size: 22px; font-weight: 400; line-height: 1.25; }
+.apasa-form-section-heading h3, .apasa-sponsorship-agreement h3 { margin: 0; font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", "Trebuchet MS", Arial, sans-serif; font-size: 22px; font-weight: 400; line-height: 1.25; }
 .apasa-sponsorship-agreement p { margin: 8px 0 0; font-size: 15px; line-height: 1.55; }
 .asm-onlineform-signature { width: 100% !important; min-width: 0 !important; max-width: 100% !important; min-height: 150px; background: #fff; border: 1px solid var(--apasa-border); border-radius: 16px; overflow: hidden; }
 .asm-onlineform-signature canvas { display: block; width: 100% !important; max-width: 100% !important; }
