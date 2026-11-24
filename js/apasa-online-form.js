@@ -633,9 +633,12 @@
               chooseDog();
             }
           });
-          if (requestedCard) requestAnimationFrame(() => {
-            picker.scrollTop = Math.max(0, requestedCard.offsetTop - picker.offsetTop - 4);
-          });
+          if (requestedCard) requestAnimationFrame(() => requestAnimationFrame(() => {
+            const pickerBox = picker.getBoundingClientRect();
+            const cardBox = requestedCard.getBoundingClientRect();
+            picker.scrollTop = Math.max(0, picker.scrollTop + cardBox.top - pickerBox.top - 4);
+            requestedCard.scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
+          }));
           dogSelect.disabled = false;
         })
         .catch(error => {
