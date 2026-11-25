@@ -184,10 +184,13 @@
     const animalId = Number(query.get("animalid") || 0);
     const actions = document.querySelector(".apasa-actions");
     if (!animalId || !actions || query.get("reserved") === "1" || actions.querySelector(".apasa-sponsor-action")) return;
-    const daysAtApasa = dog => {
+    const hasStayedEightMonths = dog => {
       const entered = new Date(String(dog.DATEBROUGHTIN || "").slice(0, 10));
-      if (Number.isNaN(entered.getTime())) return -1;
-      return Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
+      const day = entered.getUTCDate();
+      const month = entered.getUTCMonth() + 8;
+      const year = entered.getUTCFullYear();
+      const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+      return Date.now() >= Date.UTC(year, month, Math.min(day, lastDay));
     };
     fetch("https://service.sheltermanager.com/asmservice?method=animal_view_adoptable_js&account=zz1727")
       .then(response => {
@@ -206,7 +209,7 @@
           Number(dog.HASACTIVERESERVE) !== 1 &&
           Number(dog.HASTRIALADOPTION) !== 1 &&
           Number(dog.HASPERMANENTFOSTER) !== 1 &&
-          daysAtApasa(dog) >= 365 &&
+          hasStayedEightMonths(dog) &&
           String(dog.DISPLAYLOCATION || "").toLowerCase() === "shelter";
         if (!eligible) return;
         const formIds = { en: 53, es: 55, de: 54 };
@@ -441,6 +444,9 @@
   addPuppyRosette();
   addReservedStatus();
   addProfileFooter();
+  const matchHeading = document.querySelector(".apasa-profile-footer:not(.apasa-profile-footer-reserved) h2");
+  const aboutHeading = document.querySelector(".apasa-description h2");
+  if (matchHeading && aboutHeading) matchHeading.style.fontFamily = getComputedStyle(aboutHeading).fontFamily;
   loadExtraPhoto(7);
   if (main) { main.style.objectFit = "contain"; main.style.background = "#f3f4ed"; }
   main?.addEventListener("error", () => { main.closest(".apasa-gallery").hidden = true; });

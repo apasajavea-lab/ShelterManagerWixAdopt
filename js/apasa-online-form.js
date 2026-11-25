@@ -548,6 +548,14 @@
         if (Number.isNaN(entered.getTime())) return -1;
         return Math.max(0, Math.floor((Date.now() - entered.getTime()) / 86400000));
       };
+      const hasStayedEightMonths = dog => {
+        const entered = new Date(String(dog.DATEBROUGHTIN || "").slice(0, 10));
+        const day = entered.getUTCDate();
+        const month = entered.getUTCMonth() + 8;
+        const year = entered.getUTCFullYear();
+        const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+        return Date.now() >= Date.UTC(year, month, Math.min(day, lastDay));
+      };
       const apasaTimeText = dog => {
         const days = daysAtApasa(dog);
         if (days < 0) return "";
@@ -589,7 +597,7 @@
             Number(dog.HASACTIVERESERVE) !== 1 &&
             Number(dog.HASTRIALADOPTION) !== 1 &&
             Number(dog.HASPERMANENTFOSTER) !== 1 &&
-            daysAtApasa(dog) >= 365 &&
+            hasStayedEightMonths(dog) &&
             String(dog.DISPLAYLOCATION || "").toLowerCase() === "shelter"
           ).sort((a, b) => String(a.ANIMALNAME).localeCompare(String(b.ANIMALNAME), lang));
           const blank = document.createElement("option");
