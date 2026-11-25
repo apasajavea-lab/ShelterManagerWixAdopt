@@ -228,6 +228,31 @@
           const adoptionAction = actions.querySelector(".apasa-action");
           adoptionAction?.insertAdjacentElement("afterend", sponsor) || actions.prepend(sponsor);
         }
+        const sponsorshipIntro = {
+          en: [
+            "If you aren't ready to adopt, how about sponsoring one of our dogs? With a monthly or yearly donation, you can help us provide food, medical care, love, and safe shelter for the many dogs still waiting for a forever home.",
+            "Sponsorships are especially vital for older, shy, or long-term residents who need extra support and time.",
+            "Start your sponsorship today by clicking the link below. You can choose your dog and how you would like to sponsor to keep tails wagging!"
+          ],
+          es: [
+            "Si aún no te animas a adoptar, ¿qué tal si apadrinas a uno de nuestros perros? Con una donación mensual o anual, puedes ayudarnos a dar alimento, atención veterinaria, cariño y un refugio seguro a los muchos perros que aún esperan un hogar definitivo.",
+            "Los apadrinamientos son especialmente importantes para los perros mayores, tímidos o que llevan mucho tiempo en el refugio, ya que necesitan más tiempo y apoyo.",
+            "¡Empieza hoy mismo haciendo clic en el enlace de abajo! Puedes elegir a tu perro y cómo quieres apadrinarlo para que siga moviendo la cola."
+          ],
+          de: [
+            "Wenn Sie noch nicht bereit sind, einen Hund zu adoptieren, wie wäre es mit einer Patenschaft? Mit einer monatlichen oder jährlichen Spende helfen Sie uns, den vielen Hunden, die noch auf ein dauerhaftes Zuhause warten, Futter, tierärztliche Versorgung, Zuwendung und einen sicheren Platz im Tierheim zu geben.",
+            "Patenschaften sind besonders wichtig für ältere und schüchterne Hunde sowie für Hunde, die schon lange bei uns sind und mehr Zeit und Unterstützung brauchen.",
+            "Übernehmen Sie noch heute eine Patenschaft über den Link unten. Wählen Sie Ihren Hund und die passende Form der Unterstützung – so sorgen Sie für freudiges Schwanzwedeln!"
+          ]
+        }[lang];
+        const intro = document.createElement("div");
+        intro.style.marginTop = "18px";
+        for (const paragraph of sponsorshipIntro) {
+          const text = document.createElement("p");
+          text.textContent = paragraph;
+          intro.appendChild(text);
+        }
+        sponsor.before(intro);
         reportHeight();
       })
       .catch(error => console.error("APASA sponsor action:", error));
