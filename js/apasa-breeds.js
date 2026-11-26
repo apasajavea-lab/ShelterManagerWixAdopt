@@ -25,6 +25,11 @@ window.APASA_BREEDS = {
     "es": "Akita",
     "de": "Akita"
   },
+  "akita-americana": {
+    "en": "American Akita",
+    "es": "Akita Americana",
+    "de": "Amerikanischer Akita"
+  },
   "6": {
     "en": "Alaskan Malamute",
     "es": "Malamute de Alaska",
