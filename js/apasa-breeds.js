@@ -1121,8 +1121,13 @@ window.APASA_BREEDS = {
     "de": "Spanischer Mastiff"
   },
   "446": {
-    "en": "Slovakian Chuvach",
+    "en": "Slovak Shepherd",
     "es": "Pastor Eslovaco",
+    "de": "Slowakischer Schäferhund"
+  },
+  "tchuvatch-eslovaco": {
+    "en": "Slovakian Chuvach",
+    "es": "Tchuvatch Eslovaco",
     "de": "Slowakischer Tschuvatsch"
   },
   "447": {
